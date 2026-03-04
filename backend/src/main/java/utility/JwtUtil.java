@@ -15,6 +15,9 @@ public class JwtUtil {
     // Validate token
     public boolean validateToken(String token) {
         try {
+            if (TokenBlacklist.isBlacklisted(token)) {
+                return false;  // token was logged out
+            }
             getAllClaims(token); // throws if invalid
             return true;
         } catch (JwtException | IllegalArgumentException e) {

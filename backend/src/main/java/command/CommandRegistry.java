@@ -26,13 +26,14 @@ public class CommandRegistry {
 
             //login
             commands.put("LOGIN", new LoginCommand(authService));
+            commands.put("LOGOUT", new LogoutCommand(authService));
 
             //get all users
             UserService userService = new UserService(userDAO);
-            commands.put("GetAllUser",new GetAllUsersCommand(userService));
+            commands.put("GetAllUser",new GetAllUsersCommand(userService,authService));
 
             // create new user
-            commands.put("CreateUser",new CreateUserCommand(userService));
+            commands.put("CreateUser",new CreateUserCommand(userService,authService));
 
 
 

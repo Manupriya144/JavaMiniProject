@@ -1,8 +1,11 @@
 package service;
 
 import dao.UserDAO;
+import dto.responseDto.LogoutResponseDTO;
 import model.User;
 import io.jsonwebtoken.Jwts;
+import utility.JwtUtil;
+import utility.TokenBlacklist;
 
 import java.util.Date;
 
@@ -35,6 +38,21 @@ public class AuthService {
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(utility.JwtUtil.getSecretKey())
                 .compact();
+    }
+
+    public LogoutResponseDTO logout(String token) {
+        JwtUtil jwtUtil = new JwtUtil();
+        if (!jwtUtil.validateToken(token)) {
+            return new LogoutResponseDTO(false, "Invalid or expired token");
+        }
+        TokenBlacklist.blacklist(token);
+
+        return new LogoutResponseDTO(true, "Logout successful");
+    }
+
+    public boolean isTokenValid(String token) {
+        JwtUtil jwtUtil = new JwtUtil();
+        return jwtUtil.validateToken(token) && !TokenBlacklist.isBlacklisted(token);
     }
 
     // AuthResult wrapper

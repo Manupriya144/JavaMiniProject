@@ -16,11 +16,11 @@ public class Launcher {
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
-            // 1️⃣ Read server ready message
+            // ead server ready message
             String serverMsg = in.readLine();
             System.out.println("Server: " + serverMsg);
 
-            // 2️⃣ LOGIN
+            //  LOGIN
             String loginJson = "{\"command\":\"LOGIN\",\"data\":{\"username\":\"admin\",\"password\":\"1234\"}}";
             out.println(loginJson);
 
@@ -39,7 +39,7 @@ public class Launcher {
 
             // CreateUser command using token
             String createUserJson = String.format(
-                    "{\"command\":\"CreateUser\",\"token\":\"%s\",\"data\":{\"username\":\"laksiri\",\"password\":\"1234\",\"role\":\"Lecturer\",\"email\":\"lecturer1@example.com\",\"contactNumber\":\"0712345678\",\"profilePicture\":null}}",
+                    "{\"command\":\"CreateUser\",\"token\":\"%s\",\"data\":{\"username\":\"laksiri\",\"password\":\"1234\",\"role\":\"Lecturer\",\"email\":\"lecturer15@example.com\",\"contactNumber\":\"0712345678\",\"profilePicture\":null}}",
                     token
             );
             out.println(createUserJson);
@@ -54,6 +54,22 @@ public class Launcher {
             out.println(getAllUsersJson);
             String getAllUsersResponse = in.readLine();
             System.out.println("GetAllUsers Response: " + getAllUsersResponse);
+
+
+            // ===== LOGOUT =====
+            String logoutJson = String.format(
+                    "{\"command\":\"LOGOUT\",\"token\":\"%s\",\"data\":{}}",
+                    token
+            );
+            out.println(logoutJson);
+
+            String logoutResponse = in.readLine();
+            System.out.println("Logout Response: " + logoutResponse);
+
+            // ===== Try a command after logout (should fail) =====
+            out.println(getAllUsersJson); // reuse GetAllUser JSON
+            String postLogoutResponse = in.readLine();
+            System.out.println("Post-Logout GetAllUser Response: " + postLogoutResponse);
 
         } catch (Exception e) {
             e.printStackTrace();
