@@ -5,18 +5,24 @@ import service.FinalMarksService;
 
 public class UpdateFinalMarksCommand implements Command {
 
-    FinalMarksService service = new FinalMarksService();
+    private final FinalMarksService service;
+
+    public UpdateFinalMarksCommand(FinalMarksService service){
+        this.service = service;
+    }
 
     @Override
-    public void execute(JsonNode data, ClientContext context) {
+    public void execute(Object data, ClientContext context) {
 
         try{
 
-            String studentId = data.get("studentId").asText();
-            String courseId = data.get("courseId").asText();
-            int year = data.get("academicYear").asInt();
-            String semester = data.get("semester").asText();
-            double marks = data.get("marks").asDouble();
+            JsonNode json = (JsonNode) data;
+
+            String studentId = json.get("studentId").asText();
+            String courseId = json.get("courseId").asText();
+            int year = json.get("academicYear").asInt();
+            String semester = json.get("semester").asText();
+            double marks = json.get("marks").asDouble();
 
             boolean result = service.updateFinalMarks(studentId,courseId,year,semester,marks);
 

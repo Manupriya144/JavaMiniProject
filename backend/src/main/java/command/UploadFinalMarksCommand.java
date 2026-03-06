@@ -3,27 +3,27 @@ package command;
 import com.fasterxml.jackson.databind.JsonNode;
 import service.FinalMarksService;
 
-/*
-Command = Endpoint
-This class handles UploadFinalMarks request
-*/
-
 public class UploadFinalMarksCommand implements Command {
 
-    FinalMarksService service = new FinalMarksService();
+    private final FinalMarksService service;
+
+    public UploadFinalMarksCommand(FinalMarksService service){
+        this.service = service;
+    }
 
     @Override
-    public void execute(JsonNode data, ClientContext context) {
+    public void execute(Object data, ClientContext context) {
 
         try{
 
-            // read data from JSON request
-            String studentId = data.get("studentId").asText();
-            String courseId = data.get("courseId").asText();
-            int year = data.get("academicYear").asInt();
-            int level = data.get("academicLevel").asInt();
-            String semester = data.get("semester").asText();
-            double marks = data.get("marks").asDouble();
+            JsonNode json = (JsonNode) data;
+
+            String studentId = json.get("studentId").asText();
+            String courseId = json.get("courseId").asText();
+            int year = json.get("academicYear").asInt();
+            int level = json.get("academicLevel").asInt();
+            String semester = json.get("semester").asText();
+            double marks = json.get("marks").asDouble();
 
             boolean result = service.uploadFinalMarks(studentId,courseId,year,level,semester,marks);
 

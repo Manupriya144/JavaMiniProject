@@ -6,22 +6,27 @@ import service.FinalMarksService;
 
 public class GetStudentFinalMarksCommand implements Command {
 
-    FinalMarksService service = new FinalMarksService();
+    private final FinalMarksService service;
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    ObjectMapper mapper = new ObjectMapper();
+    public GetStudentFinalMarksCommand(FinalMarksService service){
+        this.service = service;
+    }
 
     @Override
-    public void execute(JsonNode data, ClientContext context) {
+    public void execute(Object data, ClientContext context) {
 
         try{
 
-            String studentId = data.get("studentId").asText();
+            JsonNode json = (JsonNode) data;
+
+            String studentId = json.get("studentId").asText();
 
             var marks = service.getStudentMarks(studentId);
 
-            String json = mapper.writeValueAsString(marks);
+            String jsonResult = mapper.writeValueAsString(marks);
 
-            context.getOutput().println(json);
+            context.getOutput().println(jsonResult);
 
         }catch(Exception e){
 
