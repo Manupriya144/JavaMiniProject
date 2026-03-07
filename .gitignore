@@ -1,0 +1,6 @@
+# Ignore build output folders
+backend/target/
+frontend/target/
+
+# Ignore compiled class files
+*.class
