@@ -9,38 +9,52 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.frontend.controller.LoginController">
+<VBox xmlns="http://javafx.com/javafx/17.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.frontend.controller.LoginController"
+      spacing="0" alignment="TOP_CENTER"
+      style="-fx-background-color: linear-gradient(to bottom right, #0f1b35, #0a1628);">
 
-    <fx:include source="LoginTitleBar.fxml" />
+    <!-- Include the existing title bar -->
+    <fx:include source="loginTitleBar.fxml" />
 
-    <StackPane style="-fx-background-color: linear-gradient(to bottom right, #1e3c72, #2a5298);" VBox.vgrow="ALWAYS">
-
+    <!-- Main login form -->
+    <StackPane VBox.vgrow="ALWAYS">
         <VBox alignment="CENTER" spacing="25">
 
-            <VBox alignment="CENTER" prefHeight="274.0" prefWidth="467.0" spacing="15" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 20,0,0,10);">
+            <VBox alignment="CENTER" prefHeight="300.0" prefWidth="470.0" spacing="15"
+                  style="-fx-background-color: #1e293b; -fx-background-radius: 0; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 20,0,0,10);">
                 <padding>
-                    <Insets bottom="40" left="40" right="40" top="40" />
+                    <Insets top="40" bottom="40" left="40" right="40"/>
                 </padding>
 
+                <!-- Username -->
+                <TextField fx:id="usernameField" alignment="CENTER" prefHeight="40" promptText="Username"
+                           style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #3a4b63; -fx-background-color: #283447; -fx-text-fill: white;">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </TextField>
 
-                <TextField fx:id="usernameField" alignment="CENTER" prefHeight="40" promptText="Username" style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #d0d0d0; -fx-background-color: light-grey; -fx-text-fill: black;">
-               <font>
-                  <Font size="14.0" />
-               </font></TextField>
+                <!-- Password -->
+                <PasswordField fx:id="passwordField" alignment="CENTER" prefHeight="40" promptText="Password"
+                               style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #3a4b63; -fx-background-color: #283447; -fx-text-fill: white;">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </PasswordField>
 
-                <PasswordField fx:id="passwordField" alignment="CENTER" prefHeight="40" promptText="Password" style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #d0d0d0; -fx-text-fill: black; -fx-background-color: light-grey;">
-               <font>
-                  <Font size="14.0" />
-               </font></PasswordField>
+                <!-- Login button -->
+                <Button onAction="#login" prefHeight="40" prefWidth="200" text="Login"
+                        style="-fx-background-color: linear-gradient(to right, #28a745, #1e7e34);
+                               -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 10;"/>
 
-                <Button onAction="#login" prefHeight="40" prefWidth="200" style="-fx-background-color: linear-gradient(to right, #28a745, #218838);  -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 10;" text="Login" />
-
-                <Label fx:id="statusLabel" textFill="red" />
+                <!-- Status label -->
+                <Label fx:id="statusLabel" textFill="#ff4d4f" style="-fx-font-size: 12px;"/>
 
             </VBox>
 
         </VBox>
-
     </StackPane>
 
 </VBox>

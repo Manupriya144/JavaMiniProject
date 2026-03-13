@@ -7,6 +7,7 @@ module com.example.frontend {
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
     requires com.fasterxml.jackson.databind;
+    requires javafx.graphics;
 
     opens com.example.frontend to javafx.fxml;
     opens com.example.frontend.controller to javafx.fxml;

@@ -20,4 +20,10 @@ public class SessionManager {
     public static String getRole(){
         return role;
     }
+
+    public static void clear(){
+        SessionManager.token = "";
+        SessionManager.role = "";
+
+    }
 }

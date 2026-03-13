@@ -5,8 +5,15 @@ import com.example.frontend.network.ServerClient;
 import com.example.frontend.service.AuthService;
 import com.example.frontend.session.SessionManager;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.io.IOException;
 
 public class LoginController {
 
@@ -16,7 +23,7 @@ public class LoginController {
     @FXML
     private PasswordField passwordField;
 
-    private final ServerClient client = new ServerClient();
+    static final ServerClient client = new ServerClient();
 
     @FXML
     public void initialize() {
@@ -45,16 +52,22 @@ public class LoginController {
                 System.out.println("Role: " + user.getRole());
 
                 // Load different pages based on role
-                switch(user.getRole()){
+                switch(user.getRole()) {
                     case "Student":
-                        System.out.println("Load Student page");
+                        loadDashboard("/view/studentDashboard.fxml",user.getUsername());
                         break;
                     case "Lecturer":
-                        System.out.println("Load Lecturer page");
+                        loadDashboard("/view/lecturerDashboard.fxml",user.getUsername());
+                        break;
+                    case "Tech_Officer":
+                        loadDashboard("/view/techOfficerDashboard.fxml",user.getUsername());
                         break;
                     case "Admin":
-                        System.out.println("Load Admin page");
+                    case "Dean":
+                        loadDashboard("/view/adminDashboard.fxml",user.getUsername());
                         break;
+                    default:
+                        System.out.println("Unknown role: access denied");
                 }
 
             } else {
@@ -65,4 +78,26 @@ public class LoginController {
             e.printStackTrace();
         }
     }
+    private void loadDashboard(String fxmlPath,String username) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+
+            // Create a NEW stage for the dashboard
+            Stage dashboardStage = new Stage();
+            dashboardStage.setTitle("Dashboard"); // OS title bar
+            dashboardStage.setScene(new Scene(root));
+            dashboardStage.show();
+
+            // Close the login stage
+            AdminDashboardController controller = loader.getController();
+            controller.setAdminName(username);
+            Stage loginStage = (Stage) usernameField.getScene().getWindow();
+            loginStage.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
