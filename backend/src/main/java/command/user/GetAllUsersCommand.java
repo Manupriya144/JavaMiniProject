@@ -1,6 +1,8 @@
-package command;
+package command.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import command.repository.ClientContext;
+import command.repository.Command;
 import dto.responseDto.UserResponseDTO;
 import model.User;
 import service.UserService;

@@ -138,4 +138,27 @@ public class UserDAO {
             ps.executeUpdate();
         }
     }
+
+    public User getUserById(String userId) {
+        try {
+            String sql = "SELECT * FROM users WHERE user_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User(
+                        rs.getString("user_id"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("contact_number"),
+                        rs.getString("profile_picture"),
+                        rs.getString("role")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

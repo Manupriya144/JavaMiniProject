@@ -1,9 +1,9 @@
 package server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import command.ClientContext;
-import command.Command;
-import command.CommandRegistry;
+import command.repository.ClientContext;
+import command.repository.Command;
+import command.repository.CommandRegistry;
 import dto.requestDto.RequestDTO;
 import utility.JwtUtil;
 

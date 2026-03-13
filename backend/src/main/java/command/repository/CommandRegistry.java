@@ -1,5 +1,10 @@
-package command;
+package command.repository;
 
+import command.login.LoginCommand;
+import command.login.LogoutCommand;
+import command.user.CreateUserCommand;
+import command.user.GetAllUsersCommand;
+import command.user.GetUserByIdCommand;
 import dao.UserDAO;
 import service.AuthService;
 import service.UserService;
@@ -28,12 +33,11 @@ public class CommandRegistry {
             commands.put("LOGIN", new LoginCommand(authService));
             commands.put("LOGOUT", new LogoutCommand(authService));
 
-            //get all users
+            // users related
             UserService userService = new UserService(userDAO);
             commands.put("GetAllUser",new GetAllUsersCommand(userService,authService));
-
-            // create new user
             commands.put("CreateUser",new CreateUserCommand(userService,authService));
+            commands.put("GetUserById", new GetUserByIdCommand(userService, authService));
 
 
 

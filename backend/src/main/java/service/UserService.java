@@ -41,4 +41,8 @@ public class UserService {
         // return true if creation succeeded
         return savedUser != null;
     }
+
+    public User getUserById(String userId) {
+        return userDAO.getUserById(userId);
+    }
 }

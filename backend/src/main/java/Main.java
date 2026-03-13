@@ -1,4 +1,4 @@
-import command.CommandRegistry;
+import command.repository.CommandRegistry;
 import server.MultiServer;
 
 public class Main {
