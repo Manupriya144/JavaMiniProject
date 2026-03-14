@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import command.repository.ClientContext;
 import command.repository.Command;
 import command.repository.CommandRegistry;
-import dto.requestDto.RequestDTO;
+import dto.requestDto.login.RequestDTO;
 import utility.JwtUtil;
 
 import java.io.BufferedReader;

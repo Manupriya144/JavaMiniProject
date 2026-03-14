@@ -3,10 +3,10 @@ package command.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import command.repository.ClientContext;
 import command.repository.Command;
-import dto.responseDto.UserResponseDTO;
+import dto.responseDto.user.UserResponseDTO;
 import model.User;
-import service.UserService;
-import service.AuthService; // add this
+import service.user.UserService;
+import service.login.AuthService; // add this
 
 import java.util.List;
 import java.util.stream.Collectors;

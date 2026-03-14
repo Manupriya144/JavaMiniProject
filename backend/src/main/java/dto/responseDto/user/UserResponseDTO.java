@@ -1,4 +1,4 @@
-package dto.responseDto;
+package dto.responseDto.user;
 
 public class UserResponseDTO {
     private String userId;

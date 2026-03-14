@@ -3,10 +3,10 @@ package command.student;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import command.repository.ClientContext;
 import command.repository.Command;
-import dto.requestDto.StudentRequestDTO;
-import dto.responseDto.StudentResponseDTO;
+import dto.requestDto.student.StudentRequestDTO;
+import dto.responseDto.student.StudentResponseDTO;
 import model.Student;
-import service.StudentService;
+import service.student.StudentService;
 
 public class GetStudentByUserIdCommand implements Command {
 

@@ -3,10 +3,10 @@ package command.login;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import command.repository.ClientContext;
 import command.repository.Command;
-import dto.requestDto.LoginRequestDTO;
-import dto.responseDto.LoginResponseDTO;
-import service.AuthService;
-import service.AuthService.AuthResult;
+import dto.requestDto.login.LoginRequestDTO;
+import dto.responseDto.login.LoginResponseDTO;
+import service.login.AuthService;
+import service.login.AuthService.AuthResult;
 
 public class LoginCommand implements Command {
 

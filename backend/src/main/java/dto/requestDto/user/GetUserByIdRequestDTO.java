@@ -1,4 +1,4 @@
-package dto.requestDto;
+package dto.requestDto.user;
 
 public class GetUserByIdRequestDTO {
     private String userId;

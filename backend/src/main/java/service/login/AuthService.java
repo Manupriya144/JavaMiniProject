@@ -1,7 +1,7 @@
-package service;
+package service.login;
 
-import dao.UserDAO;
-import dto.responseDto.LogoutResponseDTO;
+import dao.user.UserDAO;
+import dto.responseDto.login.LogoutResponseDTO;
 import model.User;
 import io.jsonwebtoken.Jwts;
 import utility.JwtUtil;

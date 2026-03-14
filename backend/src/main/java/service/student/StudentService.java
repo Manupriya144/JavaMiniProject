@@ -1,6 +1,6 @@
-package service;
+package service.student;
 
-import dao.StudentDAO;
+import dao.student.StudentDAO;
 import model.Student;
 
 public class StudentService {

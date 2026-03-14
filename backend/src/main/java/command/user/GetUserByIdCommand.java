@@ -3,12 +3,12 @@ package command.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import command.repository.ClientContext;
 import command.repository.Command;
-import dto.requestDto.GetUserByIdRequestDTO;  // we'll create this
-import dto.responseDto.UserResponseDTO;
-import dto.responseDto.ResponseDTO;          // generic wrapper
+import dto.requestDto.user.GetUserByIdRequestDTO;  // we'll create this
+import dto.responseDto.user.UserResponseDTO;
+import dto.responseDto.login.ResponseDTO;          // generic wrapper
 import model.User;
-import service.AuthService;
-import service.UserService;
+import service.login.AuthService;
+import service.user.UserService;
 
 public class GetUserByIdCommand implements Command {
 

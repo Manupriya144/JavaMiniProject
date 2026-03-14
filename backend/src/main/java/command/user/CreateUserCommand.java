@@ -3,9 +3,9 @@ package command.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import command.repository.ClientContext;
 import command.repository.Command;
-import dto.requestDto.UserRequestDTO;
-import service.UserService;
-import service.AuthService;
+import dto.requestDto.user.UserRequestDTO;
+import service.user.UserService;
+import service.login.AuthService;
 
 public class CreateUserCommand implements Command {
 

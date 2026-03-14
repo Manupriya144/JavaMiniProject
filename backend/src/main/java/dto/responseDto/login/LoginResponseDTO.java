@@ -1,4 +1,4 @@
-package dto.responseDto;
+package dto.responseDto.login;
 
 public class LoginResponseDTO {
 

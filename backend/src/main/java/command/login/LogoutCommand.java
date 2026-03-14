@@ -3,8 +3,8 @@ package command.login;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import command.repository.ClientContext;
 import command.repository.Command;
-import dto.responseDto.LogoutResponseDTO;
-import service.AuthService;
+import dto.responseDto.login.LogoutResponseDTO;
+import service.login.AuthService;
 
 public class LogoutCommand implements Command {
 

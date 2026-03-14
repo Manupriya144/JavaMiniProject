@@ -1,4 +1,4 @@
-package dao;
+package dao.student;
 
 import model.Student;
 

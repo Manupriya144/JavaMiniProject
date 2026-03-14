@@ -1,8 +1,7 @@
-package service;
+package service.user;
 
-import dao.UserDAO;
-import dto.requestDto.UserRequestDTO;
-import dto.responseDto.UserResponseDTO;
+import dao.user.UserDAO;
+import dto.requestDto.user.UserRequestDTO;
 import model.User;
 
 import java.util.List;

@@ -6,11 +6,11 @@ import command.student.GetStudentByUserIdCommand;
 import command.user.CreateUserCommand;
 import command.user.GetAllUsersCommand;
 import command.user.GetUserByIdCommand;
-import dao.StudentDAO;
-import dao.UserDAO;
-import service.AuthService;
-import service.StudentService;
-import service.UserService;
+import dao.student.StudentDAO;
+import dao.user.UserDAO;
+import service.login.AuthService;
+import service.student.StudentService;
+import service.user.UserService;
 import utility.HikariCPDataSource;
 
 import java.sql.Connection;

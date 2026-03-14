@@ -1,4 +1,4 @@
-package dto.responseDto;
+package dto.responseDto.student;
 
 import model.Student;
 
