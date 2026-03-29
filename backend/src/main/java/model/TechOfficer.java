@@ -30,14 +30,5 @@ public class TechOfficer extends User {
         this.departmentId = departmentId;
     }
 
-//    @Override
-//    public String toString() {
-//        return "TechOfficer{" +
-//                "userId='" + getUserId() + '\'' +
-//                ", username='" + getUsername() + '\'' +
-//                ", email='" + getEmail() + '\'' +
-//                ", role='" + getRole() + '\'' +
-//                ", departmentId='" + departmentId + '\'' +
-//                '}';
-//    }
+
 }

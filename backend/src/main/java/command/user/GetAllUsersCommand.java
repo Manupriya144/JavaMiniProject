@@ -25,7 +25,6 @@ public class GetAllUsersCommand implements Command {
     @Override
     public void execute(Object data, ClientContext context) {
         try {
-            // ===== Token Validation =====
             String token = context.getToken();
             if (token == null || !authService.isTokenValid(token)) {
                 context.getOutput().println("{\"success\":false,\"message\":\"Unauthorized: invalid or expired token\"}");

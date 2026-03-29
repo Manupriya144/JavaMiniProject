@@ -78,7 +78,6 @@ public class UserService {
 
             case "Admin":
             case "Dean":
-                // Just insert into users table; no extra table
                 user = new User(
                         userId,
                         dto.getUsername(),
