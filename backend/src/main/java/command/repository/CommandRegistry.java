@@ -2,12 +2,20 @@ package command.repository;
 
 import command.login.LoginCommand;
 import command.login.LogoutCommand;
+import command.attendance.AddAttendanceCommand;
+import command.attendance.DeleteAttendanceCommand;
+import command.attendance.GetAttendanceByIdCommand;
+import command.attendance.GetAttendanceSessionsCommand;
+import command.attendance.GetAttendanceStudentsCommand;
 import command.student.GetStudentByUserIdCommand;
+import command.attendance.UpdateAttendanceCommand;
 import command.user.CreateUserCommand;
 import command.user.GetAllUsersCommand;
 import command.user.GetUserByIdCommand;
+import dao.attendance.AttendanceDAO;
 import dao.student.StudentDAO;
 import dao.user.UserDAO;
+import service.attendance.AttendanceService;
 import service.login.AuthService;
 import service.student.StudentService;
 import service.user.UserService;
@@ -48,6 +56,16 @@ public class CommandRegistry {
             StudentDAO studentDAO = new StudentDAO(connection);
             StudentService studentService = new StudentService(studentDAO);
             commands.put("GET_STUDENT_BY_USER_ID",new GetStudentByUserIdCommand(studentService));
+
+            // attendance related
+            AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
+            AttendanceService attendanceService = new AttendanceService(attendanceDAO);
+            commands.put("AddAttendance", new AddAttendanceCommand(attendanceService));
+            commands.put("UpdateAttendance", new UpdateAttendanceCommand(attendanceService));
+            commands.put("DeleteAttendance", new DeleteAttendanceCommand(attendanceService));
+            commands.put("GetAttendanceById", new GetAttendanceByIdCommand(attendanceService));
+            commands.put("GetAttendanceStudents", new GetAttendanceStudentsCommand(attendanceService));
+            commands.put("GetAttendanceSessions", new GetAttendanceSessionsCommand(attendanceService));
 
 
 
