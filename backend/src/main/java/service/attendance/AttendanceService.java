@@ -56,6 +56,34 @@ public class AttendanceService {
         return attendanceDAO.getSessionOptions();
     }
 
+    public List<Map<String, Object>> getStudentAttendance(String studentId, String viewType) {
+        if (studentId == null || studentId.isBlank()) {
+            return List.of();
+        }
+        return attendanceDAO.getStudentAttendance(studentId.trim(), normalizeViewType(viewType));
+    }
+
+    public List<Map<String, Object>> getBatchAttendance(String batch, String viewType) {
+        if (batch == null || batch.isBlank()) {
+            return List.of();
+        }
+        return attendanceDAO.getBatchAttendance(batch.trim(), normalizeViewType(viewType));
+    }
+
+    public Map<String, Object> getStudentAttendanceSummary(String studentId, String viewType) {
+        if (studentId == null || studentId.isBlank()) {
+            return null;
+        }
+        return attendanceDAO.getStudentAttendanceSummary(studentId.trim(), normalizeViewType(viewType));
+    }
+
+    public List<Map<String, Object>> getBatchAttendanceSummary(String batch, String viewType) {
+        if (batch == null || batch.isBlank()) {
+            return List.of();
+        }
+        return attendanceDAO.getBatchAttendanceSummary(batch.trim(), normalizeViewType(viewType));
+    }
+
     private boolean isValidStatus(String status) {
         if (status == null) {
             return false;
@@ -66,5 +94,18 @@ public class AttendanceService {
 
     private String normalizeStatus(String status) {
         return "Present".equalsIgnoreCase(status.trim()) ? "Present" : "Absent";
+    }
+
+    private String normalizeViewType(String viewType) {
+        if (viewType == null || viewType.isBlank()) {
+            return "Combined";
+        }
+        if ("Theory".equalsIgnoreCase(viewType.trim())) {
+            return "Theory";
+        }
+        if ("Practical".equalsIgnoreCase(viewType.trim())) {
+            return "Practical";
+        }
+        return "Combined";
     }
 }

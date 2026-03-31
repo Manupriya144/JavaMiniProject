@@ -131,4 +131,162 @@ public class AttendanceDAO {
         }
         return rows;
     }
+
+    public List<Map<String, Object>> getStudentAttendance(String studentId, String viewType) {
+        String sql = "SELECT a.attendance_id, a.student_id, s.reg_no, u.username, a.session_id, se.course_id, " +
+                "se.session_date, se.type, a.status, a.hours_attended " +
+                "FROM attendance a " +
+                "INNER JOIN students s ON a.student_id = s.user_id " +
+                "INNER JOIN users u ON s.user_id = u.user_id " +
+                "INNER JOIN session se ON a.session_id = se.session_id " +
+                "WHERE a.student_id = ? AND (? = 'Combined' OR se.type = ?) " +
+                "ORDER BY se.session_date DESC, a.attendance_id DESC";
+        List<Map<String, Object>> rows = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, studentId);
+            stmt.setString(2, viewType);
+            stmt.setString(3, viewType);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("attendanceId", rs.getInt("attendance_id"));
+                    row.put("studentId", rs.getString("student_id"));
+                    row.put("regNo", rs.getString("reg_no"));
+                    row.put("studentName", rs.getString("username"));
+                    row.put("sessionId", rs.getInt("session_id"));
+                    row.put("courseId", rs.getString("course_id"));
+                    row.put("sessionDate", rs.getString("session_date"));
+                    row.put("sessionType", rs.getString("type"));
+                    row.put("status", rs.getString("status"));
+                    row.put("hoursAttended", rs.getDouble("hours_attended"));
+                    rows.add(row);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows;
+    }
+
+    public List<Map<String, Object>> getBatchAttendance(String batch, String viewType) {
+        String sql = "SELECT a.attendance_id, a.student_id, s.reg_no, u.username, s.batch, a.session_id, se.course_id, " +
+                "se.session_date, se.type, a.status, a.hours_attended " +
+                "FROM attendance a " +
+                "INNER JOIN students s ON a.student_id = s.user_id " +
+                "INNER JOIN users u ON s.user_id = u.user_id " +
+                "INNER JOIN session se ON a.session_id = se.session_id " +
+                "WHERE s.batch = ? AND (? = 'Combined' OR se.type = ?) " +
+                "ORDER BY s.reg_no ASC, se.session_date DESC, a.attendance_id DESC";
+        List<Map<String, Object>> rows = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, batch);
+            stmt.setString(2, viewType);
+            stmt.setString(3, viewType);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("attendanceId", rs.getInt("attendance_id"));
+                    row.put("studentId", rs.getString("student_id"));
+                    row.put("regNo", rs.getString("reg_no"));
+                    row.put("studentName", rs.getString("username"));
+                    row.put("batch", rs.getString("batch"));
+                    row.put("sessionId", rs.getInt("session_id"));
+                    row.put("courseId", rs.getString("course_id"));
+                    row.put("sessionDate", rs.getString("session_date"));
+                    row.put("sessionType", rs.getString("type"));
+                    row.put("status", rs.getString("status"));
+                    row.put("hoursAttended", rs.getDouble("hours_attended"));
+                    rows.add(row);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows;
+    }
+
+    public Map<String, Object> getStudentAttendanceSummary(String studentId, String viewType) {
+        String sql = "SELECT a.student_id, s.reg_no, u.username, " +
+                "COUNT(*) AS totalSessions, " +
+                "SUM(CASE WHEN a.status = 'Present' THEN 1 ELSE 0 END) AS presentCount, " +
+                "SUM(CASE WHEN a.status = 'Absent' THEN 1 ELSE 0 END) AS absentCount, " +
+                "SUM(CASE WHEN a.status = 'Present' THEN a.hours_attended ELSE 0 END) AS totalHoursAttended " +
+                "FROM attendance a " +
+                "INNER JOIN students s ON a.student_id = s.user_id " +
+                "INNER JOIN users u ON s.user_id = u.user_id " +
+                "INNER JOIN session se ON a.session_id = se.session_id " +
+                "WHERE a.student_id = ? AND (? = 'Combined' OR se.type = ?) " +
+                "GROUP BY a.student_id, s.reg_no, u.username";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, studentId);
+            stmt.setString(2, viewType);
+            stmt.setString(3, viewType);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    int total = rs.getInt("totalSessions");
+                    int present = rs.getInt("presentCount");
+                    double percentage = total == 0 ? 0.0 : (present * 100.0) / total;
+
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("studentId", rs.getString("student_id"));
+                    row.put("regNo", rs.getString("reg_no"));
+                    row.put("studentName", rs.getString("username"));
+                    row.put("viewType", viewType);
+                    row.put("totalSessions", total);
+                    row.put("presentCount", present);
+                    row.put("absentCount", rs.getInt("absentCount"));
+                    row.put("totalHoursAttended", rs.getDouble("totalHoursAttended"));
+                    row.put("attendancePercentage", Math.round(percentage * 100.0) / 100.0);
+                    return row;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Map<String, Object>> getBatchAttendanceSummary(String batch, String viewType) {
+        String sql = "SELECT a.student_id, s.reg_no, u.username, s.batch, " +
+                "COUNT(*) AS totalSessions, " +
+                "SUM(CASE WHEN a.status = 'Present' THEN 1 ELSE 0 END) AS presentCount, " +
+                "SUM(CASE WHEN a.status = 'Absent' THEN 1 ELSE 0 END) AS absentCount, " +
+                "SUM(CASE WHEN a.status = 'Present' THEN a.hours_attended ELSE 0 END) AS totalHoursAttended " +
+                "FROM attendance a " +
+                "INNER JOIN students s ON a.student_id = s.user_id " +
+                "INNER JOIN users u ON s.user_id = u.user_id " +
+                "INNER JOIN session se ON a.session_id = se.session_id " +
+                "WHERE s.batch = ? AND (? = 'Combined' OR se.type = ?) " +
+                "GROUP BY a.student_id, s.reg_no, u.username, s.batch " +
+                "ORDER BY s.reg_no ASC";
+        List<Map<String, Object>> rows = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, batch);
+            stmt.setString(2, viewType);
+            stmt.setString(3, viewType);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int total = rs.getInt("totalSessions");
+                    int present = rs.getInt("presentCount");
+                    double percentage = total == 0 ? 0.0 : (present * 100.0) / total;
+
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("studentId", rs.getString("student_id"));
+                    row.put("regNo", rs.getString("reg_no"));
+                    row.put("studentName", rs.getString("username"));
+                    row.put("batch", rs.getString("batch"));
+                    row.put("viewType", viewType);
+                    row.put("totalSessions", total);
+                    row.put("presentCount", present);
+                    row.put("absentCount", rs.getInt("absentCount"));
+                    row.put("totalHoursAttended", rs.getDouble("totalHoursAttended"));
+                    row.put("attendancePercentage", Math.round(percentage * 100.0) / 100.0);
+                    rows.add(row);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows;
+    }
 }
