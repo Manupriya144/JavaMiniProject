@@ -7,6 +7,10 @@ import command.attendance.DeleteAttendanceCommand;
 import command.attendance.GetAttendanceByIdCommand;
 import command.attendance.GetAttendanceSessionsCommand;
 import command.attendance.GetAttendanceStudentsCommand;
+import command.attendance.GetBatchAttendanceCommand;
+import command.attendance.GetBatchAttendanceSummaryCommand;
+import command.attendance.GetStudentAttendanceCommand;
+import command.attendance.GetStudentAttendanceSummaryCommand;
 import command.student.GetStudentByUserIdCommand;
 import command.attendance.UpdateAttendanceCommand;
 import command.user.CreateUserCommand;
@@ -66,6 +70,10 @@ public class CommandRegistry {
             commands.put("GetAttendanceById", new GetAttendanceByIdCommand(attendanceService));
             commands.put("GetAttendanceStudents", new GetAttendanceStudentsCommand(attendanceService));
             commands.put("GetAttendanceSessions", new GetAttendanceSessionsCommand(attendanceService));
+            commands.put("GetStudentAttendance", new GetStudentAttendanceCommand(attendanceService));
+            commands.put("GetBatchAttendance", new GetBatchAttendanceCommand(attendanceService));
+            commands.put("GetStudentAttendanceSummary", new GetStudentAttendanceSummaryCommand(attendanceService));
+            commands.put("GetBatchAttendanceSummary", new GetBatchAttendanceSummaryCommand(attendanceService));
 
 
 

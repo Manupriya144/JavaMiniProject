@@ -164,4 +164,52 @@ public class AttendanceService {
         }
         return result;
     }
+
+    public JsonNode getStudentAttendance(String studentId, String viewType) {
+        try {
+            Map<String, Object> data = new HashMap<>();
+            data.put("student_id", studentId);
+            data.put("view_type", viewType);
+            return send("GetStudentAttendance", data);
+        } catch (Exception e) {
+            lastMessage = "Failed to load student attendance: " + (e.getMessage() == null ? "error" : e.getMessage());
+            return null;
+        }
+    }
+
+    public JsonNode getBatchAttendance(String batch, String viewType) {
+        try {
+            Map<String, Object> data = new HashMap<>();
+            data.put("batch", batch);
+            data.put("view_type", viewType);
+            return send("GetBatchAttendance", data);
+        } catch (Exception e) {
+            lastMessage = "Failed to load batch attendance: " + (e.getMessage() == null ? "error" : e.getMessage());
+            return null;
+        }
+    }
+
+    public JsonNode getStudentAttendanceSummary(String studentId, String viewType) {
+        try {
+            Map<String, Object> data = new HashMap<>();
+            data.put("student_id", studentId);
+            data.put("view_type", viewType);
+            return send("GetStudentAttendanceSummary", data);
+        } catch (Exception e) {
+            lastMessage = "Failed to load student attendance summary: " + (e.getMessage() == null ? "error" : e.getMessage());
+            return null;
+        }
+    }
+
+    public JsonNode getBatchAttendanceSummary(String batch, String viewType) {
+        try {
+            Map<String, Object> data = new HashMap<>();
+            data.put("batch", batch);
+            data.put("view_type", viewType);
+            return send("GetBatchAttendanceSummary", data);
+        } catch (Exception e) {
+            lastMessage = "Failed to load batch attendance summary: " + (e.getMessage() == null ? "error" : e.getMessage());
+            return null;
+        }
+    }
 }
