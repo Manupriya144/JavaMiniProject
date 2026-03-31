@@ -137,6 +137,8 @@
                                 style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
                         <Button text="📋  View Attendance" onAction="#openAttendance" prefHeight="42" prefWidth="190"
                                 style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                        <Button text="📊  Advanced Attendance View" onAction="#openAdvancedAttendanceView" prefHeight="42" prefWidth="220"
+                                style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
                         <Button text="🏥  Add Medical" onAction="#openAddMedical" prefHeight="42" prefWidth="190"
                                 style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
                         <Button text="✔️  Approve Medical" onAction="#openMedical" prefHeight="42" prefWidth="190"

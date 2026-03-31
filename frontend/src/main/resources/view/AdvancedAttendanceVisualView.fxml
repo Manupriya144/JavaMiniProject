@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.frontend.controller.AdvancedAttendanceVisualViewController"
+            prefWidth="1200" prefHeight="800"
+            style="-fx-background-color: #0f1b35;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10"
+              style="-fx-background-color: #0a1628; -fx-border-color: #1e3c72; -fx-border-width: 0 0 2 0;">
+            <padding><Insets top="14" right="18" bottom="14" left="18"/></padding>
+            <Label text="📋 Advanced Attendance (Visual)"
+                   style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <HBox HBox.hgrow="ALWAYS"/>
+            <Button text="Back Dashboard" onAction="#backToDashboard"
+                    style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="14">
+            <padding><Insets top="18" right="18" bottom="18" left="18"/></padding>
+
+            <!-- Controls -->
+            <VBox spacing="10"
+                  style="-fx-background-color: #162040; -fx-background-radius: 14; -fx-border-color: #1e3c72; -fx-border-radius: 14; -fx-border-width: 1;">
+                <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+                <HBox spacing="14">
+                    <VBox spacing="6">
+                        <Label text="Mode" style="-fx-text-fill: #a0c4ff; -fx-font-size: 12px;"/>
+                        <ComboBox fx:id="modeComboBox" prefWidth="220"/>
+                    </VBox>
+                    <VBox spacing="6">
+                        <Label text="View Type" style="-fx-text-fill: #a0c4ff; -fx-font-size: 12px;"/>
+                        <ComboBox fx:id="viewTypeComboBox" prefWidth="220"/>
+                    </VBox>
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label fx:id="targetLabel" text="Student ID" style="-fx-text-fill: #a0c4ff; -fx-font-size: 12px;"/>
+                        <TextField fx:id="targetField" promptText="Enter value" />
+                    </VBox>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+                    <Button text="Load Details" onAction="#loadDetails"
+                            style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                    <Button text="Load Summary" onAction="#loadSummary"
+                            style="-fx-background-color: linear-gradient(to right, #0a4a6e, #1565c0); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                </HBox>
+
+                <Label fx:id="statusLabel" textFill="white" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+            </VBox>
+
+            <!-- Individual Summary -->
+            <VBox fx:id="individualSummaryPane" spacing="12">
+                <VBox spacing="10"
+                      style="-fx-background-color: #162040; -fx-background-radius: 14; -fx-border-color: #1e3c72; -fx-border-radius: 14; -fx-border-width: 1;">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+                    <HBox spacing="20">
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Overall Summary" style="-fx-text-fill: #a0c4ff; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                            <Label fx:id="overallStudentNameLabel" text="-" style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                            <Label fx:id="overallRegNoLabel" text="-" style="-fx-text-fill: #6a90c8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                        </VBox>
+
+                        <VBox spacing="8" prefWidth="420">
+                            <Label text="Total Sessions" style="-fx-text-fill: #a0b8e0; -fx-font-size: 12px;"/>
+                            <Label fx:id="overallTotalSessionsLabel" text="-" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+                            <HBox spacing="10">
+                                <VBox spacing="2">
+                                    <Label text="Present" style="-fx-text-fill: #28a745; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Label fx:id="overallPresentCountLabel" text="-" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                </VBox>
+                                <VBox spacing="2">
+                                    <Label text="Absent" style="-fx-text-fill: #c0392b; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Label fx:id="overallAbsentCountLabel" text="-" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                </VBox>
+                            </HBox>
+
+                            <VBox spacing="2">
+                                <Label text="Attendance %" style="-fx-text-fill: #ffd8b1; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                <Label fx:id="overallAttendancePercentageLabel" text="-" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                            </VBox>
+                            <VBox spacing="2">
+                                <Label text="Total Hours Attended" style="-fx-text-fill: #90caf9; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                <Label fx:id="overallTotalHoursAttendedLabel" text="-" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                            </VBox>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Course summary -->
+                <VBox fx:id="courseSummaryPane" spacing="10"
+                      style="-fx-background-color: #162040; -fx-background-radius: 14; -fx-border-color: #1e3c72; -fx-border-radius: 14; -fx-border-width: 1;">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+                    <HBox spacing="14" alignment="CENTER_LEFT">
+                        <VBox spacing="6">
+                            <Label text="Select Course" style="-fx-text-fill: #a0c4ff; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <ComboBox fx:id="courseComboBox" prefWidth="260"/>
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Course Summary" style="-fx-text-fill: #a0c4ff; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                            <Label fx:id="courseIdLabel" text="-" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                        </VBox>
+                        <VBox spacing="6">
+                            <Label text="Attendance %" style="-fx-text-fill: #ffd8b1; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <Label fx:id="courseAttendancePercentageLabel" text="-" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="20">
+                        <VBox spacing="6">
+                            <Label text="Total Sessions" style="-fx-text-fill: #a0b8e0; -fx-font-size: 12px;"/>
+                            <Label fx:id="courseTotalSessionsLabel" text="-" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                        </VBox>
+                        <VBox spacing="6">
+                            <Label text="Present / Absent" style="-fx-text-fill: #a0b8e0; -fx-font-size: 12px;"/>
+                            <Label fx:id="coursePresentCountLabel" text="Present: -" style="-fx-text-fill: #28a745; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                            <Label fx:id="courseAbsentCountLabel" text="Absent: -" style="-fx-text-fill: #c0392b; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Total Hours Attended" style="-fx-text-fill: #90caf9; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <Label fx:id="courseTotalHoursAttendedLabel" text="-" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+
+            <!-- Batch summary -->
+            <VBox fx:id="batchSummaryPane" spacing="12" visible="false" managed="false">
+                <VBox spacing="10"
+                      style="-fx-background-color: #162040; -fx-background-radius: 14; -fx-border-color: #1e3c72; -fx-border-radius: 14; -fx-border-width: 1;">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="Batch Summary" style="-fx-text-fill: #a0c4ff; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                    <TextArea fx:id="batchSummaryTextArea" prefHeight="220" wrapText="true"/>
+                </VBox>
+            </VBox>
+
+            <!-- Details Table -->
+            <VBox spacing="10">
+                <Label text="Attendance Records" style="-fx-text-fill: #a0c4ff; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                <TextArea fx:id="detailsTextArea" prefHeight="320" wrapText="true"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>
+
