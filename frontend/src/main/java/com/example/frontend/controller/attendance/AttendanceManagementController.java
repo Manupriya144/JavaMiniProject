@@ -1,6 +1,6 @@
-package com.example.frontend.controller;
+package com.example.frontend.controller.attendance;
 
-import com.example.frontend.model.Attendance;
+import com.example.frontend.controller.admin.LoginController;
 import com.example.frontend.service.AttendanceService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,42 +11,41 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class ViewAttendanceController {
+public class AttendanceManagementController {
 
     @FXML
     private TextField attendanceIdField;
     @FXML
-    private Label attendanceIdValue;
+    private TextField updateStatusField;
     @FXML
-    private Label studentIdValue;
-    @FXML
-    private Label sessionIdValue;
-    @FXML
-    private Label statusValue;
-    @FXML
-    private Label hoursValue;
+    private TextField updateHoursField;
     @FXML
     private Label resultLabel;
 
     private final AttendanceService attendanceService = new AttendanceService(LoginController.client);
 
     @FXML
-    private void findAttendance() {
+    private void updateAttendance() {
         try {
             Integer attendanceId = Integer.parseInt(attendanceIdField.getText().trim());
-            Attendance attendance = attendanceService.getAttendanceById(attendanceId);
-            if (attendance == null) {
-                resultLabel.setText("No record found.");
-                clearValues();
-                return;
-            }
+            String status = updateStatusField.getText();
+            Double hours = Double.parseDouble(updateHoursField.getText().trim());
 
-            attendanceIdValue.setText(String.valueOf(attendance.getAttendanceId()));
-            studentIdValue.setText(attendance.getStudentId());
-            sessionIdValue.setText(String.valueOf(attendance.getSessionId()));
-            statusValue.setText(attendance.getStatus());
-            hoursValue.setText(String.valueOf(attendance.getHoursAttended()));
-            resultLabel.setText("Attendance loaded.");
+            boolean ok = attendanceService.updateAttendance(attendanceId, status, hours);
+            resultLabel.setText(ok ? "Attendance updated." : "Update failed.");
+        } catch (NumberFormatException ex) {
+            showError("Attendance ID must be integer and Hours must be numeric.");
+        } catch (Exception ex) {
+            showError("Unexpected error: " + ex.getMessage());
+        }
+    }
+
+    @FXML
+    private void deleteAttendance() {
+        try {
+            Integer attendanceId = Integer.parseInt(attendanceIdField.getText().trim());
+            boolean ok = attendanceService.deleteAttendance(attendanceId);
+            resultLabel.setText(ok ? "Attendance deleted." : "Delete failed.");
         } catch (NumberFormatException ex) {
             showError("Attendance ID must be an integer.");
         } catch (Exception ex) {
@@ -55,21 +54,13 @@ public class ViewAttendanceController {
     }
 
     @FXML
-    private void goUpdateDelete() {
-        loadView("/view/AttendanceManagement.fxml");
+    private void openMarkAttendance() {
+        loadView("/view/MarkAttendance.fxml");
     }
 
     @FXML
     private void backToDashboard() {
         loadView("/view/techOfficerDashboard.fxml");
-    }
-
-    private void clearValues() {
-        attendanceIdValue.setText("-");
-        studentIdValue.setText("-");
-        sessionIdValue.setText("-");
-        statusValue.setText("-");
-        hoursValue.setText("-");
     }
 
     private void loadView(String path) {

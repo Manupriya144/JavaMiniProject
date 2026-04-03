@@ -54,9 +54,13 @@ CREATE TABLE IF NOT EXISTS course (
     name VARCHAR(150) NOT NULL,
     course_credit INT NOT NULL,
     academic_level INT CHECK (academic_level BETWEEN 1 AND 4),
-    semester ENUM('1','2') NOT NULL
-    );
+    semester ENUM('1','2') NOT NULL,
+    department_id VARCHAR(10) NOT NULL,
 
+    FOREIGN KEY (department_id)
+    REFERENCES department(department_id)
+    ON DELETE CASCADE
+);
 -- Course Registration
 CREATE TABLE IF NOT EXISTS course_registration (
     student_id VARCHAR(10),

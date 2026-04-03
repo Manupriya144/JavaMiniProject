@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.frontend.controller.ViewAttendanceController"
+            fx:controller="com.example.frontend.controller.attendance.ViewAttendanceController"
             prefWidth="900" prefHeight="650"
             style="-fx-background-color: #0f1b35;">
 

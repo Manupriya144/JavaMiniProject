@@ -1,5 +1,6 @@
-package com.example.frontend.controller;
+package com.example.frontend.controller.lecturer;
 
+import com.example.frontend.controller.admin.LoginController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;

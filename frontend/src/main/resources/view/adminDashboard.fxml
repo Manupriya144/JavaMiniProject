@@ -16,7 +16,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.frontend.controller.AdminDashboardController"
+            fx:controller="com.example.frontend.controller.admin.AdminDashboardController"
             prefWidth="1200" prefHeight="750"
             style="-fx-background-color: #0f1b35;">
 
@@ -159,11 +159,11 @@
                     <FlowPane hgap="12" vgap="12">
                         <Button text="➕  Add User" onAction="#openAddUser" prefHeight="42" prefWidth="170"
                                 style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
-                        <Button text="📖  Add Course" onAction="#openCourses" prefHeight="42" prefWidth="170"
+                        <Button text="📖  Add Course" onAction="#openAddCourses" prefHeight="42" prefWidth="170"
                                 style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
-                        <Button text="📢  Post Notice" onAction="#openNotices" prefHeight="42" prefWidth="170"
+                        <Button text="📢  Post Notice" onAction="#openAddNotices" prefHeight="42" prefWidth="170"
                                 style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
-                        <Button text="📅  Add Timetable" onAction="#openTimetables" prefHeight="42" prefWidth="170"
+                        <Button text="📅  Add Timetable" onAction="#openTimeAddTimeTables" prefHeight="42" prefWidth="170"
                                 style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
                         <Button text="📊  View Reports" onAction="#openReports" prefHeight="42" prefWidth="170"
                                 style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>

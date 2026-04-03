@@ -1,5 +1,6 @@
-package com.example.frontend.controller;
+package com.example.frontend.controller.student;
 
+import com.example.frontend.controller.admin.LoginController;
 import com.example.frontend.service.AuthService;
 import com.example.frontend.session.SessionManager;
 import javafx.event.ActionEvent;
@@ -8,10 +9,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;

@@ -1,4 +1,4 @@
-package com.example.frontend.controller;
+package com.example.frontend.controller.admin;
 
 import com.example.frontend.model.Student;
 import com.example.frontend.model.User;
@@ -25,7 +25,7 @@ public class LoginController {
     @FXML
     private PasswordField passwordField;
 
-    static final ServerClient client = ServerClient.getInstance();
+    public static final ServerClient client = ServerClient.getInstance();
     public static String username = "";
     public static String userId= "";
     public static String reNo = "";
