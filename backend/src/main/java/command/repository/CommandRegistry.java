@@ -1,6 +1,5 @@
 package command.repository;
 
-import command.course.AddCourseCommand;
 import command.login.LoginCommand;
 import command.login.LogoutCommand;
 import command.attendance.AddAttendanceCommand;
@@ -8,7 +7,9 @@ import command.attendance.DeleteAttendanceCommand;
 import command.attendance.GetAttendanceByIdCommand;
 import command.attendance.GetAttendanceSessionsCommand;
 import command.attendance.GetAttendanceStudentsCommand;
+import command.attendance.CheckAttendanceEligibilityCommand;
 import command.attendance.GetBatchAttendanceCommand;
+import command.attendance.GetBatchAttendanceEligibilityReportCommand;
 import command.attendance.GetBatchAttendanceSummaryCommand;
 import command.attendance.GetStudentAttendanceCommand;
 import command.attendance.GetStudentAttendanceSummaryCommand;
@@ -18,15 +19,13 @@ import command.user.CreateUserCommand;
 import command.user.GetAllUsersCommand;
 import command.user.GetUserByIdCommand;
 import dao.attendance.AttendanceDAO;
-import dao.course.CourseDAO;
 import dao.student.StudentDAO;
 import dao.user.UserDAO;
 import service.attendance.AttendanceService;
-import service.course.CourseService;
 import service.login.AuthService;
 import service.student.StudentService;
 import service.user.UserService;
-import utility.DataSource;
+import utility.HikariCPDataSource;
 
 import java.sql.Connection;
 import java.util.HashMap;
@@ -38,7 +37,7 @@ public class CommandRegistry {
 
     public static void init() {
         try {
-            Connection connection = DataSource.getInstance().getConnection();
+            Connection connection = HikariCPDataSource.getInstance().getConnection();
 
             UserDAO userDAO = new UserDAO(connection);
             AuthService authService = new AuthService(userDAO);
@@ -54,20 +53,15 @@ public class CommandRegistry {
             // users related
             UserService userService = new UserService(userDAO);
 
-            CourseDAO  courseDAO = new CourseDAO(connection);
-            CourseService courseService = new CourseService(courseDAO);
-
 
             commands.put("GetAllUser",new GetAllUsersCommand(userService,authService));
             commands.put("CreateUser",new CreateUserCommand(userService,authService));
             commands.put("GetUserById", new GetUserByIdCommand(userService, authService));
-            commands.put("ADD_COURSE",new AddCourseCommand(courseService,authService));
 
             // student related
             StudentDAO studentDAO = new StudentDAO(connection);
             StudentService studentService = new StudentService(studentDAO);
             commands.put("GET_STUDENT_BY_USER_ID",new GetStudentByUserIdCommand(studentService));
-
 
             // attendance related
             AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
@@ -82,7 +76,8 @@ public class CommandRegistry {
             commands.put("GetBatchAttendance", new GetBatchAttendanceCommand(attendanceService));
             commands.put("GetStudentAttendanceSummary", new GetStudentAttendanceSummaryCommand(attendanceService));
             commands.put("GetBatchAttendanceSummary", new GetBatchAttendanceSummaryCommand(attendanceService));
-
+            commands.put("CheckAttendanceEligibility", new CheckAttendanceEligibilityCommand(attendanceService));
+            commands.put("GetBatchAttendanceEligibilityReport", new GetBatchAttendanceEligibilityReportCommand(attendanceService));
 
 
         } catch (Exception e) {
