@@ -1,5 +1,6 @@
-package com.example.frontend.controller;
+package com.example.frontend.controller.attendance;
 
+import com.example.frontend.controller.admin.LoginController;
 import com.example.frontend.model.Attendance;
 import com.example.frontend.model.AttendanceSessionOption;
 import com.example.frontend.model.AttendanceStudentOption;

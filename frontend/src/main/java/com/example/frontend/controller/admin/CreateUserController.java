@@ -1,4 +1,4 @@
-package com.example.frontend.controller;
+package com.example.frontend.controller.admin;
 
 import com.example.frontend.dto.UserRequestDTO;
 import com.example.frontend.network.ServerClient;

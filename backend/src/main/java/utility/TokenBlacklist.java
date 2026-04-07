@@ -4,7 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class TokenBlacklist {
-    private static final Set<String> blacklistedTokens = new HashSet<>();
+
+    private static final Set<String> blacklistedTokens =
+            java.util.Collections.synchronizedSet(new HashSet<>());
 
     public static void blacklist(String token) {
         blacklistedTokens.add(token);

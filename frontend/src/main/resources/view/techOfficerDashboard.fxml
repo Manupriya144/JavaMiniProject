@@ -15,7 +15,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.frontend.controller.TechOfficerDashboardController"
+            fx:controller="com.example.frontend.controller.tech_officer.TechOfficerDashboardController"
             prefWidth="1200" prefHeight="750"
             style="-fx-background-color: #0f1b35;">
 
