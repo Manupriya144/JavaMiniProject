@@ -6,13 +6,13 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DataSource {
+public class HikariCPDataSource {
 
-    private DataSource() {
+    private HikariCPDataSource() {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl("jdbc:mysql://localhost:3306/lms_db");
         config.setUsername("root");
-        config.setPassword("Irfan#@123");
+        config.setPassword("");
         config.setMaximumPoolSize(20);
         config.setMinimumIdle(2);
         config.setIdleTimeout(30000);
@@ -25,10 +25,10 @@ public class DataSource {
 
     // Bill Pugh Singleton Holder
     private static class Holder {
-        private static final DataSource INSTANCE = new DataSource();
+        private static final HikariCPDataSource INSTANCE = new HikariCPDataSource();
     }
 
-    public static DataSource getInstance() {
+    public static HikariCPDataSource getInstance() {
         return Holder.INSTANCE;
     }
 

@@ -1,4 +1,4 @@
-package dto.requestDto;
+package dto.requestDto.attendance;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
