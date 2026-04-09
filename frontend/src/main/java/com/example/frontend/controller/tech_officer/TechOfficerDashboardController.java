@@ -1,7 +1,7 @@
 package com.example.frontend.controller.tech_officer;
 
-import com.example.frontend.service.AttendanceService;
 import com.example.frontend.controller.admin.LoginController;
+import com.example.frontend.service.AttendanceService;
 import com.example.frontend.service.AuthService;
 import com.example.frontend.session.SessionManager;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -87,7 +87,7 @@ public class TechOfficerDashboardController implements Initializable {
 
         String batch = batchEligibilityField != null ? batchEligibilityField.getText() : "";
         if (batch == null || batch.isBlank()) {
-            Label hint = new Label("Enter a batch code and click Refresh to load attendance eligibility (≥ 80%).");
+            Label hint = new Label("Enter batch and refresh. Eligibility uses 80% threshold with +20% medical bonus.");
             hint.setStyle("-fx-text-fill: #6a90c8; -fx-font-size: 12px;");
             attendanceSummaryContainer.getChildren().add(hint);
             return;
@@ -126,10 +126,13 @@ public class TechOfficerDashboardController implements Initializable {
             };
             String regNo = row.path("regNo").asText("—");
             String scenario = row.path("scenarioLabel").asText("");
-            double ap = row.path("attendancePercentage").asDouble();
-            String pct = String.format("%.1f%%", ap);
-            boolean med = row.path("hasMedical").asBoolean(false);
-            String note = med ? "With Medical" : "No Medical";
+            double effectiveAp = row.path("effectiveAttendancePercentage").asDouble(row.path("attendancePercentage").asDouble());
+            double rawAp = row.path("rawAttendancePercentage").asDouble(effectiveAp);
+            String pct = String.format("%.1f%%", effectiveAp);
+            double medicalBonus = row.path("medicalBonusPercent").asDouble(0.0);
+            String note = medicalBonus > 0
+                    ? String.format("Raw %.1f%% + Medical %.0f%%", rawAp, medicalBonus)
+                    : String.format("Raw %.1f%%", rawAp);
             attendanceSummaryContainer.getChildren().add(
                     buildAttendanceRow(regNo, scenario, "●", dotColor, pct, note));
         }
@@ -164,7 +167,13 @@ public class TechOfficerDashboardController implements Initializable {
     // ─── Navigation ──────────────────────────────────────────────────────────
 
     @FXML private void openAttendance()    { loadView("ViewAttendance.fxml"); }
-    @FXML private void openAdvancedAttendanceView() { loadView("AdvancedAttendanceVisualView.fxml"); }
+    @FXML
+    private void openAdvancedAttendanceView() {
+        // Some copied setups miss one advanced view file/controller. Try visual first, then fallback.
+        if (!loadView("AdvancedAttendanceVisualView.fxml")) {
+            loadView("AdvancedAttendanceView.fxml");
+        }
+    }
     @FXML private void openMarkAttendance(){ loadView("MarkAttendance.fxml"); }
     @FXML private void openMedical()       { loadView("MedicalManagement.fxml"); }
     @FXML private void openAddMedical()    { loadView("AddMedical.fxml"); }
@@ -207,20 +216,26 @@ public class TechOfficerDashboardController implements Initializable {
         }
     }
 
-    private void loadView(String fxmlFile) {
+    private boolean loadView(String fxmlFile) {
         try {
             URL resource = getClass().getResource("/view/" + fxmlFile);
             if (resource == null) {
                 showNotImplementedAlert(fxmlFile);
-                return;
+                return false;
             }
             FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
             Stage stage = (Stage) welcomeLabel.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
+            return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Cannot Open View");
+            alert.setHeaderText("Failed to open: " + fxmlFile);
+            alert.setContentText(e.getMessage() == null ? "Unknown error while loading view." : e.getMessage());
+            alert.showAndWait();
+            return false;
         }
     }
 

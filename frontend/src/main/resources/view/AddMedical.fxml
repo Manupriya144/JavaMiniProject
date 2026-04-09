@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.frontend.controller.medical.AddMedicalController"
+      spacing="12" style="-fx-background-color: #0f1b35;">
+    <padding><Insets top="18" right="18" bottom="18" left="18"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="8">
+        <Label text="Add Medical Record" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Back Dashboard" onAction="#backToDashboard"
+                style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-background-radius: 8;"/>
+    </HBox>
+
+    <Label text="Student ID" style="-fx-text-fill: #a0c4ff;"/>
+    <TextField fx:id="studentIdField" promptText="e.g. 677"/>
+
+    <Label text="Course ID" style="-fx-text-fill: #a0c4ff;"/>
+    <TextField fx:id="courseIdField" promptText="e.g. ICT1203"/>
+
+    <Label text="Exam Type" style="-fx-text-fill: #a0c4ff;"/>
+    <ComboBox fx:id="examTypeCombo"/>
+
+    <Label text="Date Submitted (must match session date)" style="-fx-text-fill: #a0c4ff;"/>
+    <DatePicker fx:id="submittedDatePicker"/>
+
+    <Label text="Medical Copy Path / Note" style="-fx-text-fill: #a0c4ff;"/>
+    <TextField fx:id="medicalCopyField" promptText="scan or note"/>
+
+    <Button text="Submit Medical" onAction="#submitMedical"
+            style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"/>
+
+    <Label fx:id="statusLabel" textFill="white"/>
+</VBox>

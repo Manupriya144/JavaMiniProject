@@ -87,6 +87,7 @@ public class AttendanceService {
     }
 
     private static final double ELIGIBILITY_THRESHOLD = 80.0;
+    private static final double MEDICAL_BONUS_PERCENT = 20.0;
 
     public Map<String, Object> checkAttendanceEligibility(String studentId, String viewType) {
         if (studentId == null || studentId.isBlank()) {
@@ -94,20 +95,16 @@ public class AttendanceService {
         }
         String vt = normalizeViewType(viewType);
         Map<String, Object> summary = attendanceDAO.getStudentAttendanceSummary(studentId.trim(), vt);
+        boolean hasMedical = attendanceDAO.hasAttendanceMedicalRecord(studentId.trim());
         if (summary == null) {
             Map<String, Object> empty = new HashMap<>();
             empty.put("studentId", studentId.trim());
             empty.put("viewType", vt);
             empty.put("totalSessions", 0);
             empty.put("attendancePercentage", 0.0);
-            empty.put("eligible", false);
-            empty.put("thresholdPercent", ELIGIBILITY_THRESHOLD);
-            empty.put("eligibilityCategory", "NoData");
-            empty.put("scenarioLabel", "No attendance records");
-            empty.put("hasMedical", attendanceDAO.hasAttendanceMedicalRecord(studentId.trim()));
-            return empty;
+            return enrichEligibility(empty, hasMedical);
         }
-        return enrichEligibility(summary, attendanceDAO.hasAttendanceMedicalRecord(studentId.trim()));
+        return enrichEligibility(summary, hasMedical);
     }
 
     public List<Map<String, Object>> getBatchAttendanceEligibilityReport(String batch, String viewType) {
@@ -127,21 +124,31 @@ public class AttendanceService {
     }
 
     private Map<String, Object> enrichEligibility(Map<String, Object> row, boolean hasMedical) {
-        double pct = ((Number) row.get("attendancePercentage")).doubleValue();
-        String category = categorizePercentage(pct);
-        boolean eligible = pct + 1e-9 >= ELIGIBILITY_THRESHOLD;
+        double rawPct = ((Number) row.getOrDefault("attendancePercentage", 0.0)).doubleValue();
+        // Apply medical grace only when student is below threshold and has attendance medical.
+        double bonusPct = (hasMedical && rawPct + 1e-9 < ELIGIBILITY_THRESHOLD) ? MEDICAL_BONUS_PERCENT : 0.0;
+        double effectivePct = Math.min(100.0, rawPct + bonusPct);
+
+        String category = categorizePercentage(effectivePct);
+        boolean eligible = effectivePct + 1e-9 >= ELIGIBILITY_THRESHOLD;
 
         String baseLabel = switch (category) {
             case "Above80" -> "Above 80%";
             case "Exactly80" -> "Exactly 80%";
             default -> "Below 80%";
         };
-        String scenarioLabel = hasMedical ? baseLabel + " + Medical" : baseLabel;
+        String scenarioLabel = hasMedical
+                ? baseLabel + " (Medical +" + (int) MEDICAL_BONUS_PERCENT + "%)"
+                : baseLabel;
 
         row.put("eligible", eligible);
         row.put("thresholdPercent", ELIGIBILITY_THRESHOLD);
         row.put("eligibilityCategory", category);
         row.put("hasMedical", hasMedical);
+        row.put("rawAttendancePercentage", round2(rawPct));
+        row.put("medicalBonusPercent", bonusPct);
+        row.put("effectiveAttendancePercentage", round2(effectivePct));
+        row.put("attendancePercentage", round2(effectivePct));
         row.put("scenarioLabel", scenarioLabel);
         return row;
     }
@@ -179,5 +186,9 @@ public class AttendanceService {
             return "Practical";
         }
         return "Combined";
+    }
+
+    private double round2(double value) {
+        return Math.round(value * 100.0) / 100.0;
     }
 }
