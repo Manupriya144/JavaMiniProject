@@ -13,16 +13,24 @@ import command.attendance.GetBatchAttendanceEligibilityReportCommand;
 import command.attendance.GetBatchAttendanceSummaryCommand;
 import command.attendance.GetStudentAttendanceCommand;
 import command.attendance.GetStudentAttendanceSummaryCommand;
+import command.medical.AddMedicalCommand;
+import command.medical.ApproveMedicalCommand;
+import command.medical.GetBatchMedicalRecordsCommand;
+import command.medical.GetStudentMedicalRecordsCommand;
+import command.medical.RejectMedicalCommand;
+import command.medical.UpdateMedicalCommand;
 import command.student.GetStudentByUserIdCommand;
 import command.attendance.UpdateAttendanceCommand;
 import command.user.CreateUserCommand;
 import command.user.GetAllUsersCommand;
 import command.user.GetUserByIdCommand;
 import dao.attendance.AttendanceDAO;
+import dao.medical.MedicalDAO;
 import dao.student.StudentDAO;
 import dao.user.UserDAO;
 import service.attendance.AttendanceService;
 import service.login.AuthService;
+import service.medical.MedicalService;
 import service.student.StudentService;
 import service.user.UserService;
 import utility.HikariCPDataSource;
@@ -79,7 +87,15 @@ public class CommandRegistry {
             commands.put("CheckAttendanceEligibility", new CheckAttendanceEligibilityCommand(attendanceService));
             commands.put("GetBatchAttendanceEligibilityReport", new GetBatchAttendanceEligibilityReportCommand(attendanceService));
 
-
+            // medical related
+            MedicalDAO medicalDAO = new MedicalDAO(connection);
+            MedicalService medicalService = new MedicalService(medicalDAO);
+            commands.put("AddMedical", new AddMedicalCommand(medicalService));
+            commands.put("UpdateMedical", new UpdateMedicalCommand(medicalService));
+            commands.put("ApproveMedical", new ApproveMedicalCommand(medicalService));
+            commands.put("RejectMedical", new RejectMedicalCommand(medicalService));
+            commands.put("GetStudentMedicalRecords", new GetStudentMedicalRecordsCommand(medicalService));
+            commands.put("GetBatchMedicalRecords", new GetBatchMedicalRecordsCommand(medicalService));
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize CommandRegistry: " + e.getMessage());
