@@ -1,6 +1,7 @@
 package dao.course;
 
 import model.Course;
+import utility.DataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,15 +9,11 @@ import java.sql.ResultSet;
 
 public class CourseDAO {
 
-    private final Connection connection;
-
-    public CourseDAO(Connection connection) {
-        this.connection = connection;
-    }
 
     public boolean existsByCourseId(String courseId) {
         String sql = "SELECT 1 FROM course WHERE course_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = DataSource.getInstance().getConnection();
+        PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, courseId);
             ResultSet rs = ps.executeQuery();
             return rs.next();
@@ -28,7 +25,8 @@ public class CourseDAO {
 
     public boolean existsByCourseCode(String courseCode) {
         String sql = "SELECT 1 FROM course WHERE course_code = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, courseCode);
             ResultSet rs = ps.executeQuery();
             return rs.next();
@@ -40,7 +38,9 @@ public class CourseDAO {
 
     public boolean existsDepartmentById(String departmentId) {
         String sql = "SELECT 1 FROM department WHERE department_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, departmentId);
             ResultSet rs = ps.executeQuery();
             return rs.next();
@@ -55,7 +55,9 @@ public class CourseDAO {
                 "(course_id, course_code, name, course_credit, academic_level, semester, department_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
             ps.setString(1, course.getCourseId());
             ps.setString(2, course.getCourseCode());
             ps.setString(3, course.getName());

@@ -33,7 +33,7 @@ import service.login.AuthService;
 import service.medical.MedicalService;
 import service.student.StudentService;
 import service.user.UserService;
-import utility.HikariCPDataSource;
+import utility.DataSource;
 
 import java.sql.Connection;
 import java.util.HashMap;
@@ -45,7 +45,7 @@ public class CommandRegistry {
 
     public static void init() {
         try {
-            Connection connection = HikariCPDataSource.getInstance().getConnection();
+            Connection connection = DataSource.getInstance().getConnection();
 
             UserDAO userDAO = new UserDAO(connection);
             AuthService authService = new AuthService(userDAO);

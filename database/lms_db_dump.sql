@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS course_registration (
     PRIMARY KEY (student_id, course_id, academic_year, semester),
     FOREIGN KEY (student_id) REFERENCES students(user_id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES course(course_id) ON DELETE CASCADE
-    );
+);
 
 -- Assessment Type
 CREATE TABLE IF NOT EXISTS assessment_type (
@@ -158,12 +158,12 @@ CREATE TABLE IF NOT EXISTS medical (
 CREATE TABLE IF NOT EXISTS notice (
     notice_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(150) NOT NULL,
-    content TEXT NOT NULL,
-    created_by VARCHAR(10),
+    description TEXT,
+    pdf_file_path VARCHAR(255),
+    created_by INT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE SET NULL
-    );
-
+);
 -- Course Material
 CREATE TABLE IF NOT EXISTS course_material (
     material_id INT AUTO_INCREMENT PRIMARY KEY,
