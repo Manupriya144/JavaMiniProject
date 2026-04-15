@@ -105,7 +105,8 @@ public class CommandRegistry {
             // notice related
             NoticeDAO noticeDAO = new NoticeDAO();
             AddNoticeService addNoticeService = new AddNoticeService(noticeDAO);
-            AddNoticeCommand addNoticeCommand = new AddNoticeCommand(addNoticeService,authService);
+            commands.put("CREATE_NOTICE",new AddNoticeCommand(addNoticeService,authService));
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize CommandRegistry: " + e.getMessage());

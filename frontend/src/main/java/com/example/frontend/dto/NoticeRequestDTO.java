@@ -1,20 +1,20 @@
-package dto.requestDto.notice;
+package com.example.frontend.dto;
 
-public class AddNoticeReqDTO {
+public class NoticeRequestDTO {
     private String title;
     private String description;
     private String pdf_file_path;
-    private String created_by;
+    private Integer created_by;
 
-    public AddNoticeReqDTO(){}
+    public NoticeRequestDTO(){}
 
-    public AddNoticeReqDTO(String title, String description,
-                           String pdf_file_path, String created_by) {
+    public NoticeRequestDTO(String title, String description, String pdf_file_path, Integer created_by) {
         this.title = title;
         this.description = description;
         this.pdf_file_path = pdf_file_path;
         this.created_by = created_by;
     }
+
 
     public String getTitle() {
         return title;
@@ -40,11 +40,11 @@ public class AddNoticeReqDTO {
         this.pdf_file_path = pdf_file_path;
     }
 
-    public String getCreated_by() {
+    public Integer getCreated_by() {
         return created_by;
     }
 
-    public void setCreated_by(String created_by) {
+    public void setCreated_by(Integer created_by) {
         this.created_by = created_by;
     }
 }

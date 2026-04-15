@@ -15,8 +15,8 @@ public class AddNoticeService {
         Notice notice = new Notice(
                 addNoticeReqDTO.getTitle(),
                 addNoticeReqDTO.getDescription(),
-                addNoticeReqDTO.getPdf_file_path(),
-                addNoticeReqDTO.getCreated_by()
+                addNoticeReqDTO.getCreated_by(),
+                addNoticeReqDTO.getPdf_file_path()
         );
 
         return noticeDAO.createNotice(notice);

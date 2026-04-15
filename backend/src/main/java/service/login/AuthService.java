@@ -2,8 +2,9 @@ package service.login;
 
 import dao.user.UserDAO;
 import dto.responseDto.login.LogoutResponseDTO;
-import model.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import model.User;
 import utility.JwtUtil;
 import utility.TokenBlacklist;
 
@@ -36,7 +37,7 @@ public class AuthService {
 
         return new AuthResult(
                 false,
-                null,                  // userId null when login fails
+                null,
                 null,
                 null,
                 "Invalid username or password",
@@ -50,6 +51,7 @@ public class AuthService {
 
         return Jwts.builder()
                 .setSubject(user.getUsername())
+                .claim("userId", user.getUserId())   // IMPORTANT
                 .claim("role", user.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
@@ -73,6 +75,22 @@ public class AuthService {
         return jwtUtil.validateToken(token) && !TokenBlacklist.isBlacklisted(token);
     }
 
+    public String getUserIdFromToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(JwtUtil.getSecretKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return claims.get("userId", String.class);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     // Wrapper class for authentication result
     public static class AuthResult {
 
@@ -93,11 +111,28 @@ public class AuthService {
             this.token = token;
         }
 
-        public boolean isSuccess() { return success; }
-        public String getUserId() { return userId; }   // <-- NEW
-        public String getUsername() { return username; }
-        public String getRole() { return role; }
-        public String getMessage() { return message; }
-        public String getToken() { return token; }
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getRole() {
+            return role;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public String getToken() {
+            return token;
+        }
     }
 }

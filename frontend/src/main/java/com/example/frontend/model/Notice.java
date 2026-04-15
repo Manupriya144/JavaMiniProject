@@ -1,4 +1,4 @@
-package model;
+package com.example.frontend.model;
 
 import java.time.LocalDateTime;
 
@@ -8,7 +8,7 @@ public class Notice {
     private String title;
     private String description;
     private String pdf_file_path;
-    private String created_by;
+    private Integer created_by;
     private LocalDateTime created_at;
 
     // Default Constructor
@@ -17,7 +17,7 @@ public class Notice {
 
     // Parameterized Constructor
     public Notice(int notice_id, String title, String description, String pdf_file_path,
-                  String created_by, LocalDateTime created_at) {
+                  Integer created_by, LocalDateTime created_at) {
         this.notice_id = notice_id;
         this.title = title;
         this.description = description;
@@ -26,11 +26,11 @@ public class Notice {
         this.created_at = created_at;
     }
 
-    public Notice(String title,String description,String created_by,String pdf_file_path){
+    public Notice(String title,String description,String pdf_file_path,Integer created_by){
         this.title = title;
         this.description = description;
-        this.created_by = created_by;
         this.pdf_file_path = pdf_file_path;
+        this.created_by = created_by;
     }
 
     // Getters and Setters
@@ -66,11 +66,11 @@ public class Notice {
         this.pdf_file_path = pdf_file_path;
     }
 
-    public String getCreated_by() {
+    public Integer getCreated_by() {
         return created_by;
     }
 
-    public void setCreated_by(String created_by) {
+    public void setCreated_by(Integer created_by) {
         this.created_by = created_by;
     }
 
@@ -81,4 +81,6 @@ public class Notice {
     public void setCreated_at(LocalDateTime created_at) {
         this.created_at = created_at;
     }
+
+
 }

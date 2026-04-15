@@ -31,6 +31,17 @@ public class AddNoticeCommand implements Command {
 
             AddNoticeReqDTO dto = mapper.convertValue(data, AddNoticeReqDTO.class);
 
+
+            String userId = authService.getUserIdFromToken(token);
+            System.out.println(authService.getUserIdFromToken(token));
+
+            if (userId == null) {
+                context.getOutput().println("{\"success\":false,\"message\":\"Invalid token user\"}");
+                return;
+            }
+
+            dto.setCreated_by(userId);
+
             Notice createdNotice = addNoticeService.addNotice(dto);
 
             if (createdNotice != null) {
