@@ -28,6 +28,28 @@ import service.student.StudentService;
 import service.user.UserService;
 import utility.DataSource;
 
+import command.finalMarks.UploadFinalMarksCommand;
+import command.finalMarks.UpdateFinalMarksCommand;
+import command.finalMarks.GetStudentFinalMarksCommand;
+import command.finalMarks.GetBatchFinalMarksCommand;
+
+import command.eligibility.CheckFullEligibilityCommand;
+import command.eligibility.GetBatchFullEligibilityReportCommand;
+
+import command.grade.GenerateGradeCommand;
+import command.grade.GetStudentGradesCommand;
+import command.grade.GetBatchGradesCommand;
+
+import dao.finalMarks.FinalMarksDAO;
+import dao.eligibility.EligibilityDAO;
+import dao.grade.GradeDAO;
+
+import service.finalMarks.FinalMarksService;
+import service.eligibility.EligibilityService;
+import service.grade.GradeService;
+
+
+
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
@@ -82,6 +104,31 @@ public class CommandRegistry {
             commands.put("GetBatchAttendance", new GetBatchAttendanceCommand(attendanceService));
             commands.put("GetStudentAttendanceSummary", new GetStudentAttendanceSummaryCommand(attendanceService));
             commands.put("GetBatchAttendanceSummary", new GetBatchAttendanceSummaryCommand(attendanceService));
+
+
+              // ---------------- Final Marks ----------------
+            FinalMarksDAO finalMarksDAO = new FinalMarksDAO(connection);
+            FinalMarksService finalMarksService = new FinalMarksService(finalMarksDAO);
+
+            commands.put("UploadFinalMarks", new UploadFinalMarksCommand(finalMarksService));
+            commands.put("UpdateFinalMarks", new UpdateFinalMarksCommand(finalMarksService));
+            commands.put("GetStudentFinalMarks", new GetStudentFinalMarksCommand(finalMarksService));
+            commands.put("GetBatchFinalMarks", new GetBatchFinalMarksCommand(finalMarksService));
+
+            // ---------------- Full Eligibility ----------------
+            EligibilityDAO eligibilityDAO = new EligibilityDAO(connection);
+            EligibilityService eligibilityService = new EligibilityService(eligibilityDAO);
+
+            commands.put("CheckFullEligibility", new CheckFullEligibilityCommand(eligibilityService));
+            commands.put("GetBatchFullEligibilityReport", new GetBatchFullEligibilityReportCommand(eligibilityService));
+
+            // ---------------- Grading ----------------
+            GradeDAO gradeDAO = new GradeDAO(connection);
+            GradeService gradeService = new GradeService(gradeDAO);
+
+            commands.put("GenerateGrade", new GenerateGradeCommand(gradeService));
+            commands.put("GetStudentGrades", new GetStudentGradesCommand(gradeService));
+            commands.put("GetBatchGrades", new GetBatchGradesCommand(gradeService));
 
 
 
