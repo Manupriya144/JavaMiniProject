@@ -177,16 +177,17 @@ CREATE TABLE IF NOT EXISTS course_material (
     );
 
 -- Time Table
-CREATE TABLE IF NOT EXISTS time_table (
+CREATE TABLE IF NOT EXISTS timetable (
     timetable_id INT AUTO_INCREMENT PRIMARY KEY,
-    course_id VARCHAR(10),
-    department_id VARCHAR(10),
-    day ENUM('Monday','Tuesday','Wednesday','Thursday','Friday'),
-    start_time TIME,
-    end_time TIME,
-    location VARCHAR(50),
-    type ENUM('Theory','Practical'),
-    FOREIGN KEY (course_id) REFERENCES course(course_id) ON DELETE CASCADE,
+    department_id VARCHAR(10) NOT NULL,
+    academic_level INT NOT NULL CHECK (academic_level BETWEEN 1 AND 4),
+    semester ENUM('1','2') NOT NULL,
+    title VARCHAR(100),
+    pdf_file_path VARCHAR(255) NOT NULL,
+    uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE (department_id, academic_level, semester),
+
     FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE CASCADE
 );
 

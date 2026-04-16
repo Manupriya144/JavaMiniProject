@@ -22,6 +22,7 @@ import command.medical.UpdateMedicalCommand;
 import command.notice.AddNoticeCommand;
 import command.student.GetStudentByUserIdCommand;
 import command.attendance.UpdateAttendanceCommand;
+import command.timetable.AddTimeTableCommand;
 import command.user.CreateUserCommand;
 import command.user.GetAllUsersCommand;
 import command.user.GetUserByIdCommand;
@@ -29,12 +30,14 @@ import dao.attendance.AttendanceDAO;
 import dao.medical.MedicalDAO;
 import dao.notice.NoticeDAO;
 import dao.student.StudentDAO;
+import dao.timetable.TimeTableDAO;
 import dao.user.UserDAO;
 import service.attendance.AttendanceService;
 import service.login.AuthService;
 import service.medical.MedicalService;
 import service.notice.AddNoticeService;
 import service.student.StudentService;
+import service.timetable.TimeTableService;
 import service.user.UserService;
 import utility.DataSource;
 
@@ -153,6 +156,11 @@ public class CommandRegistry {
             NoticeDAO noticeDAO = new NoticeDAO();
             AddNoticeService addNoticeService = new AddNoticeService(noticeDAO);
             commands.put("CREATE_NOTICE",new AddNoticeCommand(addNoticeService,authService));
+
+            //time table related
+            TimeTableDAO timeTableDAO = new TimeTableDAO();
+            TimeTableService timeTableService = new TimeTableService(timeTableDAO);
+            commands.put("CREATE_TIMETABLE",new AddTimeTableCommand(timeTableService,authService));
 
         } catch (Exception e) {
             e.printStackTrace();
