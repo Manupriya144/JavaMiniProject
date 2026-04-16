@@ -35,6 +35,7 @@ public class LoginCommand implements Command {
                 context.setToken(result.getToken());
                 context.setUsername(result.getUsername());
                 context.setRole(result.getRole());
+
                 context.setUserId(result.getUserId());
             }
 

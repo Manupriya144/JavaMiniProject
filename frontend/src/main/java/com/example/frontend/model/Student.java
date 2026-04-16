@@ -1,8 +1,7 @@
 package com.example.frontend.model;
 
-public class Student {
+public class Student extends User {
 
-    private String userId;
     private String regNo;
     private String batch;
     private int academicLevel;
@@ -12,22 +11,38 @@ public class Student {
     public Student() {
     }
 
-    // Parameterized constructor
+    // Constructor for only student-specific fields
     public Student(String userId, String regNo, String batch, int academicLevel, String departmentId) {
-        this.userId = userId;
+        super.setUserId(userId);
         this.regNo = regNo;
         this.batch = batch;
         this.academicLevel = academicLevel;
         this.departmentId = departmentId;
     }
 
-    // Getters and Setters
-    public String getUserId() {
-        return userId;
-    }
+    // Full constructor including inherited User fields
+    public Student(String userId,
+                   String username,
+                   String email,
+                   String contactNumber,
+                   String profilePicture,
+                   String role,
+                   String regNo,
+                   String batch,
+                   int academicLevel,
+                   String departmentId) {
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+        super.setUserId(userId);
+        super.setUsername(username);
+        super.setEmail(email);
+        super.setContactNumber(contactNumber);
+        super.setProfilePicture(profilePicture);
+        super.setRole(role);
+
+        this.regNo = regNo;
+        this.batch = batch;
+        this.academicLevel = academicLevel;
+        this.departmentId = departmentId;
     }
 
     public String getRegNo() {
@@ -61,5 +76,4 @@ public class Student {
     public void setDepartmentId(String departmentId) {
         this.departmentId = departmentId;
     }
-
 }

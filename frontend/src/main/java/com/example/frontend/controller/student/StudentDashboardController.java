@@ -1,7 +1,10 @@
 package com.example.frontend.controller.student;
 
 import com.example.frontend.controller.admin.LoginController;
+import com.example.frontend.model.Student;
+import com.example.frontend.network.ServerClient;
 import com.example.frontend.service.AuthService;
+import com.example.frontend.service.StudentService;
 import com.example.frontend.session.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,12 +13,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.stage.StageStyle;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -37,10 +45,14 @@ public class StudentDashboardController implements Initializable {
     @FXML private VBox coursesContainer;
     @FXML private VBox noticesContainer;
     @FXML private HBox eligibilityAlertBox;
+    @FXML private StackPane profileContainer;
+    @FXML private Circle profileCircle;
+    @FXML private ImageView profileImage;
+    @FXML private Label profileInitial;
 
     private String studentName = LoginController.username;
     private String studentRegNo = LoginController.reNo;
-    private String studentId = LoginController.userId;
+    public static final ServerClient client = ServerClient.getInstance();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -54,6 +66,10 @@ public class StudentDashboardController implements Initializable {
         studentNameLabel.setText(studentName);
         studentIdLabel.setText("Reg No: " + studentRegNo);
 
+        StudentService studentService = new StudentService(client);
+        Student student = studentService.getStudentByIdAll(LoginController.userId);
+        setupProfile(student);
+
         loadStats();
         loadCourses();
         loadNotices();
@@ -64,6 +80,44 @@ public class StudentDashboardController implements Initializable {
         this.studentName = name;
         this.studentRegNo = regNo;
 
+    }
+
+    private void setupProfile(Student student) {
+
+        String profilePicture = student.getProfilePicture();
+        String username = student.getUsername();
+
+        if (profilePicture != null && !profilePicture.isEmpty()) {
+            try {
+                File file = new File(profilePicture);
+
+                if (file.exists()) {
+                    Image image = new Image(file.toURI().toString());
+                    profileImage.setImage(image);
+
+                    // Make image circular
+                    Circle clip = new Circle(18, 18, 18);
+                    profileImage.setClip(clip);
+
+                    profileImage.setVisible(true);
+                    profileInitial.setVisible(false);
+                    return;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // fallback → first letter
+        if (username != null && !username.isEmpty()) {
+            profileInitial.setText(username.substring(0, 1).toUpperCase());
+        } else {
+            profileInitial.setText("U");
+        }
+
+        profileImage.setVisible(false);
+        profileInitial.setVisible(true);
     }
 
     // ─── DB Methods ──────────────────────────────────────────────────────────
@@ -165,7 +219,30 @@ public class StudentDashboardController implements Initializable {
     @FXML private void openTimetable()  { loadView("StudentTimetable.fxml"); }
     @FXML private void openNotices()    { loadView("NoticesView.fxml"); }
     @FXML private void openEligibility(){ loadView("StudentEligibility.fxml"); }
-    @FXML private void openProfile()    { loadView("StudentProfile.fxml"); }
+
+    @FXML
+    private void openProfile() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/StudentProfile.fxml")
+            );
+            Parent root = loader.load();
+
+            StudentProfileController controller = loader.getController();
+
+            StudentService studentService = new StudentService(client);
+            Student student = studentService.getStudentByIdAll(LoginController.userId);
+
+            controller.setStudent(student);
+
+            Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @FXML
     void logout(ActionEvent event) {
         try {

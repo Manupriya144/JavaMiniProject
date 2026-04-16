@@ -49,4 +49,71 @@ public class StudentService {
 
         return null;
     }
+
+    public Student getStudentByIdAll(String userId) {
+        try {
+            String requestJson = String.format(
+                    "{\"command\":\"GET_STUDENT_ALL_DETAILS\",\"data\":{\"user_id\":\"%s\"},\"token\":\"%s\"}",
+                    userId, SessionManager.getToken()
+            );
+
+            String response = client.sendRequest(requestJson);
+            JsonNode node = mapper.readTree(response);
+
+            if (node.get("success").asBoolean()) {
+
+                JsonNode data = node.get("data");
+
+                Student student = new Student(
+                        data.get("userId").asText(),
+                        data.get("username").asText(),
+                        data.get("email").asText(),
+                        data.get("contactNumber").asText(),
+                        data.get("profilePicture").asText(),
+                        data.get("role").asText(),
+                        data.get("regNo").asText(),
+                        data.get("batch").asText(),
+                        data.get("academicLevel").asInt(),
+                        data.get("departmentId").asText()
+                );
+
+                return student;
+            }
+
+            System.out.println("Backend response: " + response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public boolean updateStudentProfile(String userId,
+                                        String email,
+                                        String contactNumber,
+                                        String profilePicture,
+                                        String password) {
+        try {
+            String safePassword = password == null ? "" : password;
+
+            String requestJson = String.format(
+                    "{\"command\":\"UPDATE_STUDENT_PROFILE\",\"data\":{\"userId\":\"%s\",\"email\":\"%s\",\"contactNumber\":\"%s\",\"profilePicture\":\"%s\",\"password\":\"%s\"},\"token\":\"%s\"}",
+                    userId,
+                    email,
+                    contactNumber,
+                    profilePicture,
+                    safePassword,
+                    SessionManager.getToken()
+            );
+
+            String response = client.sendRequest(requestJson);
+            JsonNode node = mapper.readTree(response);
+            return node.get("success").asBoolean();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

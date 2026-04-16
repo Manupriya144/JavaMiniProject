@@ -29,6 +29,7 @@ public class LoginController {
     public static String username = "";
     public static String userId= "";
     public static String reNo = "";
+    public static String password = "";
 
     @FXML
     public void initialize() {
@@ -57,10 +58,14 @@ public class LoginController {
                 System.out.println("Login success!");
                 System.out.println("Token: " + user.getToken());
                 System.out.println("Role: " + user.getRole());
+                System.out.println("Password " + user.getPassword());
                 System.out.println("User id : " + user.getUserId());
 
                 LoginController.username = user.getUsername();
+                LoginController.password = user.getPassword();
                 LoginController.userId = user.getUserId();
+
+
                 Student student = studentService.getStudentByUserId(LoginController.userId);
                 if (student != null) {
                     reNo = student.getRegNo();
@@ -100,7 +105,7 @@ public class LoginController {
 
             // Create a NEW stage for the dashboard
             Stage dashboardStage = new Stage();
-            dashboardStage.setTitle("Dashboard"); // OS title bar
+            dashboardStage.setTitle("FOT PORTAL"); // OS title bar
             dashboardStage.setScene(new Scene(root));
             dashboardStage.show();
 

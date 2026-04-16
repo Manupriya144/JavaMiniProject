@@ -13,6 +13,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.layout.StackPane?>
 
+<?import javafx.scene.image.ImageView?>
 <BorderPane xmlns="http://javafx.com/javafx/17.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.frontend.controller.student.StudentDashboardController"
@@ -58,9 +59,21 @@
 
             <HBox alignment="CENTER" spacing="10">
                 <padding><Insets left="16" right="20"/></padding>
-                <StackPane>
-                    <Circle radius="18" style="-fx-fill: linear-gradient(to bottom right, #0a4a6e, #1565c0);"/>
-                    <Label text="S" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+                <StackPane fx:id="profileContainer">
+
+                    <Circle fx:id="profileCircle"
+                            radius="18"
+                            style="-fx-fill: linear-gradient(to bottom right, #0a4a6e, #1565c0);"/>
+
+                    <ImageView fx:id="profileImage"
+                               fitWidth="36"
+                               fitHeight="36"
+                               preserveRatio="false"
+                               visible="false"/>
+
+                    <Label fx:id="profileInitial"
+                           text="S"
+                           style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;"/>
                 </StackPane>
                 <VBox alignment="CENTER_LEFT" spacing="1">
                     <Label fx:id="studentNameLabel" text="Student Name"

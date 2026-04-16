@@ -1,14 +1,228 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.frontend.controller.admin.AddTimeTableController"
+            prefWidth="860" prefHeight="640"
+            style="-fx-background-color: #0f1b35;">
 
-</AnchorPane>
+    <!-- TOP NAV BAR -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="0"
+              style="-fx-background-color: #0a1628; -fx-border-color: #1e3c72; -fx-border-width: 0 0 2 0;">
+
+            <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="64"
+                  style="-fx-background-color: linear-gradient(to right, #1e3c72, #2a5298);">
+                <padding><Insets left="24" right="24"/></padding>
+                <Label text="🎓" style="-fx-font-size: 26px;"/>
+                <VBox alignment="CENTER_LEFT" spacing="1">
+                    <Label text="FoT Portal" style="-fx-text-fill: white; -fx-font-size: 17px; -fx-font-weight: bold;"/>
+                    <Label text="Faculty of Technology" style="-fx-text-fill: #a0b8e0; -fx-font-size: 10px;"/>
+                </VBox>
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox alignment="CENTER" spacing="8">
+                <padding><Insets left="16" right="16"/></padding>
+                <Label text="🗓️" style="-fx-font-size: 16px;"/>
+                <Label text="Add New TimeTable"
+                       style="-fx-text-fill: #a0c4ff; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <Separator orientation="VERTICAL" style="-fx-background-color: #1e3c72;"/>
+
+            <HBox alignment="CENTER" spacing="10">
+                <padding><Insets left="16" right="20"/></padding>
+                <StackPane>
+                    <Circle radius="18" style="-fx-fill: linear-gradient(to bottom right, #28a745, #1e7e34);"/>
+                    <Label text="A" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+                </StackPane>
+                <VBox alignment="CENTER_LEFT" spacing="1">
+                    <Label fx:id="adminNameLabel" text="Administrator"
+                           style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                    <Label text="Admin" style="-fx-text-fill: #a0b8e0; -fx-font-size: 10px;"/>
+                </VBox>
+                <Button text="← Back" onAction="#goBack"
+                        style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 12px;
+                               -fx-background-radius: 6; -fx-cursor: hand; -fx-font-weight: bold;"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- MAIN CONTENT -->
+    <center>
+        <ScrollPane fitToWidth="true"
+                    style="-fx-background: transparent; -fx-background-color: transparent;"
+                    hbarPolicy="NEVER">
+            <VBox spacing="28" style="-fx-background-color: #0f1b35;">
+                <padding><Insets top="32" bottom="32" left="40" right="40"/></padding>
+
+                <VBox spacing="4">
+                    <Label text="Add New TimeTable"
+                           style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                    <Label text="Upload a timetable PDF with department, academic level, and semester details."
+                           style="-fx-text-fill: #6a90c8; -fx-font-size: 13px;"/>
+                </VBox>
+
+                <VBox spacing="0"
+                      style="-fx-background-color: #162040; -fx-background-radius: 14;
+                             -fx-border-color: #1e3c72; -fx-border-radius: 14; -fx-border-width: 1;
+                             -fx-effect: dropshadow(three-pass-box,rgba(0,0,0,0.4),16,0,0,6);">
+
+                    <!-- Card Header -->
+                    <HBox alignment="CENTER_LEFT" spacing="10"
+                          style="-fx-background-color: linear-gradient(to right, #1e3c72, #1a2d5a);
+                                 -fx-background-radius: 14 14 0 0;
+                                 -fx-border-color: transparent transparent #1e3c72 transparent;
+                                 -fx-border-width: 0 0 1 0;">
+                        <padding><Insets top="18" bottom="18" left="24" right="24"/></padding>
+                        <Label text="📅" style="-fx-font-size: 18px;"/>
+                        <VBox spacing="1">
+                            <Label text="TimeTable Information"
+                                   style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                            <Label text="Enter timetable details"
+                                   style="-fx-text-fill: #6a90c8; -fx-font-size: 11px;"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Form -->
+                    <VBox spacing="20">
+                        <padding><Insets top="28" bottom="28" left="28" right="28"/></padding>
+
+                        <!-- Department -->
+                        <VBox spacing="7">
+                            <Label text="Department"
+                                   style="-fx-text-fill: #a0c4ff; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <ComboBox fx:id="departmentComboBox"
+                                      promptText="Select department"
+                                      maxWidth="Infinity"
+                                      style="-fx-background-color: #0f1b35; -fx-text-fill: white;
+                                             -fx-prompt-text-fill: #3a5a8a; -fx-font-size: 13px;
+                                             -fx-background-radius: 8; -fx-border-color: #2a4a7f;
+                                             -fx-border-radius: 8; -fx-border-width: 1;"/>
+                        </VBox>
+
+                        <!-- Academic Level + Semester -->
+                        <HBox spacing="16">
+                            <VBox spacing="7" HBox.hgrow="ALWAYS">
+                                <Label text="Academic Level"
+                                       style="-fx-text-fill: #a0c4ff; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                <ComboBox fx:id="academicLevelComboBox"
+                                          promptText="Select level"
+                                          maxWidth="Infinity"
+                                          style="-fx-background-color: #0f1b35; -fx-text-fill: white;
+                                                 -fx-prompt-text-fill: #3a5a8a; -fx-font-size: 13px;
+                                                 -fx-background-radius: 8; -fx-border-color: #2a4a7f;
+                                                 -fx-border-radius: 8; -fx-border-width: 1;"/>
+                            </VBox>
+
+                            <VBox spacing="7" HBox.hgrow="ALWAYS">
+                                <Label text="Semester"
+                                       style="-fx-text-fill: #a0c4ff; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                <ComboBox fx:id="semesterComboBox"
+                                          promptText="Select semester"
+                                          maxWidth="Infinity"
+                                          style="-fx-background-color: #0f1b35; -fx-text-fill: white;
+                                                 -fx-prompt-text-fill: #3a5a8a; -fx-font-size: 13px;
+                                                 -fx-background-radius: 8; -fx-border-color: #2a4a7f;
+                                                 -fx-border-radius: 8; -fx-border-width: 1;"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Title -->
+                        <VBox spacing="7">
+                            <Label text="TimeTable Title"
+                                   style="-fx-text-fill: #a0c4ff; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <HBox alignment="CENTER_LEFT"
+                                  style="-fx-background-color: #0f1b35; -fx-background-radius: 8;
+                                         -fx-border-color: #2a4a7f; -fx-border-radius: 8; -fx-border-width: 1;">
+                                <Label text="  📝  "
+                                       style="-fx-text-fill: #4a70a0; -fx-font-size: 13px;
+                                              -fx-min-width: 36; -fx-pref-width: 36;"/>
+                                <TextField fx:id="titleField"
+                                           promptText="e.g. Level 2 Semester 1 TimeTable"
+                                           maxWidth="Infinity"
+                                           style="-fx-background-color: transparent; -fx-text-fill: white;
+                                                  -fx-prompt-text-fill: #3a5a8a; -fx-font-size: 13px;
+                                                  -fx-border-color: transparent; -fx-background-radius: 0;"
+                                           HBox.hgrow="ALWAYS"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- PDF -->
+                        <VBox spacing="7">
+                            <Label text="PDF File Path"
+                                   style="-fx-text-fill: #a0c4ff; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <HBox spacing="12" alignment="CENTER_LEFT">
+                                <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS"
+                                      style="-fx-background-color: #0f1b35; -fx-background-radius: 8;
+                                             -fx-border-color: #2a4a7f; -fx-border-radius: 8; -fx-border-width: 1;">
+                                    <Label text="  📎  "
+                                           style="-fx-text-fill: #4a70a0; -fx-font-size: 13px;
+                                                  -fx-min-width: 36; -fx-pref-width: 36;"/>
+                                    <TextField fx:id="pdfPathField"
+                                               promptText="Choose or enter timetable pdf file path"
+                                               maxWidth="Infinity"
+                                               style="-fx-background-color: transparent; -fx-text-fill: white;
+                                                      -fx-prompt-text-fill: #3a5a8a; -fx-font-size: 13px;
+                                                      -fx-border-color: transparent; -fx-background-radius: 0;"
+                                               HBox.hgrow="ALWAYS"/>
+                                </HBox>
+
+                                <Button text="Browse PDF" onAction="#browsePdf"
+                                        prefHeight="40"
+                                        style="-fx-background-color: #1e3c72; -fx-text-fill: white;
+                                               -fx-font-size: 12px; -fx-font-weight: bold;
+                                               -fx-background-radius: 8; -fx-cursor: hand;"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Status -->
+                        <Label fx:id="statusLabel" text=""
+                               style="-fx-text-fill: #ff6b6b; -fx-font-size: 12px; -fx-font-weight: bold;"
+                               visible="false" managed="false"/>
+
+                        <!-- Buttons -->
+                        <HBox spacing="14" alignment="CENTER_RIGHT">
+                            <padding><Insets top="8"/></padding>
+                            <Button text="Clear Form" onAction="#clearForm"
+                                    prefHeight="44" prefWidth="140"
+                                    style="-fx-background-color: #1e2d50; -fx-text-fill: #a0b8e0;
+                                           -fx-font-size: 13px; -fx-background-radius: 8;
+                                           -fx-border-color: #2a4a7f; -fx-border-radius: 8;
+                                           -fx-border-width: 1; -fx-cursor: hand;"/>
+                            <Button fx:id="addBtn" text="✅  Add TimeTable" onAction="#addTimeTable"
+                                    prefHeight="44" prefWidth="180"
+                                    style="-fx-background-color: linear-gradient(to right, #1e5c2a, #28a745);
+                                           -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;
+                                           -fx-background-radius: 8; -fx-cursor: hand;
+                                           -fx-effect: dropshadow(three-pass-box,rgba(40,167,69,0.4),10,0,0,3);"/>
+                        </HBox>
+
+                    </VBox>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <!-- STATUS BAR -->
+    <bottom>
+        <HBox alignment="CENTER_LEFT" spacing="16"
+              style="-fx-background-color: #0a1628; -fx-border-color: #1e3c72; -fx-border-width: 1 0 0 0;">
+            <padding><Insets top="8" bottom="8" left="24" right="24"/></padding>
+            <Label text="●" style="-fx-text-fill: #28a745; -fx-font-size: 10px;"/>
+            <Label text="System Online  •  Faculty of Technology Management System  •  v1.0"
+                   style="-fx-text-fill: #4a6a9a; -fx-font-size: 11px;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="statusBarTime" text="16 April 2026"
+                   style="-fx-text-fill: #4a6a9a; -fx-font-size: 11px;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

@@ -22,9 +22,11 @@ import command.medical.UpdateMedicalCommand;
 import command.notice.AddNoticeCommand;
 import command.student.GetStudentByUserIdCommand;
 import command.attendance.UpdateAttendanceCommand;
+import command.student.UpdateStudentProfileCommand;
 import command.timetable.AddTimeTableCommand;
 import command.user.CreateUserCommand;
 import command.user.GetAllUsersCommand;
+import command.student.GetStudentByIdCommand;
 import command.user.GetUserByIdCommand;
 import dao.attendance.AttendanceDAO;
 import dao.medical.MedicalDAO;
@@ -61,8 +63,6 @@ import service.finalMarks.FinalMarksService;
 import service.eligibility.EligibilityService;
 import service.grade.GradeService;
 
-
-
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,9 +95,11 @@ public class CommandRegistry {
             commands.put("GetUserById", new GetUserByIdCommand(userService, authService));
 
             // student related
-            StudentDAO studentDAO = new StudentDAO(connection);
+            StudentDAO studentDAO = new StudentDAO();
             StudentService studentService = new StudentService(studentDAO);
             commands.put("GET_STUDENT_BY_USER_ID",new GetStudentByUserIdCommand(studentService));
+            commands.put("GET_STUDENT_ALL_DETAILS",new GetStudentByIdCommand(studentService,authService));
+            commands.put("UPDATE_STUDENT_PROFILE",new UpdateStudentProfileCommand(studentService, authService));
 
             // attendance related
             AttendanceDAO attendanceDAO = new AttendanceDAO(connection);

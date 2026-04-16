@@ -11,7 +11,6 @@ module com.example.frontend {
     requires javafx.base;
 
 
-
     opens com.example.frontend.dto to com.fasterxml.jackson.databind;
     opens com.example.frontend to javafx.fxml;
     opens com.example.frontend.controller to javafx.fxml;

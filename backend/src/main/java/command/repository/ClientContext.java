@@ -12,6 +12,7 @@ public class ClientContext {
     private String token;
     private String userId;
 
+
     public ClientContext(PrintWriter output) {
         this.output = output;
     }
@@ -37,4 +38,6 @@ public class ClientContext {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+
 }

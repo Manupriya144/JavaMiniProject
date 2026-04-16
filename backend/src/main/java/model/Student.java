@@ -19,6 +19,25 @@ public class Student extends User{
         this.departmentId = departmentId;
     }
 
+    public Student(String userId,String username,String email,
+                   String contactNumber,
+                   String profilePicture, String role ,String regNo,
+                   String batch,
+                   int academicLevel,
+                   String departmentId){
+        super.setUserId(userId);
+        super.setUsername(username);
+        super.setEmail(email);
+        super.setContactNumber(contactNumber);
+        super.setProfilePicture(profilePicture);
+        super.setRole(role);
+        this.regNo = regNo;
+        this.batch = batch;
+        this.academicLevel = academicLevel;
+        this.departmentId = departmentId;
+
+    }
+
 
     public String getRegNo() { return regNo; }
     public void setRegNo(String regNo) { this.regNo = regNo; }

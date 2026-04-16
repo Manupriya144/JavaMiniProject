@@ -26,7 +26,7 @@ public class AddTimeTableCommand implements Command {
         try{
             String token = context.getToken();
 
-            if(token == null || authService.isTokenValid(token)){
+            if(token == null || !authService.isTokenValid(token)){
                 context.getOutput().println("{\"success\":false,\"message\":\"Unauthorized\"}");
                 return;
             }
