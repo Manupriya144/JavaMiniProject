@@ -78,7 +78,7 @@ public class CreateUserController implements Initializable {
 
         academicLevelBox.getItems().addAll("1", "2", "3", "4");
 
-        String[] departments = {"D01", "D02", "D03"};
+        String[] departments = {"ICT", "ET", "BST"};
         departmentBox.getItems().addAll(departments);
         techDepartmentBox.getItems().addAll(departments);
 

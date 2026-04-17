@@ -35,6 +35,11 @@ public class JwtUtil {
         return getAllClaims(token).get("role", String.class);
     }
 
+    // Extract user id
+    public String getUserIdFromToken(String token) {
+        return getAllClaims(token).get("userId", String.class);
+    }
+
     // Central parsing method
     private Claims getAllClaims(String token) {
         return Jwts.parserBuilder()

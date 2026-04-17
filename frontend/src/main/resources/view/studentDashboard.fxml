@@ -53,8 +53,8 @@
                         style="-fx-background-color: transparent; -fx-text-fill: #a0b8e0; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>
                 <Button text="Notices" onAction="#openNotices"
                         style="-fx-background-color: transparent; -fx-text-fill: #a0b8e0; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>
-                <Button text="My Endpoints" onAction="#openMyAcademicEndpoints"
-                    style="-fx-background-color: transparent; -fx-text-fill: #a0b8e0; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>
+<!--                <Button text="My Endpoints" onAction="#openMyAcademicEndpoints"-->
+<!--                    style="-fx-background-color: transparent; -fx-text-fill: #a0b8e0; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>-->
             </HBox>
 
             <Separator orientation="VERTICAL"/>

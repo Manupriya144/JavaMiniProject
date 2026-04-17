@@ -45,7 +45,7 @@ public class AddCourseController implements Initializable {
 
         academicLevelBox.setItems(FXCollections.observableArrayList("1", "2", "3", "4"));
         semesterBox.setItems(FXCollections.observableArrayList("1", "2"));
-        departmentBox.setItems(FXCollections.observableArrayList("D01", "D02", "D03"));
+        departmentBox.setItems(FXCollections.observableArrayList("BST", "ET", "ICT"));
     }
 
     @FXML
