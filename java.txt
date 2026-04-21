@@ -1,0 +1,52 @@
+//1. Import the mysql library
+import java.sql.*;
+
+public class MyFirstDbConnectionDemo {
+    public static void main(String[] args) {
+        try {
+            //2. Register the driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            //3. Establish the connection
+            String url = "jdbc:mysql://localhost:3306/student";
+            String user = "root";
+            String password = "1234";
+            Connection con = DriverManager.getConnection(url,user,password);
+
+            //4. Create the statement
+            Statement stmt = con.createStatement();
+
+            //5. Execute the query and retrieve the ResultSet
+            ResultSet rs = stmt.executeQuery("SELECT * FROM basicdata");
+			
+			  //6. Traverse through the ResultSet
+            while (rs.next()) {
+                System.out.println("Id: " + rs.getString(1) +
+                        "/n Name: " + rs.getString(2) +
+                        "/n Address: " + rs.getString(3));
+            }
+
+            //7. Close the connection - finally
+            rs.close();
+            stmt.close();
+            con.close();
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("Driver not found"+e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("SQL error"+e.getMessage());
+        }
+    }
+}
+
+
+
+
+stu_id | stu_name | stu_address
+TG/001 | Amila    | Matara      |
+| TG/002 | Basil    | Hambantota  |
+| TG/003 | Charles  | Jaffna      |
+| TG/004 | Debian   | Colombo     |
+| TG/005 | Madura   | Negambo
+database student
+table basicdata
