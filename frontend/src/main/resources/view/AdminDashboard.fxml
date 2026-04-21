@@ -161,6 +161,8 @@
                                 style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
                         <Button text="📖  Add Course" onAction="#openAddCourses" prefHeight="42" prefWidth="170"
                                 style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                        <Button text="🔗  Assign Course" onAction="#openAssignCourse" prefHeight="42" prefWidth="170"
+                                style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
                         <Button text="📢  Post Notice" onAction="#openAddNotices" prefHeight="42" prefWidth="170"
                                 style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
                         <Button text="📅  Add Timetable" onAction="#openTimeAddTimeTables" prefHeight="42" prefWidth="170"

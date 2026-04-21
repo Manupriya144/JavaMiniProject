@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS lecturer_course (
     PRIMARY KEY (lecturer_id, course_id),
     FOREIGN KEY (lecturer_id) REFERENCES lecturers(user_id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES course(course_id) ON DELETE CASCADE
-    );
+);
 
 -- Medical
 CREATE TABLE IF NOT EXISTS medical (

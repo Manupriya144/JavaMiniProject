@@ -1,11 +1,14 @@
 package dao.course;
 
+import dto.responseDto.course.CourseResponseDTO;
 import model.Course;
 import utility.DataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CourseDAO {
 
@@ -73,5 +76,33 @@ public class CourseDAO {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<CourseResponseDTO> getAllCourses() {
+        String sql = """
+                SELECT course_id, course_code, name
+                FROM course
+                ORDER BY course_code
+                """;
+
+        List<CourseResponseDTO> courses = new ArrayList<>();
+
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                courses.add(new CourseResponseDTO(
+                        rs.getString("course_id"),
+                        rs.getString("course_code"),
+                        rs.getString("name")
+                ));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return courses;
     }
 }

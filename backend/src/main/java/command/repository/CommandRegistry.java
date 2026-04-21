@@ -1,5 +1,8 @@
 package command.repository;
 
+import command.course.GetAllCoursesCommand;
+import command.lecturer.GetAllLecturersCommand;
+import command.lecturerCourse.AssignLecturerCourseCommand;
 import command.login.LoginCommand;
 import command.login.LogoutCommand;
 import command.attendance.AddAttendanceCommand;
@@ -37,6 +40,10 @@ import command.student.GetStudentByIdCommand;
 import command.user.GetUserByIdCommand;
 import dao.attendance.AttendanceDAO;
 import dao.ca.CAMarkDAO;
+
+
+import dao.lecture.LecturerDAO;
+import dao.lecturerCourse.LecturerCourseDAO;
 import dao.medical.MedicalDAO;
 import dao.notice.NoticeDAO;
 import dao.student.StudentDAO;
@@ -44,6 +51,8 @@ import dao.timetable.TimeTableDAO;
 import dao.user.UserDAO;
 import service.attendance.AttendanceService;
 import service.ca.CAMarkService;
+import service.lecture.LecturerService;
+import service.lecturerCourse.LecturerCourseService;
 import service.login.AuthService;
 import service.medical.MedicalService;
 import service.notice.AddNoticeService;
@@ -233,8 +242,15 @@ public class CommandRegistry {
             CourseDAO courseDAO = new CourseDAO();
             CourseService courseService = new CourseService(courseDAO);
             commands.put("ADD_COURSE", new AddCourseCommand(courseService, authService));
+            LecturerDAO lecturerDAO = new LecturerDAO();
+            LecturerService lecturerService = new LecturerService(lecturerDAO);
+            commands.put("GetAllLecturers", new GetAllLecturersCommand(lecturerService, authService));
+            commands.put("GetAllCourses", new GetAllCoursesCommand(courseService, authService));
+            LecturerCourseDAO lecturerCourseDAO = new LecturerCourseDAO();
+            LecturerCourseService lecturerCourseService = new LecturerCourseService(lecturerCourseDAO);
+            commands.put("AssignLecturerCourse", new AssignLecturerCourseCommand(lecturerCourseService, authService));
 
-            //time table related
+            //timetable related
             TimeTableDAO timeTableDAO = new TimeTableDAO();
             TimeTableService timeTableService = new TimeTableService(timeTableDAO);
             commands.put("CREATE_TIMETABLE",new AddTimeTableCommand(timeTableService,authService));

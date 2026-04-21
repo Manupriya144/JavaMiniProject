@@ -165,6 +165,11 @@ public class AdminDashboardController implements Initializable {
     }
 
     @FXML
+    public void openAssignCourse() {
+        loadView("AssignCourse.fxml");
+    }
+
+    @FXML
     public void openTimeAddTimeTables() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AddTimeTable.fxml"));
