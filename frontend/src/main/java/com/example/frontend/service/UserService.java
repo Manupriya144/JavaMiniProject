@@ -1,13 +1,17 @@
 package com.example.frontend.service;
 
+import com.example.frontend.dto.RequestDTO;
 import com.example.frontend.dto.UserRequestDTO;
+import com.example.frontend.dto.UserResponseDTO;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.session.SessionManager;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 
 public class UserService {
     private final ServerClient client;
@@ -26,18 +30,45 @@ public class UserService {
 
             String json = mapper.writeValueAsString(request);
 
-            String response = client.sendRequest(json); // send to backend
+            String response = client.sendRequest(json);
             System.out.println("create user : " + response);
 
-            // parse response from backend
             Map<String, Object> map = mapper.readValue(response, Map.class);
 
-            // backend returns {"success": true/false, "message": "..."}
             return Boolean.TRUE.equals(map.get("success"));
 
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public List<UserResponseDTO> getAllUsers() {
+        try {
+            RequestDTO requestDTO = new RequestDTO(
+                    "GetAllUser",
+                    null,
+                    SessionManager.getToken()
+            );
+
+            String requestJson = mapper.writeValueAsString(requestDTO);
+
+            String responseJson = client.sendRequest(requestJson);
+
+            if (responseJson == null || responseJson.isEmpty()) {
+                return Collections.emptyList();
+            }
+
+            if (responseJson.contains("\"success\":false")) {
+                System.out.println("Server error: " + responseJson);
+                return Collections.emptyList();
+            }
+
+            return mapper.readValue(responseJson, new TypeReference<List<UserResponseDTO>>() {});
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
         }
     }
 }

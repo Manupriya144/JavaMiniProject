@@ -280,7 +280,7 @@ public class CreateUserController implements Initializable {
     @FXML
     private void goBack() throws IOException {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/adminDashboard.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminDashboard.fxml"));
         Parent root = loader.load();
 
         Stage stage = (Stage) usernameField.getScene().getWindow();

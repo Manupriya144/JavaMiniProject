@@ -161,7 +161,7 @@ public class AddTimeTableController {
     @FXML
     public void goBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/adminDashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminDashboard.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) adminNameLabel.getScene().getWindow();
