@@ -1,6 +1,7 @@
 package command.repository;
 
 import command.course.GetAllCoursesCommand;
+import command.course.GetAllCoursesCommandFull;
 import command.lecturer.GetAllLecturersCommand;
 import command.lecturerCourse.AssignLecturerCourseCommand;
 import command.login.LoginCommand;
@@ -249,6 +250,9 @@ public class CommandRegistry {
             LecturerCourseDAO lecturerCourseDAO = new LecturerCourseDAO();
             LecturerCourseService lecturerCourseService = new LecturerCourseService(lecturerCourseDAO);
             commands.put("AssignLecturerCourse", new AssignLecturerCourseCommand(lecturerCourseService, authService));
+            commands.put("GET_ALL_COURSES_FULL", new GetAllCoursesCommandFull(courseService, authService));
+
+
 
             //timetable related
             TimeTableDAO timeTableDAO = new TimeTableDAO();

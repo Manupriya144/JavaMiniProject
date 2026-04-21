@@ -2,6 +2,7 @@ package service.course;
 
 import dao.course.CourseDAO;
 import dto.requestDto.course.AddCourseRequestDTO;
+import dto.responseDto.course.CourseAllResponseDTO;
 import dto.responseDto.course.CourseResponseDTO;
 import model.Course;
 
@@ -31,6 +32,10 @@ public class CourseService {
 
     public List<CourseResponseDTO> getAllCourses() {
         return courseDAO.getAllCourses();
+    }
+
+    public List<CourseAllResponseDTO> getAllCoursesFull(){
+        return courseDAO.getAllCoursesFull();
     }
 
 

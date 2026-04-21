@@ -30,19 +30,18 @@ import java.util.ResourceBundle;
 
 public class AssignLecturerCourseController implements Initializable {
 
-    //
+
     @FXML private ComboBox<LecturerResponseDTO> lecturerBox;
     @FXML private ComboBox<CourseResponseDTO>   courseBox;
     @FXML private Label statusLabel;
     @FXML private Label adminNameLabel;
     @FXML private Label statusBarTime;
 
-    //
+
     private LecturerService       lecturerService;
     private CourseService         courseService;
     private LecturerCourseService lecturerCourseService;
 
-    //
     private static final String POPUP_STYLE =
             "-fx-background-color: #091527;" +
                     "-fx-background-radius: 10;" +
@@ -85,7 +84,7 @@ public class AssignLecturerCourseController implements Initializable {
                     "-fx-font-family: 'Segoe UI';" +
                     "-fx-padding: 0 14;";
 
-    //
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ServerClient client = ServerClient.getInstance();

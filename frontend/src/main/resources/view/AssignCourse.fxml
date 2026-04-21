@@ -8,8 +8,8 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.frontend.controller.admin.AssignLecturerCourseController"
-            prefWidth="900" prefHeight="660"
+            fx:controller="com.example.frontend.controller.admin.CourseDisplayController"
+            prefWidth="1100" prefHeight="700"
             style="-fx-background-color: #08111f;">
 
     <!-- ═══════════════════════  TOP NAV BAR  ═══════════════════════ -->
@@ -37,14 +37,13 @@
                 </VBox>
             </HBox>
 
-            <!-- Divider -->
             <Rectangle width="1" height="36" style="-fx-fill: #1a3355;"/>
 
             <!-- Page Title -->
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <padding><Insets left="24" right="24"/></padding>
-                <Label text="⟳" style="-fx-font-size: 16px; -fx-text-fill: #3b82f6;"/>
-                <Label text="Assign Lecturer to Course"
+                <Label text="📘" style="-fx-font-size: 16px; -fx-text-fill: #3b82f6;"/>
+                <Label text="Course Display"
                        style="-fx-text-fill: #93c5fd; -fx-font-size: 13px;
                               -fx-font-family: 'Segoe UI'; -fx-font-weight: bold;"/>
             </HBox>
@@ -102,13 +101,13 @@
                         <StackPane>
                             <Rectangle arcWidth="10" arcHeight="10" width="40" height="40"
                                        style="-fx-fill: rgba(37,99,235,0.15);"/>
-                            <Label text="🔗" style="-fx-font-size: 20px;"/>
+                            <Label text="📚" style="-fx-font-size: 20px;"/>
                         </StackPane>
                         <VBox spacing="4">
-                            <Label text="Assign Lecturer to Course"
+                            <Label text="Course Display"
                                    style="-fx-text-fill: white; -fx-font-size: 26px;
                                           -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
-                            <Label text="Select a lecturer and course to create a teaching assignment"
+                            <Label text="View and filter all available courses by name, level, and semester"
                                    style="-fx-text-fill: #4a7ab5; -fx-font-size: 13px; -fx-font-family: 'Segoe UI';"/>
                         </VBox>
                     </HBox>
@@ -134,45 +133,55 @@
                         <StackPane>
                             <Circle radius="18"
                                     style="-fx-fill: rgba(37,99,235,0.2);"/>
-                            <Label text="📚" style="-fx-font-size: 16px;"/>
+                            <Label text="📘" style="-fx-font-size: 16px;"/>
                         </StackPane>
 
                         <VBox spacing="3">
-                            <Label text="Assignment Configuration"
+                            <Label text="Course Records"
                                    style="-fx-text-fill: white; -fx-font-size: 15px;
                                           -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
-                            <Label text="Link a lecturer with a course for the current term"
+                            <Label text="Browse and filter course information"
                                    style="-fx-text-fill: #4a7ab5; -fx-font-size: 11px; -fx-font-family: 'Segoe UI';"/>
                         </VBox>
 
                         <Region HBox.hgrow="ALWAYS"/>
 
-                        <Label text="Required fields marked *"
+                        <Label text="Use filters to narrow results"
                                style="-fx-text-fill: #2563eb; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
                     </HBox>
 
                     <!-- Card Body -->
-                    <VBox spacing="28">
-                        <padding><Insets top="34" bottom="34" left="34" right="34"/></padding>
+                    <VBox spacing="24">
+                        <padding><Insets top="28" bottom="28" left="28" right="28"/></padding>
 
-                        <!-- Two column row -->
-                        <HBox spacing="24" alignment="CENTER_LEFT">
+                        <!-- Filters -->
+                        <HBox spacing="16" alignment="CENTER_LEFT">
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                <Label text="Search Course"
+                                       style="-fx-text-fill: #93c5fd; -fx-font-size: 12px;
+                                              -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
+                                <TextField fx:id="searchField"
+                                           promptText="Search by course name or code..."
+                                           prefHeight="44"
+                                           style="-fx-background-color: #091527;
+                                                  -fx-background-radius: 10;
+                                                  -fx-border-color: #1e3a5f;
+                                                  -fx-border-radius: 10;
+                                                  -fx-border-width: 1.5;
+                                                  -fx-text-fill: white;
+                                                  -fx-prompt-text-fill: #4a7ab5;
+                                                  -fx-font-size: 13px;
+                                                  -fx-font-family: 'Segoe UI';"/>
+                            </VBox>
 
-                            <!-- Lecturer ComboBox -->
-                            <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <HBox alignment="CENTER_LEFT" spacing="6">
-                                    <Label text="Lecturer"
-                                           style="-fx-text-fill: #93c5fd; -fx-font-size: 12px;
-                                                  -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
-                                    <Label text="*"
-                                           style="-fx-text-fill: #f87171; -fx-font-size: 12px;
-                                                  -fx-font-weight: bold;"/>
-                                </HBox>
-                                <ComboBox fx:id="lecturerBox"
-                                          promptText="— Select a Lecturer —"
-                                          maxWidth="Infinity"
-                                          prefHeight="46"
-                                          visibleRowCount="8"
+                            <VBox spacing="8">
+                                <Label text="Level"
+                                       style="-fx-text-fill: #93c5fd; -fx-font-size: 12px;
+                                              -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
+                                <ComboBox fx:id="levelFilter"
+                                          promptText="All Levels"
+                                          prefWidth="150"
+                                          prefHeight="44"
                                           style="-fx-background-color: #091527;
                                                  -fx-background-radius: 10;
                                                  -fx-border-color: #1e3a5f;
@@ -180,34 +189,17 @@
                                                  -fx-border-width: 1.5;
                                                  -fx-text-fill: white;
                                                  -fx-font-size: 13px;
-                                                 -fx-font-family: 'Segoe UI';
-                                                 -fx-padding: 0 14 0 14;"/>
-                                <Label text="Choose the faculty member to assign"
-                                       style="-fx-text-fill: #334d6e; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
+                                                 -fx-font-family: 'Segoe UI';"/>
                             </VBox>
 
-                            <!-- Arrow Icon -->
-                            <VBox alignment="CENTER">
-                                <padding><Insets top="22"/></padding>
-                                <Label text="→"
-                                       style="-fx-text-fill: #1e3a5f; -fx-font-size: 22px; -fx-font-weight: bold;"/>
-                            </VBox>
-
-                            <!-- Course ComboBox -->
-                            <VBox spacing="10" HBox.hgrow="ALWAYS">
-                                <HBox alignment="CENTER_LEFT" spacing="6">
-                                    <Label text="Course"
-                                           style="-fx-text-fill: #93c5fd; -fx-font-size: 12px;
-                                                  -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
-                                    <Label text="*"
-                                           style="-fx-text-fill: #f87171; -fx-font-size: 12px;
-                                                  -fx-font-weight: bold;"/>
-                                </HBox>
-                                <ComboBox fx:id="courseBox"
-                                          promptText="— Select a Course —"
-                                          maxWidth="Infinity"
-                                          prefHeight="46"
-                                          visibleRowCount="8"
+                            <VBox spacing="8">
+                                <Label text="Semester"
+                                       style="-fx-text-fill: #93c5fd; -fx-font-size: 12px;
+                                              -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
+                                <ComboBox fx:id="semesterFilter"
+                                          promptText="All Semesters"
+                                          prefWidth="160"
+                                          prefHeight="44"
                                           style="-fx-background-color: #091527;
                                                  -fx-background-radius: 10;
                                                  -fx-border-color: #1e3a5f;
@@ -215,10 +207,22 @@
                                                  -fx-border-width: 1.5;
                                                  -fx-text-fill: white;
                                                  -fx-font-size: 13px;
-                                                 -fx-font-family: 'Segoe UI';
-                                                 -fx-padding: 0 14 0 14;"/>
-                                <Label text="Choose the course to be taught"
-                                       style="-fx-text-fill: #334d6e; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
+                                                 -fx-font-family: 'Segoe UI';"/>
+                            </VBox>
+
+                            <VBox spacing="8">
+                                <Label text="Action"
+                                       style="-fx-text-fill: transparent; -fx-font-size: 12px;"/>
+                                <Button text="⟳ Refresh"
+                                        onAction="#refreshCourses"
+                                        prefHeight="44" prefWidth="130"
+                                        style="-fx-background-color: linear-gradient(to right, #1d4ed8, #2563eb);
+                                               -fx-text-fill: white;
+                                               -fx-font-size: 13px; -fx-font-family: 'Segoe UI';
+                                               -fx-font-weight: bold;
+                                               -fx-background-radius: 10;
+                                               -fx-cursor: hand;
+                                               -fx-effect: dropshadow(gaussian,rgba(37,99,235,0.45),14,0.3,0,3);"/>
                             </VBox>
                         </HBox>
 
@@ -229,38 +233,43 @@
                                     HBox.hgrow="ALWAYS"/>
                         </HBox>
 
-                        <!-- Status Label -->
+                        <!-- Table -->
+                        <VBox spacing="10">
+                            <Label text="Available Courses"
+                                   style="-fx-text-fill: #93c5fd; -fx-font-size: 12px;
+                                          -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
+
+                            <TableView fx:id="courseTable"
+                                       prefHeight="420"
+                                       columnResizePolicy="CONSTRAINED_RESIZE_POLICY"
+                                       style="-fx-background-color: #091527;
+                                              -fx-control-inner-background: #091527;
+                                              -fx-background-radius: 12;
+                                              -fx-border-radius: 12;
+                                              -fx-border-color: #1a3355;
+                                              -fx-border-width: 1.2;
+                                              -fx-table-cell-border-color: #13243d;
+                                              -fx-padding: 6;">
+
+                                <columns>
+                                    <TableColumn fx:id="colCourseId" text="Course ID"/>
+                                    <TableColumn fx:id="colCourseCode" text="Course Code"/>
+                                    <TableColumn fx:id="colName" text="Course Name"/>
+                                    <TableColumn fx:id="colCredit" text="Credit"/>
+                                    <TableColumn fx:id="colLevel" text="Level"/>
+                                    <TableColumn fx:id="colSemester" text="Semester"/>
+                                    <TableColumn fx:id="colDepartmentId" text="Department"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+
+                        <!-- Status -->
                         <HBox alignment="CENTER_LEFT" spacing="8" minHeight="28">
-                            <Label fx:id="statusLabel" text=""
+                            <Label fx:id="statusLabel" text="Loading courses..."
                                    style="-fx-font-size: 13px; -fx-font-family: 'Segoe UI';
-                                          -fx-font-weight: bold;"
+                                          -fx-font-weight: bold; -fx-text-fill: #93c5fd;"
                                    visible="true" managed="true" wrapText="true"/>
                         </HBox>
-
-                        <!-- Action Buttons -->
-                        <HBox spacing="14" alignment="CENTER_RIGHT">
-                            <Button text="Clear Selection" onAction="#clearSelections"
-                                    prefHeight="44" prefWidth="155"
-                                    style="-fx-background-color: #0b1829;
-                                           -fx-text-fill: #93c5fd;
-                                           -fx-font-size: 13px; -fx-font-family: 'Segoe UI';
-                                           -fx-background-radius: 10;
-                                           -fx-border-color: #1e3a5f;
-                                           -fx-border-radius: 10;
-                                           -fx-border-width: 1.5;
-                                           -fx-cursor: hand;"/>
-
-                            <Button text="✔  Assign Lecturer" onAction="#assignLecturerCourse"
-                                    prefHeight="44" prefWidth="185"
-                                    style="-fx-background-color: linear-gradient(to right, #1d4ed8, #2563eb);
-                                           -fx-text-fill: white;
-                                           -fx-font-size: 13px; -fx-font-family: 'Segoe UI';
-                                           -fx-font-weight: bold;
-                                           -fx-background-radius: 10;
-                                           -fx-cursor: hand;
-                                           -fx-effect: dropshadow(gaussian,rgba(37,99,235,0.45),14,0.3,0,3);"/>
-                        </HBox>
-
                     </VBox>
                 </VBox>
 
@@ -269,13 +278,14 @@
                     <padding><Insets top="20"/></padding>
                     <Label text="ℹ"
                            style="-fx-text-fill: #2563eb; -fx-font-size: 13px;"/>
-                    <Label text="Each lecturer may be assigned to multiple courses. Duplicate assignments will be rejected by the server."
+                    <Label text="Use the search field and filters to quickly find courses by name, academic level, or semester."
                            style="-fx-text-fill: #334d6e; -fx-font-size: 11px; -fx-font-family: 'Segoe UI';"/>
                 </HBox>
             </VBox>
         </ScrollPane>
     </center>
 
+    <!-- ═══════════════════════  BOTTOM STATUS BAR  ═══════════════════════ -->
     <bottom>
         <HBox alignment="CENTER_LEFT" spacing="16" prefHeight="36"
               style="-fx-background-color: #0b1829;
@@ -296,5 +306,4 @@
                    style="-fx-text-fill: #334d6e; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
         </HBox>
     </bottom>
-
 </BorderPane>

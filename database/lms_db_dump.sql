@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS notice (
     title VARCHAR(150) NOT NULL,
     description TEXT,
     pdf_file_path VARCHAR(255),
-    created_by INT,
+    created_by VARCHAR(10),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE SET NULL
 );

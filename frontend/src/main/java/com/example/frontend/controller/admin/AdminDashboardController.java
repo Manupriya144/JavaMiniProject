@@ -122,7 +122,7 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void openCourses() {
-        loadView("CourseManagement.fxml");
+        loadView("CourseDisplay.fxml");
     }
 
     @FXML
