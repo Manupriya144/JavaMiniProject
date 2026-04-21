@@ -8,63 +8,355 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Region?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.frontend.controller.attendance.AdvancedAttendanceViewController"
-            prefWidth="1100" prefHeight="760"
-            style="-fx-background-color: #0f1b35;">
+            prefWidth="1200" prefHeight="820"
+            style="-fx-background-color: #0d1526;">
 
+    <!-- ═══════════════════════  TOP BAR  ═══════════════════════ -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="10"
-              style="-fx-background-color: #0a1628; -fx-border-color: #1e3c72; -fx-border-width: 0 0 2 0;">
-            <padding><Insets top="14" right="18" bottom="14" left="18"/></padding>
-            <Label text="📊  Attendance View (Individual &amp; Batch)"
-                   style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Back Dashboard" onAction="#backToDashboard"
-                    style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+        <HBox alignment="CENTER_LEFT" spacing="0"
+              style="-fx-background-color: #101a2f;
+                     -fx-border-color: #223556;
+                     -fx-border-width: 0 0 1 0;
+                     -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.45),14,0,0,4);">
+
+            <StackPane prefWidth="5" prefHeight="64"
+                       style="-fx-background-color: linear-gradient(to bottom,#38bdf8,#1d4ed8,#7c3aed);"/>
+
+            <HBox alignment="CENTER_LEFT" spacing="14" HBox.hgrow="ALWAYS">
+                <padding><Insets top="0" right="24" bottom="0" left="20"/></padding>
+
+                <StackPane prefWidth="40" prefHeight="40"
+                           style="-fx-background-color: #16233b;
+                                  -fx-background-radius: 10;
+                                  -fx-border-color: #31486d;
+                                  -fx-border-width: 1;
+                                  -fx-border-radius: 10;">
+                    <Label text="📊" style="-fx-font-size: 18px;"/>
+                </StackPane>
+
+                <VBox spacing="2">
+                    <Label text="ATTENDANCE VIEW"
+                           style="-fx-text-fill: #eef4ff;
+                                  -fx-font-size: 14px;
+                                  -fx-font-weight: bold;
+                                  -fx-font-family: 'Consolas';"/>
+                    <Label text="Individual &amp; Batch Query Console"
+                           style="-fx-text-fill: #7f9cc3;
+                                  -fx-font-size: 10px;
+                                  -fx-font-family: 'Consolas';"/>
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <HBox alignment="CENTER" spacing="7"
+                      style="-fx-background-color: #142033;
+                             -fx-background-radius: 20;
+                             -fx-border-color: #29405f;
+                             -fx-border-radius: 20;
+                             -fx-border-width: 1;
+                             -fx-padding: 6 16 6 12;">
+                    <StackPane prefWidth="7" prefHeight="7"
+                               style="-fx-background-color: #22c55e;
+                                      -fx-background-radius: 4;
+                                      -fx-effect: dropshadow(gaussian,#22c55e,6,0.6,0,0);"/>
+                    <Label fx:id="statusLabel" text="Ready"
+                           style="-fx-text-fill: #8eb7eb;
+                                  -fx-font-size: 10px;
+                                  -fx-font-family: 'Consolas';"/>
+                </HBox>
+
+                <Button text="← Dashboard" onAction="#backToDashboard"
+                        style="-fx-background-color: #16233b;
+                               -fx-text-fill: #b8d5ff;
+                               -fx-border-color: #35517b;
+                               -fx-border-width: 1;
+                               -fx-border-radius: 8;
+                               -fx-background-radius: 8;
+                               -fx-font-size: 11px;
+                               -fx-font-family: 'Consolas';
+                               -fx-font-weight: bold;
+                               -fx-cursor: hand;
+                               -fx-padding: 8 16 8 16;"/>
+            </HBox>
         </HBox>
     </top>
 
+    <!-- ═══════════════════════  CENTER  ═══════════════════════ -->
     <center>
-        <VBox spacing="14">
-            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <VBox spacing="16">
+            <padding><Insets top="24" right="28" bottom="24" left="28"/></padding>
 
-            <HBox spacing="12">
-                <VBox spacing="6">
-                    <Label text="Mode" style="-fx-text-fill: #a0c4ff;"/>
-                    <ComboBox fx:id="modeComboBox" prefWidth="180"/>
-                </VBox>
-                <VBox spacing="6">
-                    <Label text="View Type" style="-fx-text-fill: #a0c4ff;"/>
-                    <ComboBox fx:id="viewTypeComboBox" prefWidth="180"/>
-                </VBox>
-                <VBox spacing="6" HBox.hgrow="ALWAYS">
-                    <Label fx:id="targetLabel" text="Student ID" style="-fx-text-fill: #a0c4ff;"/>
-                    <TextField fx:id="targetField" promptText="Enter value"/>
-                </VBox>
-                <VBox spacing="6">
-                    <Label text="Actions" style="-fx-text-fill: #a0c4ff;"/>
-                    <HBox spacing="8">
-                        <Button text="Load Details" onAction="#loadDetails"/>
-                        <Button text="Load Summary" onAction="#loadSummary"/>
+            <!-- ── QUERY CONTROL PANEL ── -->
+            <VBox spacing="0"
+                  style="-fx-background-color: #121d33;
+                         -fx-background-radius: 12;
+                         -fx-border-color: #243757;
+                         -fx-border-radius: 12;
+                         -fx-border-width: 1;
+                         -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.28),10,0,0,3);">
+
+                <HBox alignment="CENTER_LEFT" spacing="10"
+                      style="-fx-background-color: #162136;
+                             -fx-background-radius: 12 12 0 0;
+                             -fx-border-color: #243757;
+                             -fx-border-width: 0 0 1 0;">
+                    <padding><Insets top="10" right="18" bottom="10" left="16"/></padding>
+                    <StackPane prefWidth="3" prefHeight="16"
+                               style="-fx-background-color: #3b82f6; -fx-background-radius: 2;"/>
+                    <Label text="QUERY PARAMETERS"
+                           style="-fx-text-fill: #60a5fa;
+                                  -fx-font-size: 10px;
+                                  -fx-font-weight: bold;
+                                  -fx-font-family: 'Consolas';"/>
+                </HBox>
+
+                <HBox spacing="16" alignment="CENTER_LEFT">
+                    <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+
+                    <VBox spacing="6">
+                        <Label text="MODE"
+                               style="-fx-text-fill: #7f9cc3;
+                                      -fx-font-size: 9px;
+                                      -fx-font-weight: bold;
+                                      -fx-font-family: 'Consolas';"/>
+                        <ComboBox fx:id="modeComboBox" prefWidth="175"
+                                  style="-fx-background-color: #18243b;
+                                         -fx-border-color: #2c4467;
+                                         -fx-border-radius: 7;
+                                         -fx-background-radius: 7;
+                                         -fx-text-fill: #dbe8ff;
+                                         -fx-font-family: 'Consolas';
+                                         -fx-font-size: 12px;"/>
+                    </VBox>
+
+                    <StackPane prefWidth="1" prefHeight="38"
+                               style="-fx-background-color: #29405f;"/>
+
+                    <VBox spacing="6">
+                        <Label text="VIEW TYPE"
+                               style="-fx-text-fill: #7f9cc3;
+                                      -fx-font-size: 9px;
+                                      -fx-font-weight: bold;
+                                      -fx-font-family: 'Consolas';"/>
+                        <ComboBox fx:id="viewTypeComboBox" prefWidth="175"
+                                  style="-fx-background-color: #18243b;
+                                         -fx-border-color: #2c4467;
+                                         -fx-border-radius: 7;
+                                         -fx-background-radius: 7;
+                                         -fx-text-fill: #dbe8ff;
+                                         -fx-font-family: 'Consolas';
+                                         -fx-font-size: 12px;"/>
+                    </VBox>
+
+                    <StackPane prefWidth="1" prefHeight="38"
+                               style="-fx-background-color: #29405f;"/>
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label fx:id="targetLabel" text="STUDENT ID"
+                               style="-fx-text-fill: #7f9cc3;
+                                      -fx-font-size: 9px;
+                                      -fx-font-weight: bold;
+                                      -fx-font-family: 'Consolas';"/>
+                        <TextField fx:id="targetField" promptText="Enter value…"
+                                   style="-fx-background-color: #18243b;
+                                          -fx-border-color: #2c4467;
+                                          -fx-border-radius: 7;
+                                          -fx-background-radius: 7;
+                                          -fx-text-fill: #dbe8ff;
+                                          -fx-prompt-text-fill: #6580a6;
+                                          -fx-font-family: 'Consolas';
+                                          -fx-font-size: 12px;
+                                          -fx-padding: 8 12 8 12;"/>
+                    </VBox>
+
+                    <StackPane prefWidth="1" prefHeight="38"
+                               style="-fx-background-color: #29405f;"/>
+
+                    <VBox spacing="6">
+                        <Label text="EXECUTE"
+                               style="-fx-text-fill: #7f9cc3;
+                                      -fx-font-size: 9px;
+                                      -fx-font-weight: bold;
+                                      -fx-font-family: 'Consolas';"/>
+                        <HBox spacing="10">
+                            <Button text="Load Details" onAction="#loadDetails"
+                                    style="-fx-background-color: #18304f;
+                                           -fx-text-fill: #9ad7ff;
+                                           -fx-border-color: #32537c;
+                                           -fx-border-width: 1;
+                                           -fx-border-radius: 7;
+                                           -fx-background-radius: 7;
+                                           -fx-font-family: 'Consolas';
+                                           -fx-font-size: 11px;
+                                           -fx-font-weight: bold;
+                                           -fx-cursor: hand;
+                                           -fx-padding: 8 20 8 20;"/>
+                            <Button text="⚡  Load Summary" onAction="#loadSummary"
+                                    style="-fx-background-color: linear-gradient(to right,#2563eb,#3b82f6);
+                                           -fx-text-fill: white;
+                                           -fx-border-color: #60a5fa;
+                                           -fx-border-width: 1;
+                                           -fx-border-radius: 7;
+                                           -fx-background-radius: 7;
+                                           -fx-font-family: 'Consolas';
+                                           -fx-font-size: 11px;
+                                           -fx-font-weight: bold;
+                                           -fx-cursor: hand;
+                                           -fx-padding: 8 20 8 20;
+                                           -fx-effect: dropshadow(gaussian,rgba(59,130,246,0.28),10,0,0,3);"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- ── DUAL OUTPUT PANELS ── -->
+            <HBox spacing="16" VBox.vgrow="ALWAYS">
+
+                <!-- Details Output -->
+                <VBox spacing="0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                      style="-fx-background-color: #121d33;
+                             -fx-background-radius: 12;
+                             -fx-border-color: #243757;
+                             -fx-border-radius: 12;
+                             -fx-border-width: 1;
+                             -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.24),8,0,0,2);">
+
+                    <HBox alignment="CENTER_LEFT" spacing="10"
+                          style="-fx-background-color: #162136;
+                                 -fx-background-radius: 12 12 0 0;
+                                 -fx-border-color: #243757;
+                                 -fx-border-width: 0 0 1 0;">
+                        <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
+                        <StackPane prefWidth="3" prefHeight="16"
+                                   style="-fx-background-color: linear-gradient(to bottom,#22d3ee,#0891b2);
+                                          -fx-background-radius: 2;"/>
+                        <Label text="DETAILS RESPONSE"
+                               style="-fx-text-fill: #67e8f9;
+                                      -fx-font-size: 10px;
+                                      -fx-font-weight: bold;
+                                      -fx-font-family: 'Consolas';"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <HBox spacing="4" alignment="CENTER"
+                              style="-fx-background-color: #143041;
+                                     -fx-background-radius: 5;
+                                     -fx-border-color: #26526a;
+                                     -fx-border-radius: 5;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 3 10 3 10;">
+                            <StackPane prefWidth="6" prefHeight="6"
+                                       style="-fx-background-color: #22d3ee;
+                                              -fx-background-radius: 3;"/>
+                            <Label text="RAW OUTPUT"
+                                   style="-fx-text-fill: #67e8f9;
+                                          -fx-font-size: 8px;
+                                          -fx-font-family: 'Consolas';
+                                          -fx-font-weight: bold;"/>
+                        </HBox>
                     </HBox>
-                </VBox>
-            </HBox>
 
-            <Label fx:id="statusLabel" textFill="WHITE"/>
+                    <HBox spacing="0"
+                          style="-fx-background-color: #152238;
+                                 -fx-border-color: #243757;
+                                 -fx-border-width: 0 0 1 0;
+                                 -fx-padding: 5 16 5 16;">
+                        <Label text="student · course · session · status · hours"
+                               style="-fx-text-fill: #7594ba;
+                                      -fx-font-size: 9px;
+                                      -fx-font-family: 'Consolas';"/>
+                    </HBox>
 
-            <HBox spacing="12" VBox.vgrow="ALWAYS">
-                <VBox spacing="6" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
-                    <Label text="Details Response" style="-fx-text-fill: #a0c4ff;"/>
-                    <TextArea fx:id="detailsArea" wrapText="true" VBox.vgrow="ALWAYS"/>
+                    <VBox VBox.vgrow="ALWAYS">
+                        <padding><Insets top="12" right="14" bottom="14" left="14"/></padding>
+                        <TextArea fx:id="detailsArea" wrapText="true" VBox.vgrow="ALWAYS"
+                                  prefHeight="520"
+                                  style="-fx-control-inner-background: #18243b;
+                                         -fx-background-color: #18243b;
+                                         -fx-border-color: #2c4467;
+                                         -fx-border-radius: 8;
+                                         -fx-background-radius: 8;
+                                         -fx-text-fill: #a5e3ff;
+                                         -fx-font-family: 'Consolas';
+                                         -fx-font-size: 11px;
+                                         -fx-highlight-fill: #28405e;
+                                         -fx-padding: 14;"/>
+                    </VBox>
                 </VBox>
-                <VBox spacing="6" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
-                    <Label text="Summary Response" style="-fx-text-fill: #a0c4ff;"/>
-                    <TextArea fx:id="summaryArea" wrapText="true" VBox.vgrow="ALWAYS"/>
+
+                <!-- Summary Output -->
+                <VBox spacing="0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                      style="-fx-background-color: #121d33;
+                             -fx-background-radius: 12;
+                             -fx-border-color: #243757;
+                             -fx-border-radius: 12;
+                             -fx-border-width: 1;
+                             -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.24),8,0,0,2);">
+
+                    <HBox alignment="CENTER_LEFT" spacing="10"
+                          style="-fx-background-color: #162136;
+                                 -fx-background-radius: 12 12 0 0;
+                                 -fx-border-color: #243757;
+                                 -fx-border-width: 0 0 1 0;">
+                        <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
+                        <StackPane prefWidth="3" prefHeight="16"
+                                   style="-fx-background-color: linear-gradient(to bottom,#a78bfa,#7c3aed);
+                                          -fx-background-radius: 2;"/>
+                        <Label text="SUMMARY RESPONSE"
+                               style="-fx-text-fill: #c4b5fd;
+                                      -fx-font-size: 10px;
+                                      -fx-font-weight: bold;
+                                      -fx-font-family: 'Consolas';"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <HBox spacing="4" alignment="CENTER"
+                              style="-fx-background-color: #261a45;
+                                     -fx-background-radius: 5;
+                                     -fx-border-color: #4d3a7c;
+                                     -fx-border-radius: 5;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 3 10 3 10;">
+                            <StackPane prefWidth="6" prefHeight="6"
+                                       style="-fx-background-color: #a78bfa;
+                                              -fx-background-radius: 3;"/>
+                            <Label text="JSON OUTPUT"
+                                   style="-fx-text-fill: #c4b5fd;
+                                          -fx-font-size: 8px;
+                                          -fx-font-family: 'Consolas';
+                                          -fx-font-weight: bold;"/>
+                        </HBox>
+                    </HBox>
+
+                    <HBox spacing="0"
+                          style="-fx-background-color: #152238;
+                                 -fx-border-color: #243757;
+                                 -fx-border-width: 0 0 1 0;
+                                 -fx-padding: 5 16 5 16;">
+                        <Label text="aggregated · percentages · totals · hours"
+                               style="-fx-text-fill: #7594ba;
+                                      -fx-font-size: 9px;
+                                      -fx-font-family: 'Consolas';"/>
+                    </HBox>
+
+                    <VBox VBox.vgrow="ALWAYS">
+                        <padding><Insets top="12" right="14" bottom="14" left="14"/></padding>
+                        <TextArea fx:id="summaryArea" wrapText="true" VBox.vgrow="ALWAYS"
+                                  prefHeight="520"
+                                  style="-fx-control-inner-background: #18243b;
+                                         -fx-background-color: #18243b;
+                                         -fx-border-color: #2c4467;
+                                         -fx-border-radius: 8;
+                                         -fx-background-radius: 8;
+                                         -fx-text-fill: #d8c8ff;
+                                         -fx-font-family: 'Consolas';
+                                         -fx-font-size: 11px;
+                                         -fx-highlight-fill: #35255d;
+                                         -fx-padding: 14;"/>
+                    </VBox>
                 </VBox>
             </HBox>
         </VBox>
