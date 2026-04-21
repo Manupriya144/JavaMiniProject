@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.frontend.controller.ca.CAManagementController"
+      spacing="12" style="-fx-background-color: #0f1b35;">
+    <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="8">
+        <Label text="CA Management (Lecturer)" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Back Dashboard" onAction="#backToDashboard"
+                style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-background-radius: 8;"/>
+    </HBox>
+
+    <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+        <VBox spacing="10">
+            <VBox spacing="6" style="-fx-background-color: #162040; -fx-background-radius: 10;">
+                <padding><Insets top="10" right="12" bottom="10" left="12"/></padding>
+                <Label text="UploadCAMarks" style="-fx-text-fill: #a0c4ff; -fx-font-weight: bold;"/>
+                <HBox spacing="8">
+                    <TextField fx:id="uploadStudentIdField" promptText="student_id" prefWidth="130"/>
+                    <TextField fx:id="uploadAssessmentTypeIdField" promptText="assessment_type_id" prefWidth="150"/>
+                    <TextField fx:id="uploadMarksField" promptText="marks (0-100)" prefWidth="120"/>
+                    <Button text="Upload" onAction="#uploadCAMarks"/>
+                </HBox>
+            </VBox>
+
+            <VBox spacing="6" style="-fx-background-color: #162040; -fx-background-radius: 10;">
+                <padding><Insets top="10" right="12" bottom="10" left="12"/></padding>
+                <Label text="UpdateCAMarks" style="-fx-text-fill: #a0c4ff; -fx-font-weight: bold;"/>
+                <HBox spacing="8">
+                    <TextField fx:id="updateMarkIdField" promptText="mark_id" prefWidth="130"/>
+                    <TextField fx:id="updateMarksField" promptText="new marks" prefWidth="120"/>
+                    <Button text="Update" onAction="#updateCAMarks"/>
+                </HBox>
+            </VBox>
+
+            <VBox spacing="6" style="-fx-background-color: #162040; -fx-background-radius: 10;">
+                <padding><Insets top="10" right="12" bottom="10" left="12"/></padding>
+                <Label text="GetStudentCAMarks" style="-fx-text-fill: #a0c4ff; -fx-font-weight: bold;"/>
+                <HBox spacing="8">
+                    <TextField fx:id="studentMarksStudentIdField" promptText="student_id" prefWidth="130"/>
+                    <TextField fx:id="studentMarksCourseIdField" promptText="course_id (optional)" prefWidth="170"/>
+                    <Button text="Load" onAction="#getStudentCAMarks"/>
+                </HBox>
+            </VBox>
+
+            <VBox spacing="6" style="-fx-background-color: #162040; -fx-background-radius: 10;">
+                <padding><Insets top="10" right="12" bottom="10" left="12"/></padding>
+                <Label text="GetBatchCAMarks" style="-fx-text-fill: #a0c4ff; -fx-font-weight: bold;"/>
+                <HBox spacing="8">
+                    <TextField fx:id="batchMarksBatchField" promptText="batch" prefWidth="120"/>
+                    <TextField fx:id="batchMarksCourseIdField" promptText="course_id (optional)" prefWidth="170"/>
+                    <Button text="Load" onAction="#getBatchCAMarks"/>
+                </HBox>
+            </VBox>
+
+            <VBox spacing="6" style="-fx-background-color: #162040; -fx-background-radius: 10;">
+                <padding><Insets top="10" right="12" bottom="10" left="12"/></padding>
+                <Label text="CheckCAEligibility (CA >= 40%)" style="-fx-text-fill: #a0c4ff; -fx-font-weight: bold;"/>
+                <HBox spacing="8">
+                    <TextField fx:id="studentEligibilityStudentIdField" promptText="student_id" prefWidth="130"/>
+                    <TextField fx:id="studentEligibilityCourseIdField" promptText="course_id" prefWidth="150"/>
+                    <Button text="Check" onAction="#checkCAEligibility"/>
+                </HBox>
+            </VBox>
+
+            <VBox spacing="6" style="-fx-background-color: #162040; -fx-background-radius: 10;">
+                <padding><Insets top="10" right="12" bottom="10" left="12"/></padding>
+                <Label text="GetBatchCAEligibilityReport" style="-fx-text-fill: #a0c4ff; -fx-font-weight: bold;"/>
+                <HBox spacing="8">
+                    <TextField fx:id="batchEligibilityBatchField" promptText="batch" prefWidth="120"/>
+                    <TextField fx:id="batchEligibilityCourseIdField" promptText="course_id" prefWidth="150"/>
+                    <Button text="Load" onAction="#getBatchCAEligibilityReport"/>
+                </HBox>
+            </VBox>
+
+            <Separator/>
+            <Label fx:id="statusLabel" textFill="white"/>
+            <TextArea fx:id="outputArea" prefHeight="220" wrapText="true"/>
+        </VBox>
+    </ScrollPane>
+</VBox>

@@ -106,6 +106,7 @@ public class LecturerDashboardController implements Initializable {
     // ─── Navigation ──────────────────────────────────────────────────────────
 
     @FXML private void openCourses()    { loadView("LecturerCourses.fxml"); }
+    @FXML private void openCA()         { loadView("CAManagement.fxml"); }
     @FXML private void openMarks()      { loadView("MarksUpload.fxml"); }
     @FXML private void openStudents()   { loadView("StudentDetails.fxml"); }
     @FXML private void openEligibility(){ loadView("Eligibility.fxml"); }

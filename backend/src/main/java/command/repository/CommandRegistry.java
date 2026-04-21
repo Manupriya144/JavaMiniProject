@@ -21,6 +21,12 @@ import command.medical.RejectMedicalCommand;
 import command.medical.UpdateMedicalCommand;
 import command.notice.AddNoticeCommand;
 import command.course.AddCourseCommand;
+import command.ca.CheckCAEligibilityCommand;
+import command.ca.GetBatchCAEligibilityReportCommand;
+import command.ca.GetBatchCAMarksCommand;
+import command.ca.GetStudentCAMarksCommand;
+import command.ca.UpdateCAMarksCommand;
+import command.ca.UploadCAMarksCommand;
 import command.student.GetStudentByUserIdCommand;
 import command.attendance.UpdateAttendanceCommand;
 import command.student.UpdateStudentProfileCommand;
@@ -30,12 +36,14 @@ import command.user.GetAllUsersCommand;
 import command.student.GetStudentByIdCommand;
 import command.user.GetUserByIdCommand;
 import dao.attendance.AttendanceDAO;
+import dao.ca.CAMarkDAO;
 import dao.medical.MedicalDAO;
 import dao.notice.NoticeDAO;
 import dao.student.StudentDAO;
 import dao.timetable.TimeTableDAO;
 import dao.user.UserDAO;
 import service.attendance.AttendanceService;
+import service.ca.CAMarkService;
 import service.login.AuthService;
 import service.medical.MedicalService;
 import service.notice.AddNoticeService;
@@ -139,6 +147,16 @@ public class CommandRegistry {
             commands.put("GetBatchAttendanceSummary", new GetBatchAttendanceSummaryCommand(attendanceService));
             commands.put("CheckAttendanceEligibility", new CheckAttendanceEligibilityCommand(attendanceService));
             commands.put("GetBatchAttendanceEligibilityReport", new GetBatchAttendanceEligibilityReportCommand(attendanceService));
+
+            // CA marks related
+            CAMarkDAO caMarkDAO = new CAMarkDAO(connection);
+            CAMarkService caMarkService = new CAMarkService(caMarkDAO);
+            commands.put("UploadCAMarks", new UploadCAMarksCommand(caMarkService));
+            commands.put("UpdateCAMarks", new UpdateCAMarksCommand(caMarkService));
+            commands.put("GetStudentCAMarks", new GetStudentCAMarksCommand(caMarkService));
+            commands.put("GetBatchCAMarks", new GetBatchCAMarksCommand(caMarkService));
+            commands.put("CheckCAEligibility", new CheckCAEligibilityCommand(caMarkService));
+            commands.put("GetBatchCAEligibilityReport", new GetBatchCAEligibilityReportCommand(caMarkService));
 
             // medical related
             MedicalDAO medicalDAO = new MedicalDAO();
