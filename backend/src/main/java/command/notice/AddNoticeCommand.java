@@ -6,15 +6,15 @@ import command.repository.Command;
 import dto.requestDto.notice.AddNoticeReqDTO;
 import model.Notice;
 import service.login.AuthService;
-import service.notice.AddNoticeService;
+import service.notice.NoticeService;
 
 public class AddNoticeCommand implements Command {
 
-    private final AddNoticeService addNoticeService;
+    private final NoticeService addNoticeService;
     private final AuthService authService;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public AddNoticeCommand(AddNoticeService addNoticeService, AuthService authService) {
+    public AddNoticeCommand(NoticeService addNoticeService, AuthService authService) {
         this.addNoticeService = addNoticeService;
         this.authService = authService;
     }

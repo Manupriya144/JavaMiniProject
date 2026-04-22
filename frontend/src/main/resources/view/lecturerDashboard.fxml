@@ -46,6 +46,8 @@
                         style="-fx-background-color: transparent; -fx-text-fill: #a0b8e0; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>
                 <Button text="Marks" onAction="#openMarks"
                         style="-fx-background-color: transparent; -fx-text-fill: #a0b8e0; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                <Button text="CA Management" onAction="#openCA"
+                        style="-fx-background-color: transparent; -fx-text-fill: #a0b8e0; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>
                 <Button text="Students" onAction="#openStudents"
                         style="-fx-background-color: transparent; -fx-text-fill: #a0b8e0; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>
                 <Button text="Eligibility" onAction="#openEligibility"
@@ -142,6 +144,8 @@
                     <Separator style="-fx-background-color: #1e3c72;"/>
                     <FlowPane hgap="12" vgap="12">
                         <Button text="📝  Upload Marks" onAction="#openMarks" prefHeight="42" prefWidth="180"
+                                style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                        <Button text="📊  CA Management" onAction="#openCA" prefHeight="42" prefWidth="180"
                                 style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
                         <Button text="📋  View Attendance" onAction="#openAttendance" prefHeight="42" prefWidth="180"
                                 style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>

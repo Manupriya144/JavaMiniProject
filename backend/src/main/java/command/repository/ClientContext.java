@@ -2,6 +2,12 @@ package command.repository;
 
 import java.io.PrintWriter;
 
+/**
+ * here normally save client details
+ * because same time more client connect to the
+ * sever so save their details is the only purpose of this
+ * and keep it clean architecture
+ */
 public class ClientContext {
 
     private final PrintWriter output;

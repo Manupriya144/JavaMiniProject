@@ -112,7 +112,7 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void openUsers() {
-        loadView("createUser.fxml");
+        loadView("UserManagement.fxml");
     }
 
     @FXML
@@ -122,22 +122,22 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void openCourses() {
-        loadView("AddCourse.fxml");
+        loadView("CourseDisplay.fxml");
     }
 
     @FXML
     private void openNotices() {
-        openAddNotices();
+        loadView("NoticeDisplay.fxml");
     }
 
     @FXML
     private void openTimetables() {
-        openTimeAddTimeTables();
+        loadView("TimetableManagement.fxml");
     }
 
     @FXML
     private void openReports() {
-        loadView("BatchFullEligibility.fxml");
+        loadView("Reports.fxml");
     }
 
     @FXML
@@ -147,21 +147,26 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     public void openAddNotices() {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AddNotice.fxml"));
-                Parent root = loader.load();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AddNotice.fxml"));
+            Parent root = loader.load();
 
-                AddNoticeController controller = loader.getController();
-                controller.setNoticeService(new NoticeService(ServerClient.getInstance()));
+            AddNoticeController controller = loader.getController();
+            controller.setNoticeService(new NoticeService(ServerClient.getInstance()));
 
-                Stage stage = (Stage) welcomeLabel.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.show();
+            Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+    }
+
+    @FXML
+    public void openAssignCourse() {
+        loadView("AssignCourse.fxml");
     }
 
     @FXML
@@ -232,7 +237,5 @@ public class AdminDashboardController implements Initializable {
             e.printStackTrace();
         }
     }
-
-
 
 }

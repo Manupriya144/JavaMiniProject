@@ -84,7 +84,7 @@ public class LoginController {
                         break;
                     case "Admin":
                     case "Dean":
-                        loadDashboard("/view/adminDashboard.fxml",username);
+                        loadDashboard("/view/AdminDashboard.fxml",username);
                         break;
                     default:
                         System.out.println("Unknown role: access denied");

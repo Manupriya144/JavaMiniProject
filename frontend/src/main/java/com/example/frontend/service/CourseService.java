@@ -1,11 +1,18 @@
 package com.example.frontend.service;
 
+import com.example.frontend.dto.CourseAllResponseDTO;
 import com.example.frontend.dto.CourseRequestDTO;
+import com.example.frontend.dto.CourseResponseDTO;
+import com.example.frontend.dto.RequestDTO;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.session.SessionManager;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CourseService {
@@ -36,6 +43,69 @@ public class CourseService {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public List<CourseResponseDTO> getAllCourses() {
+        try {
+            RequestDTO requestDTO = new RequestDTO(
+                    "GetAllCourses",
+                    null,
+                    SessionManager.getToken()
+            );
+
+            String requestJson = mapper.writeValueAsString(requestDTO);
+            String responseJson = client.sendRequest(requestJson);
+
+            if (responseJson == null || responseJson.isEmpty()) {
+                return Collections.emptyList();
+            }
+
+            if (responseJson.contains("\"success\":false")) {
+                return Collections.emptyList();
+            }
+
+            return mapper.readValue(responseJson, new TypeReference<List<CourseResponseDTO>>() {});
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public List<CourseAllResponseDTO> getAllCoursesFull() {
+        try {
+            RequestDTO requestDTO = new RequestDTO(
+                    "GET_ALL_COURSES_FULL",
+                    null,
+                    SessionManager.getToken()
+            );
+
+            String requestJson = mapper.writeValueAsString(requestDTO);
+            String responseJson = client.sendRequest(requestJson);
+
+            if (responseJson == null || responseJson.isEmpty()) {
+                return Collections.emptyList();
+            }
+
+            JsonNode root = mapper.readTree(responseJson);
+
+            // If backend returns error object
+            if (root.isObject()) {
+                if (root.has("success") && !root.get("success").asBoolean()) {
+                    return Collections.emptyList();
+                }
+            }
+
+            // If backend returns array directly
+            if (root.isArray()) {
+                return mapper.readValue(responseJson, new TypeReference<List<CourseAllResponseDTO>>() {});
+            }
+
+            return Collections.emptyList();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
         }
     }
 }

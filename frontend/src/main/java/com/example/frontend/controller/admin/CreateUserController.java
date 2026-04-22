@@ -78,7 +78,7 @@ public class CreateUserController implements Initializable {
 
         academicLevelBox.getItems().addAll("1", "2", "3", "4");
 
-        String[] departments = {"D01", "D02", "D03"};
+        String[] departments = {"ICT", "ET", "BST"};
         departmentBox.getItems().addAll(departments);
         techDepartmentBox.getItems().addAll(departments);
 
@@ -280,7 +280,7 @@ public class CreateUserController implements Initializable {
     @FXML
     private void goBack() throws IOException {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/adminDashboard.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminDashboard.fxml"));
         Parent root = loader.load();
 
         Stage stage = (Stage) usernameField.getScene().getWindow();

@@ -219,16 +219,11 @@ public class StudentDashboardController implements Initializable {
     @FXML private void openTimetable()  { loadView("StudentTimetable.fxml"); }
     @FXML private void openNotices()    { loadView("NoticesView.fxml"); }
     @FXML private void openEligibility(){ loadView("StudentEligibility.fxml"); }
-<<<<<<< HEAD
-    @FXML private void openProfile()    { loadView("StudentProfile.fxml"); }
-
+//    @FXML private void openMyAcademicEndpoints() { loadView("MyAcademicEndpoints.fxml"); }
     @FXML private void openStudentFinalMarks() { loadView("ViewStudentFinalMarks.fxml"); }
-    @FXML private void openStudentGrades() { loadView("StudentGrades.fxml"); }
+    @FXML private void openStudentGrades() { loadView("StudentGrades.fxml");}
 
-=======
-    @FXML private void openMyAcademicEndpoints() { loadView("MyAcademicEndpoints.fxml"); }
-
-    @FXML
+        @FXML
     private void openProfile() {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -251,7 +246,6 @@ public class StudentDashboardController implements Initializable {
             e.printStackTrace();
         }
     }
->>>>>>> main
     @FXML
     void logout(ActionEvent event) {
         try {

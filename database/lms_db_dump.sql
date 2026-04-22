@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS lecturer_course (
     PRIMARY KEY (lecturer_id, course_id),
     FOREIGN KEY (lecturer_id) REFERENCES lecturers(user_id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES course(course_id) ON DELETE CASCADE
-    );
+);
 
 -- Medical
 CREATE TABLE IF NOT EXISTS medical (
@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS notice (
     title VARCHAR(150) NOT NULL,
     description TEXT,
     pdf_file_path VARCHAR(255),
-    created_by INT,
+    created_by VARCHAR(10),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE SET NULL
 );

@@ -31,7 +31,11 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
-       
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
@@ -42,16 +46,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
             <version>${jackson.version}</version>
         </dependency>
 
@@ -77,11 +71,11 @@
         </dependency>
 
         <!-- TilesFX (optional dashboard tiles) -->
-        <dependency>
-            <groupId>eu.hansolo</groupId>
-            <artifactId>tilesfx</artifactId>
-            <version>21.0.9</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>eu.hansolo</groupId>-->
+<!--            <artifactId>tilesfx</artifactId>-->
+<!--            <version>21.0.9</version>-->
+<!--        </dependency>-->
 
         <!-- JUnit 5 -->
         <dependency>

@@ -45,7 +45,7 @@ public class AddCourseController implements Initializable {
 
         academicLevelBox.setItems(FXCollections.observableArrayList("1", "2", "3", "4"));
         semesterBox.setItems(FXCollections.observableArrayList("1", "2"));
-        departmentBox.setItems(FXCollections.observableArrayList("D01", "D02", "D03"));
+        departmentBox.setItems(FXCollections.observableArrayList("BST", "ET", "ICT"));
     }
 
     @FXML
@@ -92,7 +92,7 @@ public class AddCourseController implements Initializable {
     @FXML
     private void goBack(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/adminDashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminDashboard.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) adminNameLabel.getScene().getWindow();

@@ -25,6 +25,7 @@ public class SessionManager {
     public static void clear(){
         SessionManager.token = "";
         SessionManager.role = "";
+        SessionManager.userId = null;
 
     }
 
