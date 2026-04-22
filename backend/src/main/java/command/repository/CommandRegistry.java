@@ -10,6 +10,8 @@ import command.attendance.AddAttendanceCommand;
 import command.attendance.DeleteAttendanceCommand;
 import command.attendance.GetAttendanceByIdCommand;
 import command.attendance.GetAttendanceSessionsCommand;
+import command.techofficer.GetTechOfficerProfileCommand;
+import command.techofficer.UpdateTechOfficerProfileCommand;
 import command.attendance.GetAttendanceStudentsCommand;
 import command.attendance.CheckAttendanceEligibilityCommand;
 import command.attendance.GetBatchAttendanceCommand;
@@ -41,7 +43,9 @@ import command.user.GetAllUsersCommand;
 import command.student.GetStudentByIdCommand;
 import command.user.GetUserByIdCommand;
 import dao.attendance.AttendanceDAO;
+import dao.techofficer.TechOfficerDAO;
 import dao.ca.CAMarkDAO;
+import command.techofficer.GetMyTechOfficerProfileCommand;
 
 
 import dao.lecture.LecturerDAO;
@@ -61,6 +65,7 @@ import service.notice.NoticeService;
 import service.student.StudentService;
 import service.timetable.TimeTableService;
 import service.user.UserService;
+import service.techofficer.TechOfficerService;
 import utility.DataSource;
 
 import command.finalMarks.UploadFinalMarksCommand;
@@ -240,6 +245,13 @@ public class CommandRegistry {
             NoticeService noticeService = new NoticeService(noticeDAO);
             commands.put("CREATE_NOTICE",new AddNoticeCommand(noticeService,authService));
             commands.put("GET_ALL_NOTICE",new GetAllNoticeCommand(noticeService,authService));
+
+            // technical officer profile related
+            TechOfficerDAO techOfficerDAO = new TechOfficerDAO(connection);
+            TechOfficerService techOfficerService = new TechOfficerService(techOfficerDAO);
+            commands.put("GET_TECH_OFFICER_PROFILE", new GetTechOfficerProfileCommand(techOfficerService));
+            commands.put("GET_MY_TECH_OFFICER_PROFILE", new GetMyTechOfficerProfileCommand(techOfficerService));
+            commands.put("UPDATE_TECH_OFFICER_PROFILE", new UpdateTechOfficerProfileCommand(techOfficerService));
 
             // course related
             CourseDAO courseDAO = new CourseDAO();

@@ -3,10 +3,12 @@ package com.example.frontend.service;
 import com.example.frontend.dto.RequestDTO;
 import com.example.frontend.dto.UserRequestDTO;
 import com.example.frontend.dto.UserResponseDTO;
+import com.example.frontend.model.TechOfficerProfile;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.session.SessionManager;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -69,6 +71,99 @@ public class UserService {
         } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
+        }
+    }
+
+    public TechOfficerProfile getTechOfficerProfile(String userId) {
+        try {
+            String requestJson = String.format(
+                    "{\"command\":\"GET_TECH_OFFICER_PROFILE\",\"data\":{\"userId\":\"%s\"},\"token\":\"%s\"}",
+                    userId, SessionManager.getToken()
+            );
+
+            String response = client.sendRequest(requestJson);
+            JsonNode node = mapper.readTree(response);
+
+            if (!node.get("success").asBoolean()) {
+                return null;
+            }
+
+            JsonNode data = node.get("data");
+            TechOfficerProfile profile = new TechOfficerProfile();
+            profile.setUserId(data.path("userId").asText(""));
+            profile.setUsername(data.path("username").asText(""));
+            profile.setEmail(data.path("email").asText(""));
+            profile.setContactNumber(data.path("contactNumber").asText(""));
+            profile.setProfilePicture(data.path("profilePicture").asText(""));
+            profile.setRole(data.path("role").asText(""));
+            profile.setDepartmentId(data.path("departmentId").asText(""));
+            return profile;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public TechOfficerProfile getMyTechOfficerProfile() {
+        try {
+            String token = SessionManager.getToken();
+            if (token == null || token.isBlank()) {
+                return null;
+            }
+
+            String requestJson = String.format(
+                    "{\"command\":\"GET_MY_TECH_OFFICER_PROFILE\",\"data\":{},\"token\":\"%s\"}",
+                    token
+            );
+
+            String response = client.sendRequest(requestJson);
+            JsonNode node = mapper.readTree(response);
+
+            if (!node.path("success").asBoolean(false)) {
+                return null;
+            }
+
+            JsonNode data = node.get("data");
+            if (data == null || data.isNull()) {
+                return null;
+            }
+
+            TechOfficerProfile profile = new TechOfficerProfile();
+            profile.setUserId(data.path("userId").asText(""));
+            profile.setUsername(data.path("username").asText(""));
+            profile.setEmail(data.path("email").asText(""));
+            profile.setContactNumber(data.path("contactNumber").asText(""));
+            profile.setProfilePicture(data.path("profilePicture").asText(""));
+            profile.setRole(data.path("role").asText(""));
+            profile.setDepartmentId(data.path("departmentId").asText(""));
+            return profile;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean updateTechOfficerProfile(TechOfficerProfile profile) {
+        try {
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("userId", profile.getUserId());
+            payload.put("username", profile.getUsername());
+            payload.put("email", profile.getEmail());
+            payload.put("password", profile.getPassword());
+            payload.put("contactNumber", profile.getContactNumber());
+            payload.put("profilePicture", profile.getProfilePicture());
+            payload.put("departmentId", profile.getDepartmentId());
+
+            Map<String, Object> request = new HashMap<>();
+            request.put("command", "UPDATE_TECH_OFFICER_PROFILE");
+            request.put("data", payload);
+            request.put("token", SessionManager.getToken());
+
+            String response = client.sendRequest(mapper.writeValueAsString(request));
+            JsonNode node = mapper.readTree(response);
+            return node.has("success") && node.get("success").asBoolean();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

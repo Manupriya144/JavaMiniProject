@@ -5,6 +5,9 @@ import com.example.frontend.network.ServerClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 public class AuthService {
 
     private final ServerClient client;
@@ -29,9 +32,12 @@ public class AuthService {
 
         if(node.get("success").asBoolean()){
 
-            String role = node.has("role") ? node.get("role").asText() : "";
-            String token = node.has("token") ? node.get("token").asText() : "";
-            String userId = node.has("userId") ? node.get("userId").asText() : "";
+            String role = node.has("role") && !node.get("role").isNull() ? node.get("role").asText() : "";
+            String token = node.has("token") && !node.get("token").isNull() ? node.get("token").asText() : "";
+            String userId = node.has("userId") && !node.get("userId").isNull() ? node.get("userId").asText() : "";
+            if ((userId == null || userId.isBlank()) && token != null && !token.isBlank()) {
+                userId = extractUserIdFromToken(token);
+            }
 
 
             User user = new User(userId, username, "", role);
@@ -58,6 +64,25 @@ public class AuthService {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    private String extractUserIdFromToken(String token) {
+        try {
+            String[] parts = token.split("\\.");
+            if (parts.length < 2) {
+                return null;
+            }
+
+            byte[] payloadBytes = Base64.getUrlDecoder().decode(parts[1]);
+            JsonNode payload = mapper.readTree(new String(payloadBytes, StandardCharsets.UTF_8));
+            if (payload.has("userId") && !payload.get("userId").isNull()) {
+                String userId = payload.get("userId").asText();
+                return userId == null || userId.isBlank() ? null : userId;
+            }
+            return null;
+        } catch (Exception ignored) {
+            return null;
         }
     }
 }
