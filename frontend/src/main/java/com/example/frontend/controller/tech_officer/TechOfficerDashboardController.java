@@ -1,8 +1,10 @@
 package com.example.frontend.controller.tech_officer;
 
 import com.example.frontend.controller.admin.LoginController;
+import com.example.frontend.model.TechOfficerDashboardStats;
 import com.example.frontend.service.AttendanceService;
 import com.example.frontend.service.AuthService;
+import com.example.frontend.service.TechOfficerDashboardService;
 import com.example.frontend.session.SessionManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import javafx.event.ActionEvent;
@@ -43,8 +45,8 @@ public class TechOfficerDashboardController implements Initializable {
     @FXML private ComboBox<String> viewTypeEligibilityCombo;
 
     private String techName = LoginController.username;
-    private int techId = -1;
     private final AttendanceService attendanceService = new AttendanceService(LoginController.client);
+    private final TechOfficerDashboardService dashboardService = new TechOfficerDashboardService(LoginController.client);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -67,15 +69,22 @@ public class TechOfficerDashboardController implements Initializable {
 
     public void setTechInfo(String name, int id) {
         this.techName = name;
-        this.techId = id;
     }
 
     private void loadStats() {
-        // TODO: replace with DB queries
-        totalStudentsLabel.setText("20");
-        attendanceSessionsLabel.setText("15");
-        medicalRecordsLabel.setText("8");
-        pendingApprovalsLabel.setText("3");
+        TechOfficerDashboardStats stats = dashboardService.getDashboardStats();
+        if (stats == null) {
+            totalStudentsLabel.setText("0");
+            attendanceSessionsLabel.setText("0");
+            medicalRecordsLabel.setText("0");
+            pendingApprovalsLabel.setText("0");
+            return;
+        }
+
+        totalStudentsLabel.setText(String.valueOf(stats.getTotalStudents()));
+        attendanceSessionsLabel.setText(String.valueOf(stats.getAttendanceSessions()));
+        medicalRecordsLabel.setText(String.valueOf(stats.getMedicalRecords()));
+        pendingApprovalsLabel.setText(String.valueOf(stats.getPendingApprovals()));
     }
 
     @FXML

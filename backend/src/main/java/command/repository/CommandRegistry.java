@@ -10,6 +10,7 @@ import command.attendance.AddAttendanceCommand;
 import command.attendance.DeleteAttendanceCommand;
 import command.attendance.GetAttendanceByIdCommand;
 import command.attendance.GetAttendanceSessionsCommand;
+import command.techofficer.GetTechOfficerDashboardStatsCommand;
 import command.techofficer.GetTechOfficerProfileCommand;
 import command.techofficer.UpdateTechOfficerProfileCommand;
 import command.attendance.GetAttendanceStudentsCommand;
@@ -67,6 +68,7 @@ import service.timetable.TimeTableService;
 import service.user.UserService;
 import service.techofficer.TechOfficerService;
 import utility.DataSource;
+import service.techofficer.TechOfficerService;
 
 import command.finalMarks.UploadFinalMarksCommand;
 import command.finalMarks.UpdateFinalMarksCommand;
@@ -251,6 +253,7 @@ public class CommandRegistry {
             TechOfficerService techOfficerService = new TechOfficerService(techOfficerDAO);
             commands.put("GET_TECH_OFFICER_PROFILE", new GetTechOfficerProfileCommand(techOfficerService));
             commands.put("GET_MY_TECH_OFFICER_PROFILE", new GetMyTechOfficerProfileCommand(techOfficerService));
+            commands.put("GET_TECH_OFFICER_DASHBOARD_STATS", new GetTechOfficerDashboardStatsCommand(techOfficerService));
             commands.put("UPDATE_TECH_OFFICER_PROFILE", new UpdateTechOfficerProfileCommand(techOfficerService));
 
             // course related

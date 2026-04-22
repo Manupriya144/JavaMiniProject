@@ -5,6 +5,8 @@ import model.TechOfficer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TechOfficerDAO {
     private final Connection connection;
@@ -15,7 +17,7 @@ public class TechOfficerDAO {
 
     public TechOfficer getTechOfficerProfileByUserId(String userId) {
         String sql = "SELECT u.user_id, u.username, u.email, u.password, u.contact_number, u.profile_picture, u.role, t.department_id " +
-                "FROM users u INNER JOIN tech_officers t ON u.user_id = t.user_id " +
+                "FROM users u LEFT JOIN tech_officers t ON u.user_id = t.user_id " +
                 "WHERE u.user_id = ? AND u.role = 'Tech_Officer'";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userId);
@@ -42,6 +44,7 @@ public class TechOfficerDAO {
         String updateUserSql = "UPDATE users SET username = ?, email = ?, password = ?, contact_number = ?, profile_picture = ? " +
                 "WHERE user_id = ? AND role = 'Tech_Officer'";
         String updateTechSql = "UPDATE tech_officers SET department_id = ? WHERE user_id = ?";
+        String insertTechSql = "INSERT INTO tech_officers (user_id, department_id) VALUES (?, ?)";
 
         try {
             connection.setAutoCommit(false);
@@ -64,6 +67,14 @@ public class TechOfficerDAO {
                 techRows = techPs.executeUpdate();
             }
 
+            if (techRows == 0) {
+                try (PreparedStatement insertTechPs = connection.prepareStatement(insertTechSql)) {
+                    insertTechPs.setString(1, techOfficer.getUserId());
+                    insertTechPs.setString(2, techOfficer.getDepartmentId());
+                    techRows = insertTechPs.executeUpdate();
+                }
+            }
+
             if (userRows == 1 && techRows == 1) {
                 connection.commit();
                 return true;
@@ -84,5 +95,38 @@ public class TechOfficerDAO {
             } catch (Exception ignored) {
             }
         }
+    }
+
+    public Map<String, Integer> getDashboardStats() {
+        Map<String, Integer> stats = new HashMap<>();
+        stats.put("totalStudents", 0);
+        stats.put("attendanceSessions", 0);
+        stats.put("medicalRecords", 0);
+        stats.put("pendingApprovals", 0);
+
+        String totalStudentsSql = "SELECT COUNT(*) AS total FROM students";
+        String attendanceSessionsSql = "SELECT COUNT(*) AS total FROM session";
+        String medicalRecordsSql = "SELECT COUNT(*) AS total FROM medical";
+        String pendingApprovalsSql = "SELECT COUNT(*) AS total FROM medical WHERE status = 'Pending'";
+
+        try {
+            stats.put("totalStudents", querySingleCount(totalStudentsSql));
+            stats.put("attendanceSessions", querySingleCount(attendanceSessionsSql));
+            stats.put("medicalRecords", querySingleCount(medicalRecordsSql));
+            stats.put("pendingApprovals", querySingleCount(pendingApprovalsSql));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return stats;
+    }
+
+    private int querySingleCount(String sql) throws Exception {
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        }
+        return 0;
     }
 }

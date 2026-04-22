@@ -2,7 +2,10 @@ package service.techofficer;
 
 import dao.techofficer.TechOfficerDAO;
 import dto.requestDto.techofficer.UpdateTechOfficerProfileRequestDTO;
+import dto.responseDto.techofficer.TechOfficerDashboardStatsResponseDTO;
 import model.TechOfficer;
+
+import java.util.Map;
 
 public class TechOfficerService {
     private final TechOfficerDAO techOfficerDAO;
@@ -41,5 +44,15 @@ public class TechOfficerService {
         }
 
         return techOfficerDAO.updateTechOfficerProfile(existing);
+    }
+
+    public TechOfficerDashboardStatsResponseDTO getDashboardStats() {
+        Map<String, Integer> stats = techOfficerDAO.getDashboardStats();
+        return new TechOfficerDashboardStatsResponseDTO(
+                stats.getOrDefault("totalStudents", 0),
+                stats.getOrDefault("attendanceSessions", 0),
+                stats.getOrDefault("medicalRecords", 0),
+                stats.getOrDefault("pendingApprovals", 0)
+        );
     }
 }
