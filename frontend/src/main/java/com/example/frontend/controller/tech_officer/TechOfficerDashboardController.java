@@ -186,7 +186,7 @@ public class TechOfficerDashboardController implements Initializable {
     @FXML private void openMarkAttendance(){ loadView("MarkAttendance.fxml"); }
     @FXML private void openMedical()       { loadView("MedicalManagement.fxml"); }
     @FXML private void openAddMedical()    { loadView("AddMedical.fxml"); }
-    @FXML private void openTimetables()    { loadView("TimetableView.fxml"); }
+    @FXML private void openTimetables()    { loadView("DisplayTimeTable.fxml"); }
     @FXML private void openNotices()       { loadView("NoticesView.fxml"); }
     @FXML private void openProfile()       { loadView("TechOfficerProfile.fxml"); }
     @FXML
