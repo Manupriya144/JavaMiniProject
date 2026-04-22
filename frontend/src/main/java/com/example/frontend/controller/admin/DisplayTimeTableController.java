@@ -3,6 +3,7 @@ package com.example.frontend.controller.admin;
 import com.example.frontend.dto.TimeTableResponseDTO;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.service.TimeTableService;
+import com.example.frontend.session.SessionManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -343,7 +344,12 @@ public class DisplayTimeTableController implements Initializable {
     @FXML
     private void goBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminDashboard.fxml"));
+            String role = SessionManager.getRole();
+            String dashboardFxml = "Tech_Officer".equals(role)
+                    ? "/view/techOfficerDashboard.fxml"
+                    : "/view/AdminDashboard.fxml";
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(dashboardFxml));
             Parent root = loader.load();
 
             Stage stage = (Stage) statusLabel.getScene().getWindow();
