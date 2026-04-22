@@ -30,18 +30,19 @@ import java.util.ResourceBundle;
 
 public class AssignLecturerCourseController implements Initializable {
 
-
+    // ── FXML Nodes ──────────────────────────────────────────────────
     @FXML private ComboBox<LecturerResponseDTO> lecturerBox;
     @FXML private ComboBox<CourseResponseDTO>   courseBox;
     @FXML private Label statusLabel;
     @FXML private Label adminNameLabel;
     @FXML private Label statusBarTime;
 
-
+    // ── Services ─────────────────────────────────────────────────────
     private LecturerService       lecturerService;
     private CourseService         courseService;
     private LecturerCourseService lecturerCourseService;
 
+    // ── Shared inline CSS for the popup list ─────────────────────────
     private static final String POPUP_STYLE =
             "-fx-background-color: #091527;" +
                     "-fx-background-radius: 10;" +
@@ -84,7 +85,7 @@ public class AssignLecturerCourseController implements Initializable {
                     "-fx-font-family: 'Segoe UI';" +
                     "-fx-padding: 0 14;";
 
-
+    // ── Lifecycle ────────────────────────────────────────────────────
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ServerClient client = ServerClient.getInstance();
@@ -108,6 +109,7 @@ public class AssignLecturerCourseController implements Initializable {
         loadCourses();
     }
 
+    // ── ComboBox Styling ─────────────────────────────────────────────
 
     /**
      * Applies a complete dark-themed skin to a ComboBox, including:
@@ -156,7 +158,8 @@ public class AssignLecturerCourseController implements Initializable {
 
         box.setCellFactory(cellFactory);
 
-
+        // ── Popup list background ─────────────────────────────────────
+        // We hook into the popup after it is shown to style its inner ListView
         box.showingProperty().addListener((obs, wasShowing, isNowShowing) -> {
             if (isNowShowing) {
                 // The popup ListView is accessible via lookup after show()
@@ -171,6 +174,7 @@ public class AssignLecturerCourseController implements Initializable {
             }
         });
 
+        // ── Button cell: the visible part when popup is closed ────────
         box.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(T item, boolean empty) {
@@ -188,7 +192,7 @@ public class AssignLecturerCourseController implements Initializable {
         });
     }
 
-
+    // ── Data Loading ─────────────────────────────────────────────────
     private void loadLecturers() {
         List<LecturerResponseDTO> lecturers = lecturerService.getAllLecturers();
         lecturerBox.setItems(FXCollections.observableArrayList(lecturers));
@@ -199,7 +203,7 @@ public class AssignLecturerCourseController implements Initializable {
         courseBox.setItems(FXCollections.observableArrayList(courses));
     }
 
-    // Handlers
+    // ── Handlers ─────────────────────────────────────────────────────
     @FXML
     private void assignLecturerCourse() {
         LecturerResponseDTO lecturer = lecturerBox.getValue();
@@ -251,7 +255,7 @@ public class AssignLecturerCourseController implements Initializable {
         }
     }
 
-    // Status Helper
+    // ── Status Helper ─────────────────────────────────────────────────
     private enum StatusType { SUCCESS, ERROR, INFO }
 
     private void showStatus(String message, StatusType type) {
