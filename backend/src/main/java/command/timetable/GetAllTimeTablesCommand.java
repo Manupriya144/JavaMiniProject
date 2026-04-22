@@ -1,23 +1,23 @@
-package command.notice;
+package command.timetable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import command.repository.ClientContext;
 import command.repository.Command;
 
-import dto.responseDto.notice.NoticeResponseDTO;
-import service.notice.NoticeService;
+import dto.responseDto.timetable.TimeTableResponseDTO;
 import service.login.AuthService;
+import service.timetable.TimeTableService;
 
 import java.util.List;
 
-public class GetAllNoticeCommand implements Command {
+public class GetAllTimeTablesCommand implements Command {
 
-    private final NoticeService noticeService;
+    private final TimeTableService timeTableService;
     private final AuthService authService;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public GetAllNoticeCommand(NoticeService noticeService, AuthService authService) {
-        this.noticeService = noticeService;
+    public GetAllTimeTablesCommand(TimeTableService timeTableService, AuthService authService) {
+        this.timeTableService = timeTableService;
         this.authService = authService;
     }
 
@@ -30,10 +30,9 @@ public class GetAllNoticeCommand implements Command {
                 context.getOutput().println("{\"success\":false,\"message\":\"Unauthorized\"}");
                 return;
             }
+            List<TimeTableResponseDTO> timeTables = timeTableService.getAllTimeTableResponses();
 
-            List<NoticeResponseDTO> notices = noticeService.getAllNotices();
-
-            context.getOutput().println(mapper.writeValueAsString(notices));
+            context.getOutput().println(mapper.writeValueAsString(timeTables));
 
         } catch (Exception e) {
             e.printStackTrace();

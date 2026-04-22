@@ -1,8 +1,9 @@
 package service.notice;
 
 import dao.notice.NoticeDAO;
-import dto.NoticeResponseDTO;
+
 import dto.requestDto.notice.AddNoticeReqDTO;
+import dto.responseDto.notice.NoticeResponseDTO;
 import model.Notice;
 
 import java.util.ArrayList;

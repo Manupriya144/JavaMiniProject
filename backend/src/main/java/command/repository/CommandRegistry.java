@@ -39,6 +39,7 @@ import command.student.GetStudentByUserIdCommand;
 import command.attendance.UpdateAttendanceCommand;
 import command.student.UpdateStudentProfileCommand;
 import command.timetable.AddTimeTableCommand;
+import command.timetable.GetAllTimeTablesCommand;
 import command.user.CreateUserCommand;
 import command.user.GetAllUsersCommand;
 import command.student.GetStudentByIdCommand;
@@ -275,6 +276,7 @@ public class CommandRegistry {
             TimeTableDAO timeTableDAO = new TimeTableDAO();
             TimeTableService timeTableService = new TimeTableService(timeTableDAO);
             commands.put("CREATE_TIMETABLE",new AddTimeTableCommand(timeTableService,authService));
+            commands.put("GET_ALL_TIMETABLES", new GetAllTimeTablesCommand(timeTableService, authService));
 
         } catch (Exception e) {
             e.printStackTrace();

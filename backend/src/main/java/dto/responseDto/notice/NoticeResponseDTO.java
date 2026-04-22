@@ -1,4 +1,4 @@
-package dto;
+package dto.responseDto.notice;
 
 public class NoticeResponseDTO {
 
