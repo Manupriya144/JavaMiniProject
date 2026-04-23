@@ -1,7 +1,6 @@
 module com.example.frontend {
     requires javafx.controls;
     requires javafx.fxml;
-    requires javafx.web;
     requires javafx.graphics;
     requires javafx.base;
 
