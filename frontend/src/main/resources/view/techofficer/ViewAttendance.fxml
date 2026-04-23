@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.frontend.controller.attendance.ViewAttendanceController"
+            prefWidth="920" prefHeight="680"
+            style="-fx-background-color: #f8fbff;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="0"
+              style="-fx-background-color: #ffffff; -fx-border-color: #e8eef5; -fx-border-width: 0 0 1 0;">
+
+            <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="64"
+                  style="-fx-background-color: #ffffff;">
+                <padding><Insets left="28" right="28"/></padding>
+                <Label text="📋" style="-fx-font-size: 24px;"/>
+                <VBox alignment="CENTER_LEFT" spacing="1">
+                    <Label text="Attendance Module"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 17px; -fx-font-weight: bold;"/>
+                    <Label text="Technical Officer Panel"
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px;"/>
+                </VBox>
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox alignment="CENTER" spacing="8">
+                <padding><Insets left="16" right="24"/></padding>
+                <Label text="View Attendance"
+                       style="-fx-text-fill: #5b9fd9; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="26" style="-fx-background-color: #f8fbff;">
+            <padding><Insets top="32" bottom="32" left="40" right="40"/></padding>
+
+            <VBox spacing="4">
+                <Label text="View Attendance Record"
+                       style="-fx-text-fill: #1a3a52; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+                <Label text="Search and view attendance details by attendance ID."
+                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 13px;"/>
+            </VBox>
+
+            <VBox spacing="0"
+                  style="-fx-background-color: #ffffff; -fx-background-radius: 14;
+                         -fx-border-color: #d4e4f7; -fx-border-radius: 14; -fx-border-width: 1;">
+
+                <HBox alignment="CENTER_LEFT" spacing="10"
+                      style="-fx-background-color: #f5f9ff;
+                             -fx-background-radius: 14 14 0 0;
+                             -fx-border-color: transparent transparent #e8eef5 transparent;
+                             -fx-border-width: 0 0 1 0;">
+                    <padding><Insets top="18" bottom="18" left="24" right="24"/></padding>
+                    <Label text="Search Attendance"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                </HBox>
+
+                <VBox spacing="20">
+                    <padding><Insets top="24" bottom="24" left="24" right="24"/></padding>
+
+                    <HBox spacing="10">
+                        <TextField fx:id="attendanceIdField" promptText="Enter attendance ID (e.g. 5)"
+                                   HBox.hgrow="ALWAYS"
+                                   style="-fx-background-color: #ffffff; -fx-text-fill: #1a3a52;
+                                          -fx-prompt-text-fill: #a8b8ca;
+                                          -fx-border-color: #d4e4f7; -fx-border-radius: 8;
+                                          -fx-background-radius: 8; -fx-border-width: 1;"/>
+                        <Button text="Search" onAction="#findAttendance"
+                                style="-fx-background-color: #5b9fd9; -fx-text-fill: white;
+                                       -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                    </HBox>
+
+                    <GridPane hgap="20" vgap="14">
+                        <Label text="Attendance ID"
+                               style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                               GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label fx:id="attendanceIdValue" text="-"
+                               style="-fx-text-fill: #5b9fd9; -fx-font-size: 12px;"
+                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                        <Label text="Student ID"
+                               style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                               GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <Label fx:id="studentIdValue" text="-"
+                               style="-fx-text-fill: #5b9fd9; -fx-font-size: 12px;"
+                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                        <Label text="Session ID"
+                               style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                               GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <Label fx:id="sessionIdValue" text="-"
+                               style="-fx-text-fill: #5b9fd9; -fx-font-size: 12px;"
+                               GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                        <Label text="Status"
+                               style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                               GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <Label fx:id="statusValue" text="-"
+                               style="-fx-text-fill: #5b9fd9; -fx-font-size: 12px;"
+                               GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                        <Label text="Hours Attended"
+                               style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                               GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <Label fx:id="hoursValue" text="-"
+                               style="-fx-text-fill: #5b9fd9; -fx-font-size: 12px;"
+                               GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                    </GridPane>
+
+                    <HBox alignment="CENTER_LEFT"
+                          style="-fx-background-color: #f5f9ff;
+                                 -fx-background-radius: 8;
+                                 -fx-border-color: #e8eef5;
+                                 -fx-border-radius: 8;
+                                 -fx-padding: 10 12 10 12;">
+                        <Label fx:id="resultLabel"
+                               style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    </HBox>
+
+                    <HBox spacing="12" alignment="CENTER_RIGHT">
+                        <Button text="Back Dashboard" onAction="#backToDashboard"
+                                style="-fx-background-color: #e8eef5; -fx-text-fill: #5b9fd9;
+                                       -fx-background-radius: 8; -fx-border-color: #d4e4f7;
+                                       -fx-border-radius: 8; -fx-border-width: 1;
+                                       -fx-font-weight: 600; -fx-cursor: hand;"/>
+
+                        <Button text="Go Update/Delete" onAction="#goUpdateDelete"
+                                style="-fx-background-color: #eef6ff; -fx-text-fill: #5b9fd9;
+                                       -fx-border-color: #d8e8fb; -fx-border-radius: 8;
+                                       -fx-background-radius: 8; -fx-border-width: 1;
+                                       -fx-font-weight: bold; -fx-cursor: hand;"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

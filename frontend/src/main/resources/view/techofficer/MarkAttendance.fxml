@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.frontend.controller.attendance.MarkAttendanceController"
+            prefWidth="900" prefHeight="650"
+            style="-fx-background-color: #f8fbff;">
+
+    <!-- TOP BAR -->
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              style="-fx-background-color: #ffffff;
+                     -fx-border-color: #e8eef5;
+                     -fx-border-width: 0 0 1 0;"
+              spacing="12">
+
+            <padding><Insets left="28" right="28"/></padding>
+
+            <Label text="✅" style="-fx-font-size: 24px;"/>
+
+            <VBox spacing="2">
+                <Label text="Attendance Module"
+                       style="-fx-text-fill: #1a3a52; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label text="Technical Officer Panel"
+                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px;"/>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Label text="Add Attendance"
+                   style="-fx-text-fill: #5b9fd9; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <!-- CENTER -->
+    <center>
+        <VBox spacing="24">
+            <padding><Insets top="30" left="38" right="38" bottom="30"/></padding>
+
+            <VBox spacing="4">
+                <Label text="Mark Attendance"
+                       style="-fx-text-fill: #1a3a52; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                <Label text="Create a new attendance record for a student session."
+                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 13px;"/>
+            </VBox>
+
+            <!-- FORM CARD -->
+            <VBox spacing="20"
+                  style="-fx-background-color: white;
+                         -fx-background-radius: 14;
+                         -fx-border-color: #d4e4f7;
+                         -fx-border-radius: 14;
+                         -fx-padding: 24;">
+
+                <HBox spacing="20">
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Student"
+                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                        <ComboBox fx:id="studentComboBox" promptText="Select student"/>
+                    </VBox>
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Session"
+                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                        <ComboBox fx:id="sessionComboBox" promptText="Select session"/>
+                    </VBox>
+
+                </HBox>
+
+                <VBox spacing="6">
+                    <Label text="Status"
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                    <ComboBox fx:id="statusComboBox" promptText="Select status"/>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Attendance Hours"
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                    <TextField fx:id="hoursField" promptText="Example: 2 or 2.5"/>
+                </VBox>
+
+                <!-- STATUS -->
+                <HBox alignment="CENTER_LEFT"
+                      style="-fx-background-color: #f5f9ff;
+                             -fx-border-color: #e8eef5;
+                             -fx-border-radius: 8;
+                             -fx-padding: 10;">
+                    <Label fx:id="resultLabel"
+                           style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                </HBox>
+
+                <!-- BUTTONS -->
+                <HBox spacing="12" alignment="CENTER_RIGHT">
+
+                    <Button text="Back Dashboard"
+                            onAction="#backToDashboard"
+                            style="-fx-background-color: #e8eef5;
+                                   -fx-text-fill: #5b9fd9;
+                                   -fx-font-weight: bold;"/>
+
+                    <Button text="Manage Existing"
+                            onAction="#openAttendanceManagement"
+                            style="-fx-background-color: #eef6ff;
+                                   -fx-text-fill: #5b9fd9;
+                                   -fx-font-weight: bold;"/>
+
+                    <Button text="Add Attendance"
+                            onAction="#addAttendance"
+                            style="-fx-background-color: #4cba52;
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;"/>
+                </HBox>
+
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

@@ -244,7 +244,7 @@ public class AssignLecturerCourseController implements Initializable {
     private void goBack() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/AdminDashboard.fxml"));
+                    getClass().getResource("/view/admin/AdminDashboard.fxml"));
             Parent root  = loader.load();
             Stage  stage = (Stage) lecturerBox.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -261,14 +261,13 @@ public class AssignLecturerCourseController implements Initializable {
     private void showStatus(String message, StatusType type) {
         statusLabel.setText(message);
         String color = switch (type) {
-            case SUCCESS -> "#4ade80";
-            case ERROR   -> "#f87171";
-            case INFO    -> "#93c5fd";
+            case SUCCESS -> "#4cba52";
+            case ERROR   -> "#e85d5d";
+            case INFO    -> "#5b9fd9";
         };
         statusLabel.setStyle(
                 "-fx-text-fill: " + color + ";" +
                         "-fx-font-size: 13px;" +
-                        "-fx-font-family: 'Segoe UI';" +
                         "-fx-font-weight: bold;"
         );
     }

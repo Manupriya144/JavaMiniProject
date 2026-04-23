@@ -89,7 +89,7 @@ public class MarkAttendanceController {
 
             Attendance created = attendanceService.addAttendance(studentId, sessionId, status, hours);
             if (created != null) {
-                resultLabel.setText("Added. Attendance ID: " + created.getAttendanceId());
+                showResult("Attendance added successfully. ID: " + created.getAttendanceId(), ResultType.SUCCESS);
             } else {
                 resultLabel.setText("Add failed: " + attendanceService.getLastMessage());
             }
@@ -102,12 +102,12 @@ public class MarkAttendanceController {
 
     @FXML
     private void openAttendanceManagement() {
-        loadView("/view/AttendanceManagement.fxml");
+        loadView("/view/techofficer/AttendanceManagement.fxml");
     }
 
     @FXML
     private void backToDashboard() {
-        loadView("/view/techOfficerDashboard.fxml");
+        loadView("/view/techofficer/techOfficerDashboard.fxml");
     }
 
     private void loadView(String path) {
@@ -127,5 +127,25 @@ public class MarkAttendanceController {
         alert.setHeaderText("Operation failed");
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private enum ResultType {
+        SUCCESS, ERROR, INFO
+    }
+
+    private void showResult(String message, ResultType type) {
+        resultLabel.setText(message);
+
+        String color = switch (type) {
+            case SUCCESS -> "#4cba52";
+            case ERROR -> "#e85d5d";
+            case INFO -> "#8fa3b8";
+        };
+
+        resultLabel.setStyle(
+                "-fx-text-fill: " + color + ";" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-font-weight: bold;"
+        );
     }
 }

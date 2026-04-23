@@ -35,21 +35,27 @@ public class MedicalManagementController {
     public void initialize() {
         statusFilterCombo.getItems().addAll("All", "Pending", "Approved", "Rejected");
         statusFilterCombo.getSelectionModel().select("All");
+        showStatus("", StatusType.INFO);
     }
 
     @FXML
     private void loadBatchRecords() {
         String batch = batchField.getText() == null ? "" : batchField.getText().trim();
+
         if (batch.isEmpty()) {
-            statusLabel.setText("Enter batch first.");
+            showStatus("Enter batch first.", StatusType.ERROR);
             return;
         }
 
         List<Medical> records = medicalService.getBatchMedicalRecords(batch);
         String statusFilter = statusFilterCombo.getValue();
         String text = formatRecords(records, statusFilter);
+
         recordsTextArea.setText(text);
-        statusLabel.setText(records.isEmpty() ? medicalService.getLastMessage() : "Loaded " + records.size() + " records.");
+
+        boolean hasVisibleRecords = text != null && !text.equals("No medical records found.");
+        showStatus(hasVisibleRecords ? "Records loaded successfully." : medicalService.getLastMessage(),
+                hasVisibleRecords ? StatusType.SUCCESS : StatusType.ERROR);
     }
 
     @FXML
@@ -58,8 +64,11 @@ public class MedicalManagementController {
         if (id == null) {
             return;
         }
+
         boolean ok = medicalService.approveMedical(id);
-        statusLabel.setText(ok ? "Medical #" + id + " approved." : medicalService.getLastMessage());
+        showStatus(ok ? "Medical #" + id + " approved." : medicalService.getLastMessage(),
+                ok ? StatusType.SUCCESS : StatusType.ERROR);
+
         if (ok) {
             loadBatchRecords();
         }
@@ -71,8 +80,11 @@ public class MedicalManagementController {
         if (id == null) {
             return;
         }
+
         boolean ok = medicalService.rejectMedical(id);
-        statusLabel.setText(ok ? "Medical #" + id + " rejected." : medicalService.getLastMessage());
+        showStatus(ok ? "Medical #" + id + " rejected." : medicalService.getLastMessage(),
+                ok ? StatusType.SUCCESS : StatusType.ERROR);
+
         if (ok) {
             loadBatchRecords();
         }
@@ -80,14 +92,14 @@ public class MedicalManagementController {
 
     @FXML
     private void backToDashboard() {
-        loadView("/view/techOfficerDashboard.fxml");
+        loadView("/view/techofficer/techOfficerDashboard.fxml");
     }
 
     private Integer readMedicalId() {
         try {
             return Integer.parseInt(medicalIdField.getText().trim());
         } catch (Exception e) {
-            statusLabel.setText("Enter valid medical id.");
+            showStatus("Enter valid medical id.", StatusType.ERROR);
             return null;
         }
     }
@@ -96,11 +108,13 @@ public class MedicalManagementController {
         if (records == null || records.isEmpty()) {
             return "No medical records found.";
         }
+
         StringBuilder sb = new StringBuilder();
         for (Medical m : records) {
             if (!"All".equalsIgnoreCase(statusFilter) && !statusFilter.equalsIgnoreCase(m.getStatus())) {
                 continue;
             }
+
             sb.append("ID: ").append(m.getMedicalId())
                     .append(" | Student: ").append(value(m.getStudentId()))
                     .append(" | Course: ").append(value(m.getCourseId()))
@@ -110,7 +124,8 @@ public class MedicalManagementController {
                     .append("\nCopy: ").append(value(m.getMedicalCopy()))
                     .append("\n--------------------------------------------------\n");
         }
-        return sb.toString();
+
+        return sb.length() == 0 ? "No medical records found." : sb.toString();
     }
 
     private String value(String v) {
@@ -122,6 +137,7 @@ public class MedicalManagementController {
             Parent root = FXMLLoader.load(getClass().getResource(path));
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.centerOnScreen();
             stage.show();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -130,5 +146,25 @@ public class MedicalManagementController {
             alert.setContentText(path);
             alert.showAndWait();
         }
+    }
+
+    private enum StatusType {
+        SUCCESS, ERROR, INFO
+    }
+
+    private void showStatus(String message, StatusType type) {
+        statusLabel.setText(message);
+
+        String color = switch (type) {
+            case SUCCESS -> "#4cba52";
+            case ERROR -> "#e85d5d";
+            case INFO -> "#8fa3b8";
+        };
+
+        statusLabel.setStyle(
+                "-fx-text-fill: " + color + ";" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-font-weight: bold;"
+        );
     }
 }

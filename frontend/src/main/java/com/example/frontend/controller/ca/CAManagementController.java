@@ -18,44 +18,34 @@ import java.util.List;
 
 public class CAManagementController {
 
-    @FXML
-    private TextField uploadStudentIdField;
-    @FXML
-    private TextField uploadAssessmentTypeIdField;
-    @FXML
-    private TextField uploadMarksField;
+    @FXML private TextField uploadStudentIdField;
+    @FXML private TextField uploadAssessmentTypeIdField;
+    @FXML private TextField uploadMarksField;
 
-    @FXML
-    private TextField updateMarkIdField;
-    @FXML
-    private TextField updateMarksField;
+    @FXML private TextField updateMarkIdField;
+    @FXML private TextField updateMarksField;
 
-    @FXML
-    private TextField studentMarksStudentIdField;
-    @FXML
-    private TextField studentMarksCourseIdField;
+    @FXML private TextField studentMarksStudentIdField;
+    @FXML private TextField studentMarksCourseIdField;
 
-    @FXML
-    private TextField batchMarksBatchField;
-    @FXML
-    private TextField batchMarksCourseIdField;
+    @FXML private TextField batchMarksBatchField;
+    @FXML private TextField batchMarksCourseIdField;
 
-    @FXML
-    private TextField studentEligibilityStudentIdField;
-    @FXML
-    private TextField studentEligibilityCourseIdField;
+    @FXML private TextField studentEligibilityStudentIdField;
+    @FXML private TextField studentEligibilityCourseIdField;
 
-    @FXML
-    private TextField batchEligibilityBatchField;
-    @FXML
-    private TextField batchEligibilityCourseIdField;
+    @FXML private TextField batchEligibilityBatchField;
+    @FXML private TextField batchEligibilityCourseIdField;
 
-    @FXML
-    private TextArea outputArea;
-    @FXML
-    private Label statusLabel;
+    @FXML private TextArea outputArea;
+    @FXML private Label statusLabel;
 
     private final CAMarkService caService = new CAMarkService(LoginController.client);
+
+    @FXML
+    public void initialize() {
+        showStatus("", StatusType.INFO);
+    }
 
     @FXML
     private void uploadCAMarks() {
@@ -63,17 +53,21 @@ public class CAManagementController {
             String studentId = uploadStudentIdField.getText().trim();
             Integer assessmentTypeId = Integer.parseInt(uploadAssessmentTypeIdField.getText().trim());
             Double marks = Double.parseDouble(uploadMarksField.getText().trim());
+
             CAMark saved = caService.uploadCAMarks(studentId, assessmentTypeId, marks);
             if (saved == null) {
-                statusLabel.setText(caService.getLastMessage());
+                showStatus(caService.getLastMessage(), StatusType.ERROR);
                 return;
             }
-            statusLabel.setText("CA mark uploaded.");
-            outputArea.setText("Mark ID: " + saved.getMarkId() + "\nStudent: " + saved.getStudentId()
-                    + "\nCourse: " + saved.getCourseId() + "\nAssessment: " + saved.getAssessmentName()
+
+            showStatus("CA mark uploaded successfully.", StatusType.SUCCESS);
+            outputArea.setText("Mark ID: " + saved.getMarkId()
+                    + "\nStudent: " + saved.getStudentId()
+                    + "\nCourse: " + saved.getCourseId()
+                    + "\nAssessment: " + saved.getAssessmentName()
                     + "\nMarks: " + saved.getMarks());
         } catch (Exception e) {
-            statusLabel.setText("Invalid upload input.");
+            showStatus("Invalid upload input.", StatusType.ERROR);
         }
     }
 
@@ -82,10 +76,13 @@ public class CAManagementController {
         try {
             Integer markId = Integer.parseInt(updateMarkIdField.getText().trim());
             Double marks = Double.parseDouble(updateMarksField.getText().trim());
+
             boolean ok = caService.updateCAMarks(markId, marks);
-            statusLabel.setText(ok ? "CA mark updated." : caService.getLastMessage());
+            showStatus(ok ? "CA mark updated successfully." : caService.getLastMessage(),
+                    ok ? StatusType.SUCCESS : StatusType.ERROR);
+
         } catch (Exception e) {
-            statusLabel.setText("Invalid update input.");
+            showStatus("Invalid update input.", StatusType.ERROR);
         }
     }
 
@@ -93,47 +90,56 @@ public class CAManagementController {
     private void getStudentCAMarks() {
         String studentId = studentMarksStudentIdField.getText() == null ? "" : studentMarksStudentIdField.getText().trim();
         String courseId = studentMarksCourseIdField.getText() == null ? "" : studentMarksCourseIdField.getText().trim();
+
         List<CAMark> list = caService.getStudentCAMarks(studentId, courseId.isBlank() ? null : courseId);
         outputArea.setText(formatCAMarks(list));
-        statusLabel.setText(list.isEmpty() ? caService.getLastMessage() : "Loaded student CA marks.");
+        showStatus(list.isEmpty() ? caService.getLastMessage() : "Loaded student CA marks.",
+                list.isEmpty() ? StatusType.ERROR : StatusType.SUCCESS);
     }
 
     @FXML
     private void getBatchCAMarks() {
         String batch = batchMarksBatchField.getText() == null ? "" : batchMarksBatchField.getText().trim();
         String courseId = batchMarksCourseIdField.getText() == null ? "" : batchMarksCourseIdField.getText().trim();
+
         List<CAMark> list = caService.getBatchCAMarks(batch, courseId.isBlank() ? null : courseId);
         outputArea.setText(formatCAMarks(list));
-        statusLabel.setText(list.isEmpty() ? caService.getLastMessage() : "Loaded batch CA marks.");
+        showStatus(list.isEmpty() ? caService.getLastMessage() : "Loaded batch CA marks.",
+                list.isEmpty() ? StatusType.ERROR : StatusType.SUCCESS);
     }
 
     @FXML
     private void checkCAEligibility() {
         String studentId = studentEligibilityStudentIdField.getText() == null ? "" : studentEligibilityStudentIdField.getText().trim();
         String courseId = studentEligibilityCourseIdField.getText() == null ? "" : studentEligibilityCourseIdField.getText().trim();
+
         JsonNode node = caService.checkCAEligibility(studentId, courseId);
         if (node == null || !node.path("success").asBoolean(false)) {
-            statusLabel.setText(caService.getLastMessage());
+            showStatus(caService.getLastMessage(), StatusType.ERROR);
             return;
         }
+
         JsonNode data = node.path("data");
         outputArea.setText("Student: " + data.path("studentId").asText("-")
                 + "\nCourse: " + data.path("courseId").asText("-")
                 + "\nCA %: " + data.path("caPercentage").asDouble(0.0)
                 + "\nThreshold: " + data.path("thresholdPercent").asDouble(40.0)
                 + "\nEligible: " + data.path("eligible").asBoolean(false));
-        statusLabel.setText("Student CA eligibility checked.");
+
+        showStatus("Student CA eligibility checked.", StatusType.SUCCESS);
     }
 
     @FXML
     private void getBatchCAEligibilityReport() {
         String batch = batchEligibilityBatchField.getText() == null ? "" : batchEligibilityBatchField.getText().trim();
         String courseId = batchEligibilityCourseIdField.getText() == null ? "" : batchEligibilityCourseIdField.getText().trim();
+
         JsonNode node = caService.getBatchCAEligibilityReport(batch, courseId);
         if (node == null || !node.path("success").asBoolean(false) || !node.path("data").isArray()) {
-            statusLabel.setText(caService.getLastMessage());
+            showStatus(caService.getLastMessage(), StatusType.ERROR);
             return;
         }
+
         StringBuilder sb = new StringBuilder();
         for (JsonNode row : node.path("data")) {
             sb.append(row.path("regNo").asText("-"))
@@ -142,8 +148,9 @@ public class CAManagementController {
                     .append(" | Eligible: ").append(row.path("eligible").asBoolean(false))
                     .append('\n');
         }
+
         outputArea.setText(sb.length() == 0 ? "No eligibility records found." : sb.toString());
-        statusLabel.setText("Batch CA eligibility report loaded.");
+        showStatus("Batch CA eligibility report loaded.", StatusType.SUCCESS);
     }
 
     @FXML
@@ -155,6 +162,7 @@ public class CAManagementController {
         if (list == null || list.isEmpty()) {
             return "No CA marks found.";
         }
+
         StringBuilder sb = new StringBuilder();
         for (CAMark m : list) {
             sb.append("Mark ID: ").append(m.getMarkId())
@@ -177,6 +185,7 @@ public class CAManagementController {
             Parent root = FXMLLoader.load(getClass().getResource(path));
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.centerOnScreen();
             stage.show();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -185,5 +194,25 @@ public class CAManagementController {
             alert.setContentText(path);
             alert.showAndWait();
         }
+    }
+
+    private enum StatusType {
+        SUCCESS, ERROR, INFO
+    }
+
+    private void showStatus(String message, StatusType type) {
+        statusLabel.setText(message);
+
+        String color = switch (type) {
+            case SUCCESS -> "#4cba52";
+            case ERROR -> "#e85d5d";
+            case INFO -> "#8fa3b8";
+        };
+
+        statusLabel.setStyle(
+                "-fx-text-fill: " + color + ";" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-font-weight: bold;"
+        );
     }
 }

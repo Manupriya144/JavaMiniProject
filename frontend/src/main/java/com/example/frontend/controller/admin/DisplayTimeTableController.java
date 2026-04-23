@@ -88,10 +88,11 @@ public class DisplayTimeTableController implements Initializable {
     private VBox buildRow(TimeTableResponseDTO tt) {
         VBox row = new VBox(0);
         row.setStyle(
-                "-fx-background-color: #0d1e33;" +
-                        "-fx-border-color: #132237;" +
+                "-fx-background-color: #fafbff;" +
+                        "-fx-border-color: #d4e4f7;" +
                         "-fx-border-radius: 10;" +
-                        "-fx-background-radius: 10;"
+                        "-fx-background-radius: 10;" +
+                        "-fx-effect: dropshadow(three-pass-box,rgba(91,159,217,0.08),8,0,0,2);"
         );
 
         HBox header = new HBox(12);
@@ -100,12 +101,12 @@ public class DisplayTimeTableController implements Initializable {
         header.setStyle("-fx-cursor: hand; -fx-background-radius: 10;");
 
         Label dot = new Label("●");
-        dot.setStyle("-fx-text-fill: #2563eb; -fx-font-size: 9px;");
+        dot.setStyle("-fx-text-fill: #5b9fd9; -fx-font-size: 10px;");
 
         Label title = new Label(safe(tt.getTitle()));
         title.setStyle(
-                "-fx-text-fill: #d6e4f7;" +
-                        "-fx-font-size: 14px;" +
+                "-fx-text-fill: #1a3a52;" +
+                        "-fx-font-size: 13px;" +
                         "-fx-font-weight: bold;"
         );
         title.setWrapText(true);
@@ -116,10 +117,10 @@ public class DisplayTimeTableController implements Initializable {
                         "  ·  L" + tt.getAcademicLevel() +
                         "  ·  " + safe(tt.getSemester())
         );
-        meta.setStyle("-fx-text-fill: #3a6496; -fx-font-size: 11px;");
+        meta.setStyle("-fx-text-fill: #8fa3b8; -fx-font-size: 11px;");
 
         Label chevron = new Label("▾");
-        chevron.setStyle("-fx-text-fill: #2563eb; -fx-font-size: 13px;");
+        chevron.setStyle("-fx-text-fill: #5b9fd9; -fx-font-size: 13px;");
 
         header.getChildren().addAll(dot, title, meta, chevron);
 
@@ -137,13 +138,13 @@ public class DisplayTimeTableController implements Initializable {
         VBox panel = new VBox(10);
         panel.setPadding(new Insets(0, 16, 16, 36));
         panel.setStyle(
-                "-fx-background-color: #091525;" +
+                "-fx-background-color: #f5f9ff;" +
                         "-fx-background-radius: 0 0 10 10;"
         );
 
         Region divider = new Region();
         divider.setPrefHeight(1);
-        divider.setStyle("-fx-background-color: #132237;");
+        divider.setStyle("-fx-background-color: #e8eef5;");
         divider.setPadding(new Insets(0, 0, 8, 0));
 
         HBox infoRow = new HBox(30);
@@ -166,21 +167,21 @@ public class DisplayTimeTableController implements Initializable {
         if (hasPdf) {
             Button openBtn = new Button("📄  Open PDF");
             openBtn.setStyle(
-                    "-fx-background-color: #0f2d52;" +
-                            "-fx-text-fill: #5b9bd5;" +
-                            "-fx-font-size: 11px;" +
+                    "-fx-background-color: #5b9fd9;" +
+                            "-fx-text-fill: white;" +
+                            "-fx-font-size: 12px;" +
                             "-fx-font-weight: bold;" +
-                            "-fx-border-color: #1b3a6b;" +
-                            "-fx-border-radius: 6;" +
-                            "-fx-background-radius: 6;" +
+                            "-fx-border-color: transparent;" +
+                            "-fx-border-radius: 8;" +
+                            "-fx-background-radius: 8;" +
                             "-fx-cursor: hand;" +
-                            "-fx-padding: 7 16 7 16;"
+                            "-fx-padding: 8 16 8 16;"
             );
             openBtn.setOnAction(e -> openFileOrLink(tt.getPdfFilePath()));
             pdfRow.getChildren().add(openBtn);
         } else {
             Label noPdf = new Label("No PDF attached");
-            noPdf.setStyle("-fx-text-fill: #2a4060; -fx-font-size: 11px; -fx-font-style: italic;");
+            noPdf.setStyle("-fx-text-fill: #a8b8ca; -fx-font-size: 11px; -fx-font-style: italic;");
             pdfRow.getChildren().add(noPdf);
         }
 
@@ -192,10 +193,10 @@ public class DisplayTimeTableController implements Initializable {
         VBox box = new VBox(2);
 
         Label lbl = new Label(label.toUpperCase());
-        lbl.setStyle("-fx-text-fill: #1e3c72; -fx-font-size: 9px; -fx-font-weight: bold;");
+        lbl.setStyle("-fx-text-fill: #8fa3b8; -fx-font-size: 10px; -fx-font-weight: bold;");
 
         Label val = new Label(value == null || value.isEmpty() ? "—" : value);
-        val.setStyle("-fx-text-fill: #7aa8d8; -fx-font-size: 11px;");
+        val.setStyle("-fx-text-fill: #1a3a52; -fx-font-size: 12px;");
 
         box.getChildren().addAll(lbl, val);
         return box;
@@ -214,10 +215,11 @@ public class DisplayTimeTableController implements Initializable {
             }
 
             ((VBox) expandedDetailsBox.getParent()).setStyle(
-                    "-fx-background-color: #0d1e33;" +
-                            "-fx-border-color: #132237;" +
+                    "-fx-background-color: #fafbff;" +
+                            "-fx-border-color: #d4e4f7;" +
                             "-fx-border-radius: 10;" +
-                            "-fx-background-radius: 10;"
+                            "-fx-background-radius: 10;" +
+                            "-fx-effect: dropshadow(three-pass-box,rgba(91,159,217,0.08),8,0,0,2);"
             );
         }
 
@@ -228,10 +230,11 @@ public class DisplayTimeTableController implements Initializable {
             expandedDetailsBox = details;
 
             row.setStyle(
-                    "-fx-background-color: #0d1e33;" +
-                            "-fx-border-color: #2563eb;" +
+                    "-fx-background-color: #fafbff;" +
+                            "-fx-border-color: #5b9fd9;" +
                             "-fx-border-radius: 10;" +
-                            "-fx-background-radius: 10;"
+                            "-fx-background-radius: 10;" +
+                            "-fx-effect: dropshadow(three-pass-box,rgba(91,159,217,0.15),10,0,0,3);"
             );
         } else {
             details.setVisible(false);
@@ -240,14 +243,14 @@ public class DisplayTimeTableController implements Initializable {
             expandedDetailsBox = null;
 
             row.setStyle(
-                    "-fx-background-color: #0d1e33;" +
-                            "-fx-border-color: #132237;" +
+                    "-fx-background-color: #fafbff;" +
+                            "-fx-border-color: #d4e4f7;" +
                             "-fx-border-radius: 10;" +
-                            "-fx-background-radius: 10;"
+                            "-fx-background-radius: 10;" +
+                            "-fx-effect: dropshadow(three-pass-box,rgba(91,159,217,0.08),8,0,0,2);"
             );
         }
     }
-
     private Label findChevron(javafx.scene.Parent rowParent) {
         if (rowParent instanceof VBox rowBox) {
             if (!rowBox.getChildren().isEmpty() && rowBox.getChildren().get(0) instanceof HBox header) {
@@ -345,9 +348,25 @@ public class DisplayTimeTableController implements Initializable {
     private void goBack() {
         try {
             String role = SessionManager.getRole();
-            String dashboardFxml = "Tech_Officer".equals(role)
-                    ? "/view/techOfficerDashboard.fxml"
-                    : "/view/AdminDashboard.fxml";
+            String dashboardFxml;
+
+            switch (role) {
+                case "Admin":
+                    dashboardFxml = "/view/admin/AdminDashboard.fxml";
+                    break;
+                case "Tech_Officer":
+                    dashboardFxml = "/view/techofficer/techOfficerDashboard.fxml";
+                    break;
+                case "Lecturer":
+                    dashboardFxml = "/view/lecturerDashboard.fxml";
+                    break;
+                case "Student":
+                    dashboardFxml = "/view/student/studentDashboard.fxml";
+                    break;
+                default:
+                    statusLabel.setText("Unknown role: " + role);
+                    return;
+            }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource(dashboardFxml));
             Parent root = loader.load();
@@ -356,6 +375,7 @@ public class DisplayTimeTableController implements Initializable {
             stage.setScene(new Scene(root));
             stage.centerOnScreen();
             stage.show();
+
         } catch (Exception e) {
             e.printStackTrace();
             statusLabel.setText("Failed to go back.");

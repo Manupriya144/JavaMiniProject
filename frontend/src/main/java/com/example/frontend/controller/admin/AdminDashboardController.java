@@ -32,6 +32,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import com.example.frontend.dto.AdminStatsResponseDTO;
+import com.example.frontend.service.AdminDashboardService;
 
 public class AdminDashboardController implements Initializable {
 
@@ -49,6 +51,10 @@ public class AdminDashboardController implements Initializable {
     @FXML private VBox noticesContainer;
 
     private final NoticeService noticeService = new NoticeService(ServerClient.getInstance());
+    private final AdminDashboardService adminDashboardService =
+            new AdminDashboardService(ServerClient.getInstance());
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -90,23 +96,32 @@ public class AdminDashboardController implements Initializable {
     }
 
     private void loadStats() {
-        /*
-         * TODO:
-         * Replace these values with real backend/service calls.
-         *
-         * Example later:
-         * totalUsersLabel.setText(String.valueOf(userService.getTotalUsers()));
-         * totalStudentsLabel.setText(String.valueOf(userService.getTotalStudents()));
-         * totalLecturersLabel.setText(String.valueOf(userService.getTotalLecturers()));
-         * totalTechLabel.setText(String.valueOf(userService.getTotalTechOfficers()));
-         * totalCoursesLabel.setText(String.valueOf(courseService.getTotalCourses()));
-         */
+        try {
+            AdminStatsResponseDTO stats = adminDashboardService.getAdminStats();
 
-        totalUsersLabel.setText("30");
-        totalStudentsLabel.setText("20");
-        totalLecturersLabel.setText("5");
-        totalTechLabel.setText("4");
-        totalCoursesLabel.setText("8");
+            if (stats != null && stats.isSuccess()) {
+                totalUsersLabel.setText(String.valueOf(stats.getTotalUsers()));
+                totalStudentsLabel.setText(String.valueOf(stats.getTotalStudents()));
+                totalLecturersLabel.setText(String.valueOf(stats.getTotalLecturers()));
+                totalTechLabel.setText(String.valueOf(stats.getTotalTechOfficers()));
+                totalCoursesLabel.setText(String.valueOf(stats.getTotalCourses()));
+            } else {
+                setDefaultStats();
+                System.out.println(stats != null ? stats.getMessage() : "Stats null");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            setDefaultStats();
+        }
+    }
+
+    private void setDefaultStats() {
+        totalUsersLabel.setText("0");
+        totalStudentsLabel.setText("0");
+        totalLecturersLabel.setText("0");
+        totalTechLabel.setText("0");
+        totalCoursesLabel.setText("0");
     }
 
     private void loadRecentNotices() {
@@ -143,10 +158,11 @@ public class AdminDashboardController implements Initializable {
         HBox row = new HBox(12);
         row.setPadding(new Insets(12, 16, 12, 16));
         row.setStyle(
-                "-fx-background-color: #1e3c72;" +
+                "-fx-background-color: #f9fafb;" +
                         "-fx-background-radius: 8;" +
-                        "-fx-border-color: #2a5298;" +
-                        "-fx-border-radius: 8;"
+                        "-fx-border-color: #e0e6f2;" +
+                        "-fx-border-radius: 8;" +
+                        "-fx-border-width: 1;"
         );
 
         Label icon = new Label("📢");
@@ -156,10 +172,10 @@ public class AdminDashboardController implements Initializable {
 
         Label titleLbl = new Label(title);
         titleLbl.setWrapText(true);
-        titleLbl.setStyle("-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;");
+        titleLbl.setStyle("-fx-text-fill: #1e3c72; -fx-font-size: 13px; -fx-font-weight: bold;");
 
         Label dateLbl = new Label(date);
-        dateLbl.setStyle("-fx-text-fill: #a0b8e0; -fx-font-size: 11px;");
+        dateLbl.setStyle("-fx-text-fill: #7a8fa6; -fx-font-size: 11px;");
 
         textBox.getChildren().addAll(titleLbl, dateLbl);
 
@@ -174,12 +190,15 @@ public class AdminDashboardController implements Initializable {
         HBox row = new HBox();
         row.setPadding(new Insets(12, 16, 12, 16));
         row.setStyle(
-                "-fx-background-color: #1e3c72;" +
-                        "-fx-background-radius: 8;"
+                "-fx-background-color: #f9fafb;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-border-color: #e0e6f2;" +
+                        "-fx-border-radius: 8;" +
+                        "-fx-border-width: 1;"
         );
 
         Label msg = new Label(message);
-        msg.setStyle("-fx-text-fill: white; -fx-font-size: 12px;");
+        msg.setStyle("-fx-text-fill: #7a8fa6; -fx-font-size: 12px;");
 
         row.getChildren().add(msg);
         return row;
@@ -187,38 +206,38 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void openUsers() {
-        loadView("UserManagement.fxml");
+        loadView("admin/UserManagement.fxml");
     }
 
     @FXML
     private void openAddUser() {
-        loadView("createUser.fxml");
+        loadView("admin/createUser.fxml");
     }
 
     @FXML
     private void openCourses() {
-        loadView("CourseDisplay.fxml");
+        loadView("admin/CourseDisplay.fxml");
     }
 
     @FXML
     private void openAddCourses() {
-        loadView("AddCourse.fxml");
+        loadView("admin/AddCourse.fxml");
     }
 
     @FXML
     private void openAssignCourse() {
-        loadView("AssignCourse.fxml");
+        loadView("admin/AssignCourse.fxml");
     }
 
     @FXML
     private void openNotices() {
-        loadView("NoticeDisplay.fxml");
+        loadView("admin/NoticeDisplay.fxml");
     }
 
     @FXML
     private void openAddNotices() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AddNotice.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin/AddNotice.fxml"));
             Parent root = loader.load();
 
             AddNoticeController controller = loader.getController();
@@ -236,13 +255,13 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void openTimetables() {
-        loadView("DisplayTimeTable.fxml");
+        loadView("admin/DisplayTimeTable.fxml");
     }
 
     @FXML
     private void openTimeAddTimeTables() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AddTimeTable.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin/AddTimeTable.fxml"));
             Parent root = loader.load();
 
             AddTimeTableController controller = loader.getController();

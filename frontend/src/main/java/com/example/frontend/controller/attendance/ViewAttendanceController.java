@@ -32,22 +32,31 @@ public class ViewAttendanceController {
     private final AttendanceService attendanceService = new AttendanceService(LoginController.client);
 
     @FXML
+    public void initialize() {
+        clearValues();
+        showResult("", ResultType.INFO);
+    }
+
+    @FXML
     private void findAttendance() {
         try {
             Integer attendanceId = Integer.parseInt(attendanceIdField.getText().trim());
             Attendance attendance = attendanceService.getAttendanceById(attendanceId);
+
             if (attendance == null) {
-                resultLabel.setText("No record found.");
+                showResult("No record found.", ResultType.ERROR);
                 clearValues();
                 return;
             }
 
             attendanceIdValue.setText(String.valueOf(attendance.getAttendanceId()));
-            studentIdValue.setText(attendance.getStudentId());
+            studentIdValue.setText(attendance.getStudentId() == null ? "-" : attendance.getStudentId());
             sessionIdValue.setText(String.valueOf(attendance.getSessionId()));
-            statusValue.setText(attendance.getStatus());
+            statusValue.setText(attendance.getStatus() == null ? "-" : attendance.getStatus());
             hoursValue.setText(String.valueOf(attendance.getHoursAttended()));
-            resultLabel.setText("Attendance loaded.");
+
+            showResult("Attendance loaded successfully.", ResultType.SUCCESS);
+
         } catch (NumberFormatException ex) {
             showError("Attendance ID must be an integer.");
         } catch (Exception ex) {
@@ -57,12 +66,12 @@ public class ViewAttendanceController {
 
     @FXML
     private void goUpdateDelete() {
-        loadView("/view/AttendanceManagement.fxml");
+        loadView("/view/techofficer/AttendanceManagement.fxml");
     }
 
     @FXML
     private void backToDashboard() {
-        loadView("/view/techOfficerDashboard.fxml");
+        loadView("/view/techofficer/techOfficerDashboard.fxml");
     }
 
     private void clearValues() {
@@ -78,6 +87,7 @@ public class ViewAttendanceController {
             Parent root = FXMLLoader.load(getClass().getResource(path));
             Stage stage = (Stage) resultLabel.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.centerOnScreen();
             stage.show();
         } catch (Exception e) {
             showError("Cannot load view: " + path);
@@ -85,10 +95,32 @@ public class ViewAttendanceController {
     }
 
     private void showError(String message) {
+        showResult(message, ResultType.ERROR);
+
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText("Operation failed");
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private enum ResultType {
+        SUCCESS, ERROR, INFO
+    }
+
+    private void showResult(String message, ResultType type) {
+        resultLabel.setText(message);
+
+        String color = switch (type) {
+            case SUCCESS -> "#4cba52";
+            case ERROR -> "#e85d5d";
+            case INFO -> "#8fa3b8";
+        };
+
+        resultLabel.setStyle(
+                "-fx-text-fill: " + color + ";" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-font-weight: bold;"
+        );
     }
 }

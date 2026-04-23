@@ -90,9 +90,9 @@ public class UserManagementController implements Initializable {
                     if (empty || item == null) {
                         setStyle("-fx-background-color: transparent;");
                     } else if (isSelected()) {
-                        setStyle("-fx-background-color: #2a5298; -fx-background-insets: 2 0 2 0;");
+                        setStyle("-fx-background-color: #e8f0ff; -fx-background-insets: 2 0 2 0;");
                     } else {
-                        setStyle("-fx-background-color: #0f1b35; -fx-background-insets: 2 0 2 0;");
+                        setStyle("-fx-background-color: #ffffff; -fx-background-insets: 2 0 2 0;");
                     }
                 }
             };
@@ -100,9 +100,9 @@ public class UserManagementController implements Initializable {
             row.hoverProperty().addListener((obs, oldVal, isHovering) -> {
                 if (!row.isEmpty() && !row.isSelected()) {
                     if (isHovering) {
-                        row.setStyle("-fx-background-color: #1a2d5a; -fx-background-insets: 2 0 2 0;");
+                        row.setStyle("-fx-background-color: #f5f9ff; -fx-background-insets: 2 0 2 0;");
                     } else {
-                        row.setStyle("-fx-background-color: #0f1b35; -fx-background-insets: 2 0 2 0;");
+                        row.setStyle("-fx-background-color: #ffffff; -fx-background-insets: 2 0 2 0;");
                     }
                 }
             });
@@ -110,11 +110,11 @@ public class UserManagementController implements Initializable {
             row.selectedProperty().addListener((obs, oldVal, selected) -> {
                 if (!row.isEmpty()) {
                     if (selected) {
-                        row.setStyle("-fx-background-color: #2a5298; -fx-background-insets: 2 0 2 0;");
+                        row.setStyle("-fx-background-color: #e8f0ff; -fx-background-insets: 2 0 2 0;");
                     } else if (row.isHover()) {
-                        row.setStyle("-fx-background-color: #1a2d5a; -fx-background-insets: 2 0 2 0;");
+                        row.setStyle("-fx-background-color: #f5f9ff; -fx-background-insets: 2 0 2 0;");
                     } else {
-                        row.setStyle("-fx-background-color: #0f1b35; -fx-background-insets: 2 0 2 0;");
+                        row.setStyle("-fx-background-color: #ffffff; -fx-background-insets: 2 0 2 0;");
                     }
                 }
             });
@@ -139,11 +139,11 @@ public class UserManagementController implements Initializable {
     }
 
     private void styleTableColumns() {
-        colUserId.setStyle("-fx-alignment: CENTER-LEFT; -fx-text-fill: white;");
-        colUsername.setStyle("-fx-alignment: CENTER-LEFT; -fx-text-fill: white;");
-        colEmail.setStyle("-fx-alignment: CENTER-LEFT; -fx-text-fill: white;");
-        colRole.setStyle("-fx-alignment: CENTER; -fx-text-fill: white;");
-        colContactNo.setStyle("-fx-alignment: CENTER-LEFT; -fx-text-fill: white;");
+        colUserId.setStyle("-fx-alignment: CENTER-LEFT; -fx-text-fill: #1a3a52; -fx-font-size: 12px;");
+        colUsername.setStyle("-fx-alignment: CENTER-LEFT; -fx-text-fill: #1a3a52; -fx-font-size: 12px;");
+        colEmail.setStyle("-fx-alignment: CENTER-LEFT; -fx-text-fill: #1a3a52; -fx-font-size: 12px;");
+        colRole.setStyle("-fx-alignment: CENTER; -fx-text-fill: #1a3a52; -fx-font-size: 12px;");
+        colContactNo.setStyle("-fx-alignment: CENTER-LEFT; -fx-text-fill: #1a3a52; -fx-font-size: 12px;");
     }
 
     @FXML
@@ -283,12 +283,24 @@ public class UserManagementController implements Initializable {
 
     @FXML
     private void openAddUser() {
-        loadView("createUser.fxml");
+        loadView("admin/createUser.fxml");
     }
 
     @FXML
-    private void goBack() {
-        loadView("AdminDashboard.fxml");
+    public void goBack() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin/AdminDashboard.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) adminNameLabel.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen();
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
     }
 
     private void loadView(String fxmlFile) {

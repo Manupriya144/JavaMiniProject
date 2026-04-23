@@ -74,17 +74,17 @@ public class LoginController {
                 // Load different pages based on role
                 switch(user.getRole()) {
                     case "Student":
-                        loadDashboard("/view/studentDashboard.fxml",username);
+                        loadDashboard("/view/student/studentDashboard.fxml",username);
                         break;
                     case "Lecturer":
                         loadDashboard("/view/lecturerDashboard.fxml",username);
                         break;
                     case "Tech_Officer":
-                        loadDashboard("/view/techOfficerDashboard.fxml",username);
+                        loadDashboard("/view/techofficer/techOfficerDashboard.fxml",username);
                         break;
                     case "Admin":
                     case "Dean":
-                        loadDashboard("/view/AdminDashboard.fxml",username);
+                        loadDashboard("/view/admin/AdminDashboard.fxml",username);
                         break;
                     default:
                         System.out.println("Unknown role: access denied");

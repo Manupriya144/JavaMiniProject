@@ -44,7 +44,6 @@ public class TechOfficerProfileController {
 
     @FXML
     public void initialize() {
-        // Prefer session userId as the source of truth; profile fetch may fail transiently.
         profileUserId = trimOrNull(SessionManager.getUserId());
         loadProfile();
     }
@@ -59,7 +58,7 @@ public class TechOfficerProfileController {
         TechOfficerProfile profile = userService.getMyTechOfficerProfile();
         if (profile == null) {
             showStatus("Could not load profile from server.", false);
-            // Keep user id from session so updates can still proceed when profile fetch fails.
+
             userIdField.setText(profileUserId != null ? profileUserId : "");
             usernameTextField.setText(LoginController.username != null ? LoginController.username : "");
             roleField.setText(SessionManager.getRole() != null ? SessionManager.getRole() : "");
@@ -69,6 +68,7 @@ public class TechOfficerProfileController {
             profilePictureField.clear();
             passwordField.clear();
             confirmPasswordField.clear();
+
             usernameLabel.setText(headerDisplayName(usernameTextField.getText()));
             updateSubtitle(roleField.getText(), departmentIdField.getText());
             setupAvatar(usernameLabel.getText(), null);
@@ -78,10 +78,12 @@ public class TechOfficerProfileController {
         profileUserId = firstNonBlank(trimOrNull(profile.getUserId()), trimOrNull(SessionManager.getUserId()));
         userIdField.setText(profileUserId);
         usernameTextField.setText(safeText(profile.getUsername()));
+
         String role = safeText(profile.getRole());
         if (role.isEmpty()) {
             role = safeText(SessionManager.getRole());
         }
+
         roleField.setText(role);
         departmentIdField.setText(safeText(profile.getDepartmentId()));
         emailField.setText(safeText(profile.getEmail()));
@@ -140,15 +142,18 @@ public class TechOfficerProfileController {
     @FXML
     private void saveProfile() {
         profileUserId = resolveProfileUserId();
+
         if (profileUserId == null || profileUserId.isBlank()) {
             profileUserId = extractUserIdFromToken(SessionManager.getToken());
         }
+
         if (profileUserId == null || profileUserId.isBlank()) {
             TechOfficerProfile latest = userService.getMyTechOfficerProfile();
             if (latest != null) {
                 profileUserId = trimOrNull(latest.getUserId());
             }
         }
+
         if (profileUserId == null || profileUserId.isBlank()) {
             showStatus("Invalid session. Log in again.", false);
             return;
@@ -204,7 +209,7 @@ public class TechOfficerProfileController {
     @FXML
     private void goBack() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/view/techOfficerDashboard.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/techofficer/techOfficerDashboard.fxml"));
             Stage stage = (Stage) userIdField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -249,6 +254,7 @@ public class TechOfficerProfileController {
         String r = role == null ? "" : role.trim();
         String d = dept == null ? "" : dept.trim();
         String sub;
+
         if (r.isEmpty() && d.isEmpty()) {
             sub = safeText(SessionManager.getRole());
         } else if (d.isEmpty()) {
@@ -258,6 +264,7 @@ public class TechOfficerProfileController {
         } else {
             sub = r + " · " + d;
         }
+
         subtitleLabel.setText(sub.isEmpty() ? "—" : sub);
     }
 
@@ -272,8 +279,7 @@ public class TechOfficerProfileController {
     }
 
     private static String normalizePicturePath(String s) {
-        String t = safeText(s);
-        return t;
+        return safeText(s);
     }
 
     private static String trimOrNull(String s) {
@@ -289,30 +295,37 @@ public class TechOfficerProfileController {
             if (token == null || token.isBlank()) {
                 return null;
             }
+
             String[] parts = token.split("\\.");
             if (parts.length < 2) {
                 return null;
             }
+
             String payloadJson = new String(Base64.getUrlDecoder().decode(parts[1]), StandardCharsets.UTF_8);
             String marker = "\"userId\"";
             int key = payloadJson.indexOf(marker);
             if (key < 0) {
                 return null;
             }
+
             int colon = payloadJson.indexOf(':', key + marker.length());
             if (colon < 0) {
                 return null;
             }
+
             int firstQuote = payloadJson.indexOf('"', colon + 1);
             if (firstQuote < 0) {
                 return null;
             }
+
             int secondQuote = payloadJson.indexOf('"', firstQuote + 1);
             if (secondQuote < 0) {
                 return null;
             }
+
             String userId = payloadJson.substring(firstQuote + 1, secondQuote).trim();
             return userId.isEmpty() ? null : userId;
+
         } catch (Exception ignored) {
             return null;
         }
@@ -321,8 +334,8 @@ public class TechOfficerProfileController {
     private void showStatus(String message, boolean success) {
         statusLabel.setText(message);
         statusLabel.setStyle(success
-                ? "-fx-text-fill: #28a745; -fx-font-size: 12px; -fx-font-weight: bold;"
-                : "-fx-text-fill: #ff6b6b; -fx-font-size: 12px; -fx-font-weight: bold;");
+                ? "-fx-text-fill: #4cba52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                : "-fx-text-fill: #e85d5d; -fx-font-size: 12px; -fx-font-weight: bold;");
         statusLabel.setVisible(true);
         statusLabel.setManaged(true);
     }

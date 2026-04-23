@@ -92,7 +92,7 @@ public class AddCourseController implements Initializable {
     @FXML
     private void goBack(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminDashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin/AdminDashboard.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) adminNameLabel.getScene().getWindow();
@@ -108,7 +108,18 @@ public class AddCourseController implements Initializable {
 
     private void showStatus(String message, String color) {
         statusLabel.setText(message);
-        statusLabel.setStyle("-fx-text-fill: " + color + "; -fx-font-size: 12px; -fx-font-weight: bold;");
+
+
+        String cssColor;
+        if (color.contains("74c69d")) {
+            cssColor = "#4cba52";
+        } else if (color.contains("ff6b6b")) {
+            cssColor = "#e85d5d";
+        } else {
+            cssColor = "#5b9fd9";
+        }
+
+        statusLabel.setStyle("-fx-text-fill: " + cssColor + "; -fx-font-size: 12px; -fx-font-weight: bold;");
         statusLabel.setVisible(true);
         statusLabel.setManaged(true);
     }

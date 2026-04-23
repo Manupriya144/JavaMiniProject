@@ -109,27 +109,27 @@ public class CourseDisplayController implements Initializable {
 
     private void styleTableHeader() {
         courseTable.lookupAll(".column-header-background").forEach(node ->
-                node.setStyle("-fx-background-color: #0f1b35;"));
+                node.setStyle("-fx-background-color: #ffffff;"));
 
         courseTable.lookupAll(".column-header").forEach(node ->
-                node.setStyle("-fx-background-color: #0f1b35; -fx-border-color: #1e3c72;"));
+                node.setStyle("-fx-background-color: #f5f9ff; -fx-border-color: #e8eef5;"));
 
         courseTable.lookupAll(".column-header .label").forEach(node ->
-                node.setStyle("-fx-text-fill: #a0c4ff; -fx-font-weight: bold; -fx-font-size: 12px;"));
+                node.setStyle("-fx-text-fill: #1a3a52; -fx-font-weight: bold; -fx-font-size: 12px;"));
 
         courseTable.lookupAll(".filler").forEach(node ->
-                node.setStyle("-fx-background-color: #0f1b35; -fx-border-color: #1e3c72;"));
+                node.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e8eef5;"));
     }
 
     private void styleScrollBar() {
         courseTable.lookupAll(".scroll-bar").forEach(node ->
-                node.setStyle("-fx-background-color: #0f1b35;"));
+                node.setStyle("-fx-background-color: #ffffff;"));
 
         courseTable.lookupAll(".scroll-bar .thumb").forEach(node ->
-                node.setStyle("-fx-background-color: #2a4a7f; -fx-background-radius: 8;"));
+                node.setStyle("-fx-background-color: #d4e4f7; -fx-background-radius: 8;"));
 
         courseTable.lookupAll(".scroll-bar .track").forEach(node ->
-                node.setStyle("-fx-background-color: #0f1b35;"));
+                node.setStyle("-fx-background-color: #f5f9ff;"));
     }
 
     private void setupFilters() {
@@ -167,10 +167,10 @@ public class CourseDisplayController implements Initializable {
             courseTable.setItems(FXCollections.observableArrayList(allCourses));
 
             if (allCourses == null || allCourses.isEmpty()) {
-                statusLabel.setStyle("-fx-text-fill: #f59e0b; -fx-font-size: 13px; -fx-font-weight: bold;");
+                statusLabel.setStyle("-fx-text-fill: #f5a623; -fx-font-size: 13px; -fx-font-weight: bold;");
                 statusLabel.setText("No courses found.");
             } else {
-                statusLabel.setStyle("-fx-text-fill: #22c55e; -fx-font-size: 13px; -fx-font-weight: bold;");
+                statusLabel.setStyle("-fx-text-fill: #4cba52; -fx-font-size: 13px; -fx-font-weight: bold;");
                 statusLabel.setText("Loaded " + allCourses.size() + " course(s) successfully.");
             }
 
@@ -181,7 +181,7 @@ public class CourseDisplayController implements Initializable {
 
         } catch (Exception e) {
             e.printStackTrace();
-            statusLabel.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 13px; -fx-font-weight: bold;");
+            statusLabel.setStyle("-fx-text-fill: #e85d5d; -fx-font-size: 13px; -fx-font-weight: bold;");
             statusLabel.setText("Failed to load courses.");
         }
     }
@@ -210,7 +210,7 @@ public class CourseDisplayController implements Initializable {
                 .collect(Collectors.toList());
 
         courseTable.setItems(FXCollections.observableArrayList(filtered));
-        statusLabel.setStyle("-fx-text-fill: #93c5fd; -fx-font-size: 13px; -fx-font-weight: bold;");
+        statusLabel.setStyle("-fx-text-fill: #5b9fd9; -fx-font-size: 13px; -fx-font-weight: bold;");
         statusLabel.setText("Showing " + filtered.size() + " course(s).");
 
         Platform.runLater(() -> {
@@ -230,7 +230,7 @@ public class CourseDisplayController implements Initializable {
     @FXML
     private void goBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminDashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin/AdminDashboard.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) courseTable.getScene().getWindow();

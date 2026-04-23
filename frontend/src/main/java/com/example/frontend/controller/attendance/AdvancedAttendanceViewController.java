@@ -78,7 +78,7 @@ public class AdvancedAttendanceViewController {
 
     @FXML
     private void backToDashboard() {
-        loadView("/view/techOfficerDashboard.fxml");
+        loadView("/view/techofficer/techOfficerDashboard.fxml");
     }
 
     private void onModeChanged() {

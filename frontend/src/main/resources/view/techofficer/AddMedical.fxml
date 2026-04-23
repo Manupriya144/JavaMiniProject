@@ -8,14 +8,14 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.frontend.controller.medical.AddMedicalController"
-            prefWidth="900" prefHeight="680"
-            style="-fx-background-color: #08111f;">
+            prefWidth="940" prefHeight="700"
+            style="-fx-background-color: #f8fbff;">
 
-    <!-- ══════════════════════  TOP NAV BAR  ══════════════════════ -->
+    <!-- TOP NAV BAR -->
     <top>
         <HBox alignment="CENTER_LEFT" prefHeight="68" spacing="0"
-              style="-fx-background-color: #0b1829;
-                     -fx-border-color: #1a3355;
+              style="-fx-background-color: #ffffff;
+                     -fx-border-color: #e8eef5;
                      -fx-border-width: 0 0 1 0;">
 
             <!-- Brand -->
@@ -23,27 +23,25 @@
                 <padding><Insets left="28" right="32"/></padding>
                 <StackPane>
                     <Circle radius="20"
-                            style="-fx-fill: linear-gradient(to bottom right, #2563eb, #1d4ed8);
-                                   -fx-effect: dropshadow(gaussian,rgba(37,99,235,0.5),12,0.3,0,0);"/>
+                            style="-fx-fill: linear-gradient(to bottom right, #5b9fd9, #4a8fcb);"/>
                     <Label text="🎓" style="-fx-font-size: 18px;"/>
                 </StackPane>
                 <VBox alignment="CENTER_LEFT" spacing="2">
                     <Label text="FoT Portal"
-                           style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 16px; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
                     <Label text="Faculty of Technology"
-                           style="-fx-text-fill: #4a7ab5; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
                 </VBox>
             </HBox>
 
-            <!-- Divider -->
-            <Region prefWidth="1" prefHeight="36" style="-fx-background-color: #1a3355;"/>
+            <Region prefWidth="1" prefHeight="36" style="-fx-background-color: #e8eef5;"/>
 
             <!-- Page Title -->
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <padding><Insets left="24" right="24"/></padding>
                 <Label text="🩺" style="-fx-font-size: 16px;"/>
                 <Label text="Add Medical Record"
-                       style="-fx-text-fill: #93c5fd; -fx-font-size: 13px;
+                       style="-fx-text-fill: #5b9fd9; -fx-font-size: 13px;
                               -fx-font-family: 'Segoe UI'; -fx-font-weight: bold;"/>
             </HBox>
 
@@ -54,18 +52,17 @@
                 <padding><Insets left="20" right="12"/></padding>
                 <StackPane>
                     <Circle radius="20"
-                            style="-fx-fill: linear-gradient(to bottom right, #0891b2, #0e7490);
-                                   -fx-effect: dropshadow(gaussian,rgba(8,145,178,0.4),10,0.3,0,0);"/>
+                            style="-fx-fill: linear-gradient(to bottom right, #4cba52, #39a940);"/>
                     <Label text="T"
                            style="-fx-text-fill: white; -fx-font-weight: bold;
                                   -fx-font-size: 14px; -fx-font-family: 'Segoe UI';"/>
                 </StackPane>
                 <VBox alignment="CENTER_LEFT" spacing="2">
                     <Label fx:id="officerNameLabel" text="Tech Officer"
-                           style="-fx-text-fill: white; -fx-font-size: 13px;
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 13px;
                                   -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
                     <Label text="Technical Officer"
-                           style="-fx-text-fill: #4a7ab5; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
                 </VBox>
             </HBox>
 
@@ -74,23 +71,23 @@
                 <padding><Insets left="12" right="24"/></padding>
                 <Button text="← Back" onAction="#backToDashboard"
                         prefHeight="36" prefWidth="100"
-                        style="-fx-background-color: transparent;
-                               -fx-text-fill: #93c5fd;
+                        style="-fx-background-color: #e8eef5;
+                               -fx-text-fill: #5b9fd9;
                                -fx-font-size: 12px; -fx-font-family: 'Segoe UI';
-                               -fx-border-color: #1e3a5f;
-                               -fx-border-radius: 6; -fx-border-width: 1;
-                               -fx-background-radius: 6; -fx-cursor: hand;"/>
+                               -fx-border-color: #d4e4f7;
+                               -fx-border-radius: 8; -fx-border-width: 1;
+                               -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: 600;"/>
             </HBox>
         </HBox>
     </top>
 
-    <!-- ══════════════════════  MAIN CONTENT  ══════════════════════ -->
+    <!-- MAIN CONTENT -->
     <center>
         <ScrollPane fitToWidth="true"
                     style="-fx-background: transparent; -fx-background-color: transparent;"
                     hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
 
-            <VBox spacing="0" style="-fx-background-color: #08111f;">
+            <VBox spacing="0" style="-fx-background-color: #f8fbff;">
                 <padding><Insets top="36" bottom="40" left="60" right="60"/></padding>
 
                 <!-- Page Heading -->
@@ -98,220 +95,219 @@
                     <padding><Insets bottom="28"/></padding>
                     <StackPane>
                         <Circle radius="22"
-                                style="-fx-fill: rgba(8,145,178,0.15);"/>
+                                style="-fx-fill: #eef6ff;"/>
                         <Label text="🩺" style="-fx-font-size: 20px;"/>
                     </StackPane>
                     <VBox spacing="4">
                         <Label text="Add Medical Record"
-                               style="-fx-text-fill: white; -fx-font-size: 26px;
+                               style="-fx-text-fill: #1a3a52; -fx-font-size: 26px;
                                       -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
                         <Label text="Submit a student medical certificate for exam exemption review"
-                               style="-fx-text-fill: #4a7ab5; -fx-font-size: 13px; -fx-font-family: 'Segoe UI';"/>
+                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 13px; -fx-font-family: 'Segoe UI';"/>
                     </VBox>
                 </HBox>
 
-                <!-- ─── Main Card ─── -->
+                <!-- Main Card -->
                 <VBox spacing="0"
-                      style="-fx-background-color: #0d1e36;
+                      style="-fx-background-color: #ffffff;
                              -fx-background-radius: 16;
-                             -fx-border-color: #1a3355;
+                             -fx-border-color: #d4e4f7;
                              -fx-border-radius: 16;
                              -fx-border-width: 1;
-                             -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.6),28,0,0,8);">
+                             -fx-effect: dropshadow(gaussian,rgba(91,159,217,0.10),20,0,0,4);">
 
                     <!-- Card Header -->
                     <HBox alignment="CENTER_LEFT" spacing="14"
-                          style="-fx-background-color: linear-gradient(to right, #0f2444, #0d1e36);
+                          style="-fx-background-color: #f5f9ff;
                                  -fx-background-radius: 16 16 0 0;
-                                 -fx-border-color: transparent transparent #1a3355 transparent;
+                                 -fx-border-color: transparent transparent #e8eef5 transparent;
                                  -fx-border-width: 0 0 1 0;">
                         <padding><Insets top="20" bottom="20" left="28" right="28"/></padding>
                         <StackPane>
-                            <Circle radius="18" style="-fx-fill: rgba(8,145,178,0.2);"/>
+                            <Circle radius="18" style="-fx-fill: #eef6ff;"/>
                             <Label text="📋" style="-fx-font-size: 16px;"/>
                         </StackPane>
                         <VBox spacing="3">
                             <Label text="Medical Submission Form"
-                                   style="-fx-text-fill: white; -fx-font-size: 15px;
+                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 15px;
                                           -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
-                            <Label text="All fields marked * are required"
-                                   style="-fx-text-fill: #4a7ab5; -fx-font-size: 11px; -fx-font-family: 'Segoe UI';"/>
+                            <Label text="All required details must be completed"
+                                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px; -fx-font-family: 'Segoe UI';"/>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Label text="Status: Pending on submission"
-                               style="-fx-text-fill: #f59e0b; -fx-font-size: 10px;
+                        <Label text="Pending after submit"
+                               style="-fx-text-fill: #f0a35a; -fx-font-size: 10px;
                                       -fx-font-family: 'Segoe UI';
-                                      -fx-background-color: rgba(245,158,11,0.1);
-                                      -fx-background-radius: 4;
-                                      -fx-padding: 4 10;"/>
+                                      -fx-background-color: #fff6ee;
+                                      -fx-background-radius: 14;
+                                      -fx-padding: 5 12;"/>
                     </HBox>
 
                     <!-- Form Body -->
                     <VBox spacing="24">
                         <padding><Insets top="32" bottom="32" left="32" right="32"/></padding>
 
-                        <!-- Row 1: Student ID + Course ID -->
+                        <!-- Row 1 -->
                         <HBox spacing="20">
-                            <!-- Student ID -->
                             <VBox spacing="8" HBox.hgrow="ALWAYS">
                                 <HBox spacing="4" alignment="CENTER_LEFT">
                                     <Label text="Student ID"
-                                           style="-fx-text-fill: #93c5fd; -fx-font-size: 12px;
+                                           style="-fx-text-fill: #1a3a52; -fx-font-size: 12px;
                                                   -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
-                                    <Label text="*" style="-fx-text-fill: #f87171; -fx-font-size: 12px;"/>
+                                    <Label text="*" style="-fx-text-fill: #e85d5d; -fx-font-size: 12px;"/>
                                 </HBox>
                                 <TextField fx:id="studentIdField"
                                            promptText="e.g. 677"
                                            prefHeight="44"
-                                           style="-fx-background-color: #091527;
-                                                  -fx-text-fill: white;
-                                                  -fx-prompt-text-fill: #334d6e;
+                                           style="-fx-background-color: #ffffff;
+                                                  -fx-text-fill: #1a3a52;
+                                                  -fx-prompt-text-fill: #a8b8ca;
                                                   -fx-background-radius: 10;
-                                                  -fx-border-color: #1e3a5f;
+                                                  -fx-border-color: #d4e4f7;
                                                   -fx-border-radius: 10;
-                                                  -fx-border-width: 1.5;
+                                                  -fx-border-width: 1.4;
                                                   -fx-font-size: 13px;
                                                   -fx-font-family: 'Segoe UI';
                                                   -fx-padding: 0 14;"/>
                                 <Label text="Numeric student registration number"
-                                       style="-fx-text-fill: #334d6e; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
+                                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
                             </VBox>
 
-                            <!-- Course ID -->
                             <VBox spacing="8" HBox.hgrow="ALWAYS">
                                 <HBox spacing="4" alignment="CENTER_LEFT">
                                     <Label text="Course ID"
-                                           style="-fx-text-fill: #93c5fd; -fx-font-size: 12px;
+                                           style="-fx-text-fill: #1a3a52; -fx-font-size: 12px;
                                                   -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
-                                    <Label text="*" style="-fx-text-fill: #f87171; -fx-font-size: 12px;"/>
+                                    <Label text="*" style="-fx-text-fill: #e85d5d; -fx-font-size: 12px;"/>
                                 </HBox>
                                 <TextField fx:id="courseIdField"
                                            promptText="e.g. ICT1203"
                                            prefHeight="44"
-                                           style="-fx-background-color: #091527;
-                                                  -fx-text-fill: white;
-                                                  -fx-prompt-text-fill: #334d6e;
+                                           style="-fx-background-color: #ffffff;
+                                                  -fx-text-fill: #1a3a52;
+                                                  -fx-prompt-text-fill: #a8b8ca;
                                                   -fx-background-radius: 10;
-                                                  -fx-border-color: #1e3a5f;
+                                                  -fx-border-color: #d4e4f7;
                                                   -fx-border-radius: 10;
-                                                  -fx-border-width: 1.5;
+                                                  -fx-border-width: 1.4;
                                                   -fx-font-size: 13px;
                                                   -fx-font-family: 'Segoe UI';
                                                   -fx-padding: 0 14;"/>
                                 <Label text="Module code from the timetable"
-                                       style="-fx-text-fill: #334d6e; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
+                                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
                             </VBox>
                         </HBox>
 
-                        <!-- Row 2: Exam Type + Date -->
+                        <!-- Row 2 -->
                         <HBox spacing="20">
-                            <!-- Exam Type -->
                             <VBox spacing="8" HBox.hgrow="ALWAYS">
                                 <HBox spacing="4" alignment="CENTER_LEFT">
                                     <Label text="Exam Type"
-                                           style="-fx-text-fill: #93c5fd; -fx-font-size: 12px;
+                                           style="-fx-text-fill: #1a3a52; -fx-font-size: 12px;
                                                   -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
-                                    <Label text="*" style="-fx-text-fill: #f87171; -fx-font-size: 12px;"/>
+                                    <Label text="*" style="-fx-text-fill: #e85d5d; -fx-font-size: 12px;"/>
                                 </HBox>
                                 <ComboBox fx:id="examTypeCombo"
                                           maxWidth="Infinity"
                                           prefHeight="44"
                                           visibleRowCount="5"
-                                          style="-fx-background-color: #091527;
+                                          style="-fx-background-color: #ffffff;
                                                  -fx-background-radius: 10;
-                                                 -fx-border-color: #1e3a5f;
+                                                 -fx-border-color: #d4e4f7;
                                                  -fx-border-radius: 10;
-                                                 -fx-border-width: 1.5;
-                                                 -fx-text-fill: white;
+                                                 -fx-border-width: 1.4;
+                                                 -fx-text-fill: #1a3a52;
                                                  -fx-font-size: 13px;
                                                  -fx-font-family: 'Segoe UI';
                                                  -fx-padding: 0 14;"/>
                                 <Label text="Type of assessment session"
-                                       style="-fx-text-fill: #334d6e; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
+                                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
                             </VBox>
 
-                            <!-- Date Submitted -->
                             <VBox spacing="8" HBox.hgrow="ALWAYS">
                                 <HBox spacing="4" alignment="CENTER_LEFT">
                                     <Label text="Date Submitted"
-                                           style="-fx-text-fill: #93c5fd; -fx-font-size: 12px;
+                                           style="-fx-text-fill: #1a3a52; -fx-font-size: 12px;
                                                   -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
-                                    <Label text="*" style="-fx-text-fill: #f87171; -fx-font-size: 12px;"/>
+                                    <Label text="*" style="-fx-text-fill: #e85d5d; -fx-font-size: 12px;"/>
                                 </HBox>
                                 <DatePicker fx:id="submittedDatePicker"
                                             maxWidth="Infinity"
                                             prefHeight="44"
                                             promptText="Select date"
-                                            style="-fx-background-color: #091527;
+                                            style="-fx-background-color: #ffffff;
                                                    -fx-background-radius: 10;
-                                                   -fx-border-color: #1e3a5f;
+                                                   -fx-border-color: #d4e4f7;
                                                    -fx-border-radius: 10;
-                                                   -fx-border-width: 1.5;
+                                                   -fx-border-width: 1.4;
                                                    -fx-font-size: 13px;
                                                    -fx-font-family: 'Segoe UI';"/>
-                                <Label text="Must match the exam session date exactly"
-                                       style="-fx-text-fill: #f59e0b; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
+                                <Label text="Must match the exam session date"
+                                       style="-fx-text-fill: #f0a35a; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
                             </VBox>
                         </HBox>
 
-                        <!-- Row 3: Medical Copy (full width) -->
+                        <!-- Row 3 -->
                         <VBox spacing="8">
                             <Label text="Medical Certificate / Note"
-                                   style="-fx-text-fill: #93c5fd; -fx-font-size: 12px;
+                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 12px;
                                           -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
                             <TextField fx:id="medicalCopyField"
                                        promptText="File path or short description of document"
                                        prefHeight="44"
-                                       style="-fx-background-color: #091527;
-                                              -fx-text-fill: white;
-                                              -fx-prompt-text-fill: #334d6e;
+                                       style="-fx-background-color: #ffffff;
+                                              -fx-text-fill: #1a3a52;
+                                              -fx-prompt-text-fill: #a8b8ca;
                                               -fx-background-radius: 10;
-                                              -fx-border-color: #1e3a5f;
+                                              -fx-border-color: #d4e4f7;
                                               -fx-border-radius: 10;
-                                              -fx-border-width: 1.5;
+                                              -fx-border-width: 1.4;
                                               -fx-font-size: 13px;
                                               -fx-font-family: 'Segoe UI';
                                               -fx-padding: 0 14;"/>
                             <Label text="Attach a scanned copy reference or enter a note"
-                                   style="-fx-text-fill: #334d6e; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
+                                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
                         </VBox>
 
-                        <!-- Divider -->
                         <HBox>
                             <Region prefHeight="1"
-                                    style="-fx-background-color: #1a3355;"
+                                    style="-fx-background-color: #e8eef5;"
                                     HBox.hgrow="ALWAYS"/>
                         </HBox>
 
-                        <!-- Status Label -->
-                        <HBox minHeight="24" alignment="CENTER_LEFT">
+                        <!-- Status -->
+                        <HBox minHeight="24" alignment="CENTER_LEFT"
+                              style="-fx-background-color: #f5f9ff;
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #e8eef5;
+                                     -fx-border-radius: 10;
+                                     -fx-padding: 12 14;">
                             <Label fx:id="statusLabel" text=""
                                    wrapText="true"
                                    style="-fx-font-size: 13px; -fx-font-family: 'Segoe UI'; -fx-font-weight: bold;"/>
                         </HBox>
 
-                        <!-- Action Buttons -->
+                        <!-- Buttons -->
                         <HBox spacing="14" alignment="CENTER_RIGHT">
                             <Button text="Clear Form" onAction="#clearForm"
                                     prefHeight="44" prefWidth="140"
-                                    style="-fx-background-color: #0b1829;
-                                           -fx-text-fill: #93c5fd;
+                                    style="-fx-background-color: #e8eef5;
+                                           -fx-text-fill: #5b9fd9;
                                            -fx-font-size: 13px; -fx-font-family: 'Segoe UI';
                                            -fx-background-radius: 10;
-                                           -fx-border-color: #1e3a5f;
+                                           -fx-border-color: #d4e4f7;
                                            -fx-border-radius: 10;
-                                           -fx-border-width: 1.5;
+                                           -fx-border-width: 1.4;
                                            -fx-cursor: hand;"/>
 
                             <Button text="🩺  Submit Medical" onAction="#submitMedical"
                                     prefHeight="44" prefWidth="190"
-                                    style="-fx-background-color: linear-gradient(to right, #0e7490, #0891b2);
+                                    style="-fx-background-color: #4cba52;
                                            -fx-text-fill: white;
                                            -fx-font-size: 13px; -fx-font-family: 'Segoe UI';
                                            -fx-font-weight: bold;
                                            -fx-background-radius: 10;
-                                           -fx-cursor: hand;
-                                           -fx-effect: dropshadow(gaussian,rgba(8,145,178,0.45),14,0.3,0,3);"/>
+                                           -fx-cursor: hand;"/>
                         </HBox>
                     </VBox>
                 </VBox>
@@ -319,32 +315,30 @@
                 <!-- Info Strip -->
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <padding><Insets top="18"/></padding>
-                    <Label text="ℹ" style="-fx-text-fill: #0891b2; -fx-font-size: 13px;"/>
-                    <Label text="Submitted records are set to Pending status and reviewed by an administrator before approval."
-                           style="-fx-text-fill: #334d6e; -fx-font-size: 11px; -fx-font-family: 'Segoe UI';"/>
+                    <Label text="ℹ" style="-fx-text-fill: #5b9fd9; -fx-font-size: 13px;"/>
+                    <Label text="Submitted records are set to Pending status and reviewed before approval."
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px; -fx-font-family: 'Segoe UI';"/>
                 </HBox>
             </VBox>
         </ScrollPane>
     </center>
 
-    <!-- ══════════════════════  STATUS BAR  ══════════════════════ -->
+    <!-- STATUS BAR -->
     <bottom>
         <HBox alignment="CENTER_LEFT" spacing="16" prefHeight="36"
-              style="-fx-background-color: #0b1829;
-                     -fx-border-color: #1a3355;
+              style="-fx-background-color: #ffffff;
+                     -fx-border-color: #e8eef5;
                      -fx-border-width: 1 0 0 0;">
             <padding><Insets left="24" right="24"/></padding>
-            <Circle radius="5"
-                    style="-fx-fill: #16a34a;
-                           -fx-effect: dropshadow(gaussian,rgba(22,163,74,0.7),8,0.4,0,0);"/>
+            <Circle radius="5" style="-fx-fill: #4cba52;"/>
             <Label text="System Online"
-                   style="-fx-text-fill: #16a34a; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
-            <Label text="•" style="-fx-text-fill: #1a3355; -fx-font-size: 10px;"/>
+                   style="-fx-text-fill: #4cba52; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
+            <Label text="•" style="-fx-text-fill: #d4e4f7; -fx-font-size: 10px;"/>
             <Label text="Faculty of Technology Management System  •  v1.0"
-                   style="-fx-text-fill: #334d6e; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
+                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="statusBarTime" text=""
-                   style="-fx-text-fill: #334d6e; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
+                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
         </HBox>
     </bottom>
 

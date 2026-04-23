@@ -3,6 +3,7 @@ package com.example.frontend.controller.admin;
 import com.example.frontend.dto.UserRequestDTO;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.service.UserService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -62,15 +63,15 @@ public class CreateUserController implements Initializable {
     @FXML private Label statusLabel;
 
     private static final String ACTIVE_STYLE =
-            "-fx-background-color: #1e3c72; -fx-text-fill: white;" +
+            "-fx-background-color: #5b9fd9; -fx-text-fill: white;" +
                     "-fx-font-size: 12px; -fx-background-radius: 8;" +
-                    "-fx-border-color: #4a90d9; -fx-border-radius: 8;" +
+                    "-fx-border-color: #4a8ac8; -fx-border-radius: 8;" +
                     "-fx-border-width: 2; -fx-cursor: hand; -fx-font-weight: bold;";
 
     private static final String INACTIVE_STYLE =
-            "-fx-background-color: #0f1b35; -fx-text-fill: #a0b8e0;" +
+            "-fx-background-color: #ffffff; -fx-text-fill: #8fa3b8;" +
                     "-fx-font-size: 12px; -fx-background-radius: 8;" +
-                    "-fx-border-color: #2a4a7f; -fx-border-radius: 8;" +
+                    "-fx-border-color: #d4e4f7; -fx-border-radius: 8;" +
                     "-fx-border-width: 1; -fx-cursor: hand;";
 
     @Override
@@ -278,16 +279,20 @@ public class CreateUserController implements Initializable {
     //Back Button
 
     @FXML
-    private void goBack() throws IOException {
+    public void goBack() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin/AdminDashboard.fxml"));
+            Parent root = loader.load();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminDashboard.fxml"));
-        Parent root = loader.load();
+            Stage stage = (Stage) adminNameLabel.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen();
+            stage.show();
 
-        Stage stage = (Stage) usernameField.getScene().getWindow();
-
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showStatus("Failed to load dashboard", false);
+        }
     }
 
 

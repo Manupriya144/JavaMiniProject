@@ -3,17 +3,22 @@ package com.example.frontend.controller.admin;
 import com.example.frontend.dto.NoticeResponseDTO;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.service.NoticeService;
+import com.example.frontend.session.SessionManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.awt.Desktop;
@@ -49,7 +54,7 @@ public class DisplayNoticeController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        adminNameLabel.setText("Administrator");
+        adminNameLabel.setText(LoginController.username);
         detailPdfLink.setDisable(true);
         startClock();
         loadNotices();
@@ -85,27 +90,28 @@ public class DisplayNoticeController implements Initializable {
         VBox card = new VBox(8);
         card.setPadding(new Insets(14));
         card.setStyle(
-                "-fx-background-color: #0f1b35;" +
-                        "-fx-border-color: #1e3c72;" +
+                "-fx-background-color: #ffffff;" +
+                        "-fx-border-color: #d4e4f7;" +
                         "-fx-border-radius: 10;" +
                         "-fx-background-radius: 10;" +
-                        "-fx-cursor: hand;"
+                        "-fx-cursor: hand;" +
+                        "-fx-effect: dropshadow(three-pass-box,rgba(91,159,217,0.08),8,0,0,2);"
         );
 
         Label title = new Label(safe(notice.getTitle()));
         title.setWrapText(true);
-        title.setStyle("-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;");
+        title.setStyle("-fx-text-fill: #1a3a52; -fx-font-size: 13px; -fx-font-weight: bold;");
 
         Label description = new Label(shortText(safe(notice.getDescription()), 110));
         description.setWrapText(true);
-        description.setStyle("-fx-text-fill: #a0b8e0; -fx-font-size: 12px;");
+        description.setStyle("-fx-text-fill: #8fa3b8; -fx-font-size: 12px;");
 
         Label meta = new Label("By: " + safe(notice.getCreated_by()) + "   |   " + formatDateTime(safe(notice.getCreated_at())));
         meta.setWrapText(true);
-        meta.setStyle("-fx-text-fill: #6a90c8; -fx-font-size: 11px;");
+        meta.setStyle("-fx-text-fill: #a8b8ca; -fx-font-size: 11px;");
 
         Hyperlink openLink = new Hyperlink("Open PDF");
-        openLink.setStyle("-fx-text-fill: #7db4ff; -fx-font-size: 12px;");
+        openLink.setStyle("-fx-text-fill: #5b9fd9; -fx-font-size: 12px; -fx-font-weight: 600;");
         openLink.setOnAction(e -> {
             e.consume();
             openFileOrLink(notice.getPdf_file_path());
@@ -113,12 +119,13 @@ public class DisplayNoticeController implements Initializable {
 
         Button detailsBtn = new Button("View Details");
         detailsBtn.setStyle(
-                "-fx-background-color: #1e3c72;" +
+                "-fx-background-color: #5b9fd9;" +
                         "-fx-text-fill: white;" +
                         "-fx-font-size: 12px;" +
                         "-fx-font-weight: bold;" +
                         "-fx-background-radius: 8;" +
-                        "-fx-cursor: hand;"
+                        "-fx-cursor: hand;" +
+                        "-fx-padding: 6 12 6 12;"
         );
         detailsBtn.setOnAction(e -> {
             e.consume();
@@ -259,14 +266,33 @@ public class DisplayNoticeController implements Initializable {
     @FXML
     private void goBack() {
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
-                    getClass().getResource("/view/AdminDashboard.fxml")
-            );
+            String role = SessionManager.getRole();
+            String dashboardFxml;
 
-            javafx.scene.Parent root = loader.load();
+            switch (role) {
+                case "Admin":
+                    dashboardFxml = "/view/admin/AdminDashboard.fxml";
+                    break;
+                case "Tech_Officer":
+                    dashboardFxml = "/view/techofficer/techOfficerDashboard.fxml";
+                    break;
+                case "Lecturer":
+                    dashboardFxml = "/view/LecturerDashboard.fxml";
+                    break;
+                case "Student":
+                    dashboardFxml = "/view/student/studentDashboard.fxml";
+                    break;
+                default:
+                    statusLabel.setText("Unknown role: " + role);
+                    return;
+            }
 
-            javafx.stage.Stage stage = (javafx.stage.Stage) statusLabel.getScene().getWindow();
-            stage.setScene(new javafx.scene.Scene(root));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(dashboardFxml));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) statusLabel.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen();
             stage.show();
 
         } catch (Exception e) {

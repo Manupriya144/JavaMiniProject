@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -150,37 +149,48 @@ public class StudentProfileController {
             return;
         }
 
-        boolean success = studentService.updateStudentProfile(
-                currentStudent.getUserId(),
-                email,
-                contactNumber,
-                profilePicture,
-                password
-        );
+        saveBtn.setDisable(true);
 
-        if (success) {
-            currentStudent.setEmail(email);
-            currentStudent.setContactNumber(contactNumber);
-            currentStudent.setProfilePicture(profilePicture);
-            setupProfile(currentStudent);
+        try {
+            boolean success = studentService.updateStudentProfile(
+                    currentStudent.getUserId(),
+                    email,
+                    contactNumber,
+                    profilePicture,
+                    password
+            );
 
-            passwordField.clear();
-            confirmPasswordField.clear();
+            if (success) {
+                currentStudent.setEmail(email);
+                currentStudent.setContactNumber(contactNumber);
+                currentStudent.setProfilePicture(profilePicture);
 
-            showStatus("Profile updated successfully.", true);
-        } else {
-            showStatus("Failed to update profile.", false);
+                setupProfile(currentStudent);
+
+                passwordField.clear();
+                confirmPasswordField.clear();
+
+                showStatus("Profile updated successfully.", true);
+            } else {
+                showStatus("Failed to update profile.", false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showStatus("Unexpected error occurred.", false);
+        } finally {
+            saveBtn.setDisable(false);
         }
     }
 
     @FXML
     private void goBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/studentDashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/student/studentDashboard.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) userIdField.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.centerOnScreen();
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -191,8 +201,8 @@ public class StudentProfileController {
     private void showStatus(String message, boolean success) {
         statusLabel.setText(message);
         statusLabel.setStyle(success
-                ? "-fx-text-fill: #28a745; -fx-font-size: 12px; -fx-font-weight: bold;"
-                : "-fx-text-fill: #ff6b6b; -fx-font-size: 12px; -fx-font-weight: bold;");
+                ? "-fx-text-fill: #4cba52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                : "-fx-text-fill: #e85d5d; -fx-font-size: 12px; -fx-font-weight: bold;");
         statusLabel.setVisible(true);
         statusLabel.setManaged(true);
     }

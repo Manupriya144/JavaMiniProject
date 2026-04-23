@@ -41,6 +41,7 @@ import command.student.UpdateStudentProfileCommand;
 import command.timetable.AddTimeTableCommand;
 import command.timetable.GetAllTimeTablesCommand;
 import command.user.CreateUserCommand;
+import command.user.GetAdminStatsCommand;
 import command.user.GetAllUsersCommand;
 import command.student.GetStudentByIdCommand;
 import command.user.GetUserByIdCommand;
@@ -56,6 +57,8 @@ import dao.medical.MedicalDAO;
 import dao.notice.NoticeDAO;
 import dao.student.StudentDAO;
 import dao.timetable.TimeTableDAO;
+import dao.user.AdminDashboardDAO;
+import dao.user.AdminDashboardDAOImpl;
 import dao.user.UserDAO;
 import service.attendance.AttendanceService;
 import service.ca.CAMarkService;
@@ -66,6 +69,7 @@ import service.medical.MedicalService;
 import service.notice.NoticeService;
 import service.student.StudentService;
 import service.timetable.TimeTableService;
+import service.user.AdminDashboardService;
 import service.user.UserService;
 import service.techofficer.TechOfficerService;
 import utility.DataSource;
@@ -138,6 +142,9 @@ public class CommandRegistry {
 
             // users related
             UserService userService = new UserService(userDAO);
+            AdminDashboardDAO adminDashboardDAO = new AdminDashboardDAOImpl();
+            AdminDashboardService adminDashboardService = new AdminDashboardService(adminDashboardDAO);
+            commands.put("GET_ADMIN_STATS",new GetAdminStatsCommand(adminDashboardService,authService));
 
 
             commands.put("GetAllUser",new GetAllUsersCommand(userService,authService));

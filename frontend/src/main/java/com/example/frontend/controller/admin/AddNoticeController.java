@@ -50,9 +50,14 @@ public class AddNoticeController {
 
     @FXML
     public void initialize() {
+        adminNameLabel.setText(LoginController.username);
+
         statusBarTime.setText(
-                LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
+                LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy"))
         );
+
+        statusLabel.setVisible(false);
+        statusLabel.setManaged(false);
     }
 
     @FXML
@@ -76,12 +81,17 @@ public class AddNoticeController {
         String pdfPath = pdfPathField.getText() != null ? pdfPathField.getText().trim() : "";
 
         if (title.isEmpty()) {
-            showStatus("Title is required.", false);
+            showStatus("Title is required", "#ff6b6b");
             return;
         }
 
         if (description.isEmpty() && pdfPath.isEmpty()) {
-            showStatus("Provide a description or a PDF file path.", false);
+            showStatus("Provide description or PDF path", "#ff6b6b");
+            return;
+        }
+
+        if (noticeService == null) {
+            showStatus("Notice service is not initialized", "#ff6b6b");
             return;
         }
 
@@ -90,28 +100,24 @@ public class AddNoticeController {
         dto.setDescription(description);
         dto.setPdf_file_path(pdfPath);
 
-        if (noticeService == null) {
-            showStatus("Notice service is not initialized.", false);
-            return;
-        }
-
         addBtn.setDisable(true);
 
         try {
             boolean success = noticeService.createNotice(dto);
 
             if (success) {
-                showStatus("Notice published successfully.", true);
+                showStatus("Notice published successfully", "#74c69d");
                 clearForm();
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Notice published successfully.");
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Notice published successfully");
             } else {
-                showStatus("Failed to publish notice.", false);
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to publish notice.");
+                showStatus("Failed to publish notice", "#ff6b6b");
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to publish notice");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
-            showStatus("Unexpected error occurred.", false);
-            showAlert(Alert.AlertType.ERROR, "Error", "Unexpected error occurred.");
+            showStatus("Unexpected error occurred", "#ff6b6b");
+            showAlert(Alert.AlertType.ERROR, "Error", "Unexpected error occurred");
         } finally {
             addBtn.setDisable(false);
         }
@@ -122,15 +128,16 @@ public class AddNoticeController {
         titleField.clear();
         descriptionArea.clear();
         pdfPathField.clear();
+
+        statusLabel.setText("");
         statusLabel.setVisible(false);
         statusLabel.setManaged(false);
-        statusLabel.setText("");
     }
 
     @FXML
     public void goBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminDashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin/AdminDashboard.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) adminNameLabel.getScene().getWindow();
@@ -140,15 +147,27 @@ public class AddNoticeController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            showStatus("Failed to load dashboard", false);
+            showStatus("Failed to load dashboard", "#ff6b6b");
         }
     }
 
-    private void showStatus(String message, boolean success) {
+    private void showStatus(String message, String color) {
         statusLabel.setText(message);
-        statusLabel.setStyle(success
-                ? "-fx-text-fill: #28a745; -fx-font-size: 12px; -fx-font-weight: bold;"
-                : "-fx-text-fill: #ff6b6b; -fx-font-size: 12px; -fx-font-weight: bold;");
+
+        String cssColor;
+        if (color.contains("74c69d")) {
+            cssColor = "#4cba52";
+        } else if (color.contains("ff6b6b")) {
+            cssColor = "#e85d5d";
+        } else {
+            cssColor = "#5b9fd9";
+        }
+
+        statusLabel.setStyle(
+                "-fx-text-fill: " + cssColor + ";" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-font-weight: bold;"
+        );
         statusLabel.setVisible(true);
         statusLabel.setManaged(true);
     }

@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.frontend.controller.attendance.AdvancedAttendanceVisualViewController"
+            prefWidth="1200" prefHeight="820"
+            style="-fx-background-color: #f8fbff;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="0"
+              style="-fx-background-color: #ffffff;
+                     -fx-border-color: #e8eef5;
+                     -fx-border-width: 0 0 1 0;">
+
+            <HBox alignment="CENTER_LEFT" spacing="14" HBox.hgrow="ALWAYS">
+                <padding><Insets top="0" right="24" bottom="0" left="24"/></padding>
+
+                <StackPane prefWidth="40" prefHeight="40"
+                           style="-fx-background-color: #eef6ff;
+                                  -fx-background-radius: 10;
+                                  -fx-border-color: #d4e4f7;
+                                  -fx-border-width: 1;
+                                  -fx-border-radius: 10;">
+                    <Label text="📋" style="-fx-font-size: 18px;"/>
+                </StackPane>
+
+                <VBox spacing="2">
+                    <Label text="Advanced Attendance"
+                           style="-fx-text-fill: #1a3a52;
+                                  -fx-font-size: 15px;
+                                  -fx-font-weight: bold;"/>
+                    <Label text="Visual Analytics Dashboard"
+                           style="-fx-text-fill: #8fa3b8;
+                                  -fx-font-size: 10px;"/>
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <HBox alignment="CENTER" spacing="6"
+                      style="-fx-background-color: #f5f9ff;
+                             -fx-background-radius: 20;
+                             -fx-border-color: #d4e4f7;
+                             -fx-border-radius: 20;
+                             -fx-border-width: 1;
+                             -fx-padding: 6 14 6 12;">
+                    <Circle radius="4" style="-fx-fill: #4cba52;"/>
+                    <Label fx:id="statusLabel"
+                           text="Ready"
+                           style="-fx-text-fill: #8fa3b8;
+                                  -fx-font-size: 10px;
+                                  -fx-font-weight: bold;"/>
+                </HBox>
+
+                <Button text="← Dashboard" onAction="#backToDashboard"
+                        style="-fx-background-color: #e8eef5;
+                               -fx-text-fill: #5b9fd9;
+                               -fx-border-color: #d4e4f7;
+                               -fx-border-width: 1;
+                               -fx-border-radius: 8;
+                               -fx-background-radius: 8;
+                               -fx-font-size: 11px;
+                               -fx-font-weight: bold;
+                               -fx-cursor: hand;
+                               -fx-padding: 8 16 8 16;"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="16">
+            <padding><Insets top="22" right="24" bottom="22" left="24"/></padding>
+
+            <!-- Query Panel -->
+            <VBox spacing="0"
+                  style="-fx-background-color: #ffffff;
+                         -fx-background-radius: 12;
+                         -fx-border-color: #d4e4f7;
+                         -fx-border-radius: 12;
+                         -fx-border-width: 1;">
+
+                <HBox alignment="CENTER_LEFT" spacing="10"
+                      style="-fx-background-color: #f5f9ff;
+                             -fx-background-radius: 12 12 0 0;
+                             -fx-border-color: #e8eef5;
+                             -fx-border-width: 0 0 1 0;">
+                    <padding><Insets top="11" right="18" bottom="11" left="16"/></padding>
+                    <StackPane prefWidth="3" prefHeight="16"
+                               style="-fx-background-color: #5b9fd9; -fx-background-radius: 2;"/>
+                    <Label text="Query Parameters"
+                           style="-fx-text-fill: #1a3a52;
+                                  -fx-font-size: 11px;
+                                  -fx-font-weight: bold;"/>
+                </HBox>
+
+                <HBox spacing="14" alignment="CENTER_LEFT">
+                    <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+
+                    <VBox spacing="6">
+                        <Label text="Mode"
+                               style="-fx-text-fill: #8fa3b8;
+                                      -fx-font-size: 11px;
+                                      -fx-font-weight: bold;"/>
+                        <ComboBox fx:id="modeComboBox" prefWidth="170"
+                                  style="-fx-background-color: #ffffff;
+                                         -fx-border-color: #d4e4f7;
+                                         -fx-border-radius: 8;
+                                         -fx-background-radius: 8;
+                                         -fx-text-fill: #1a3a52;
+                                         -fx-font-size: 12px;"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="View Type"
+                               style="-fx-text-fill: #8fa3b8;
+                                      -fx-font-size: 11px;
+                                      -fx-font-weight: bold;"/>
+                        <ComboBox fx:id="viewTypeComboBox" prefWidth="170"
+                                  style="-fx-background-color: #ffffff;
+                                         -fx-border-color: #d4e4f7;
+                                         -fx-border-radius: 8;
+                                         -fx-background-radius: 8;
+                                         -fx-text-fill: #1a3a52;
+                                         -fx-font-size: 12px;"/>
+                    </VBox>
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label fx:id="targetLabel" text="Student ID"
+                               style="-fx-text-fill: #8fa3b8;
+                                      -fx-font-size: 11px;
+                                      -fx-font-weight: bold;"/>
+                        <TextField fx:id="targetField" promptText="Enter value…"
+                                   style="-fx-background-color: #ffffff;
+                                          -fx-border-color: #d4e4f7;
+                                          -fx-border-radius: 8;
+                                          -fx-background-radius: 8;
+                                          -fx-text-fill: #1a3a52;
+                                          -fx-prompt-text-fill: #a8b8ca;
+                                          -fx-font-size: 12px;
+                                          -fx-padding: 8 12 8 12;"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="Actions"
+                               style="-fx-text-fill: #8fa3b8;
+                                      -fx-font-size: 11px;
+                                      -fx-font-weight: bold;"/>
+                        <HBox spacing="8">
+                            <Button text="Load Details" onAction="#loadDetails"
+                                    style="-fx-background-color: #e8eef5;
+                                           -fx-text-fill: #5b9fd9;
+                                           -fx-border-color: #d4e4f7;
+                                           -fx-border-width: 1;
+                                           -fx-border-radius: 8;
+                                           -fx-background-radius: 8;
+                                           -fx-font-size: 11px;
+                                           -fx-font-weight: bold;
+                                           -fx-cursor: hand;
+                                           -fx-padding: 8 18 8 18;"/>
+                            <Button text="Load Summary" onAction="#loadSummary"
+                                    style="-fx-background-color: #5b9fd9;
+                                           -fx-text-fill: white;
+                                           -fx-border-color: #5b9fd9;
+                                           -fx-border-width: 1;
+                                           -fx-border-radius: 8;
+                                           -fx-background-radius: 8;
+                                           -fx-font-size: 11px;
+                                           -fx-font-weight: bold;
+                                           -fx-cursor: hand;
+                                           -fx-padding: 8 18 8 18;"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Individual Summary -->
+            <VBox fx:id="individualSummaryPane" spacing="12">
+
+                <VBox spacing="0"
+                      style="-fx-background-color: #ffffff;
+                             -fx-background-radius: 12;
+                             -fx-border-color: #d4e4f7;
+                             -fx-border-radius: 12;
+                             -fx-border-width: 1;">
+
+                    <HBox alignment="CENTER_LEFT" spacing="10"
+                          style="-fx-background-color: #f5f9ff;
+                                 -fx-background-radius: 12 12 0 0;
+                                 -fx-border-color: #e8eef5;
+                                 -fx-border-width: 0 0 1 0;">
+                        <padding><Insets top="11" right="18" bottom="11" left="16"/></padding>
+                        <StackPane prefWidth="3" prefHeight="16"
+                                   style="-fx-background-color: #5b9fd9; -fx-background-radius: 2;"/>
+                        <Label text="Overall Summary"
+                               style="-fx-text-fill: #1a3a52;
+                                      -fx-font-size: 11px;
+                                      -fx-font-weight: bold;"/>
+                    </HBox>
+
+                    <HBox spacing="12">
+                        <padding><Insets top="16" right="18" bottom="18" left="18"/></padding>
+
+                        <VBox spacing="6" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: #f5f9ff;
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #dfeaf8;
+                                     -fx-border-radius: 10;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 14 18 14 18;">
+                            <Label text="Student"
+                                   style="-fx-text-fill: #8fa3b8;
+                                          -fx-font-size: 10px;
+                                          -fx-font-weight: bold;"/>
+                            <Label fx:id="overallStudentNameLabel" text="—"
+                                   style="-fx-text-fill: #1a3a52;
+                                          -fx-font-size: 20px;
+                                          -fx-font-weight: bold;"/>
+                            <Label fx:id="overallRegNoLabel" text="—"
+                                   style="-fx-text-fill: #8fa3b8;
+                                          -fx-font-size: 11px;"/>
+                        </VBox>
+
+                        <VBox spacing="4" prefWidth="130"
+                              style="-fx-background-color: #eef6ff;
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #d8e8fb;
+                                     -fx-border-radius: 10;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 14 18 14 18;">
+                            <Label text="Sessions"
+                                   style="-fx-text-fill: #5b9fd9;
+                                          -fx-font-size: 10px;
+                                          -fx-font-weight: bold;"/>
+                            <Label fx:id="overallTotalSessionsLabel" text="—"
+                                   style="-fx-text-fill: #1a3a52;
+                                          -fx-font-size: 26px;
+                                          -fx-font-weight: bold;"/>
+                        </VBox>
+
+                        <VBox spacing="4" prefWidth="130"
+                              style="-fx-background-color: #eefaf0;
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #d7f0dc;
+                                     -fx-border-radius: 10;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 14 18 14 18;">
+                            <Label text="Present"
+                                   style="-fx-text-fill: #4cba52;
+                                          -fx-font-size: 10px;
+                                          -fx-font-weight: bold;"/>
+                            <Label fx:id="overallPresentCountLabel" text="—"
+                                   style="-fx-text-fill: #1a3a52;
+                                          -fx-font-size: 26px;
+                                          -fx-font-weight: bold;"/>
+                        </VBox>
+
+                        <VBox spacing="4" prefWidth="130"
+                              style="-fx-background-color: #fff2f2;
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #f2d6d6;
+                                     -fx-border-radius: 10;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 14 18 14 18;">
+                            <Label text="Absent"
+                                   style="-fx-text-fill: #e85d5d;
+                                          -fx-font-size: 10px;
+                                          -fx-font-weight: bold;"/>
+                            <Label fx:id="overallAbsentCountLabel" text="—"
+                                   style="-fx-text-fill: #1a3a52;
+                                          -fx-font-size: 26px;
+                                          -fx-font-weight: bold;"/>
+                        </VBox>
+
+                        <VBox spacing="4" prefWidth="150"
+                              style="-fx-background-color: #fff8e8;
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #f5e2ac;
+                                     -fx-border-radius: 10;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 14 18 14 18;">
+                            <Label text="Attendance %"
+                                   style="-fx-text-fill: #f0a35a;
+                                          -fx-font-size: 10px;
+                                          -fx-font-weight: bold;"/>
+                            <Label fx:id="overallAttendancePercentageLabel" text="—"
+                                   style="-fx-text-fill: #1a3a52;
+                                          -fx-font-size: 26px;
+                                          -fx-font-weight: bold;"/>
+                        </VBox>
+
+                        <VBox spacing="4" prefWidth="130"
+                              style="-fx-background-color: #eef6ff;
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #d8e8fb;
+                                     -fx-border-radius: 10;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 14 18 14 18;">
+                            <Label text="Hours"
+                                   style="-fx-text-fill: #5b9fd9;
+                                          -fx-font-size: 10px;
+                                          -fx-font-weight: bold;"/>
+                            <Label fx:id="overallTotalHoursAttendedLabel" text="—"
+                                   style="-fx-text-fill: #1a3a52;
+                                          -fx-font-size: 26px;
+                                          -fx-font-weight: bold;"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Course Summary -->
+                <VBox fx:id="courseSummaryPane" spacing="0"
+                      style="-fx-background-color: #ffffff;
+                             -fx-background-radius: 12;
+                             -fx-border-color: #d4e4f7;
+                             -fx-border-radius: 12;
+                             -fx-border-width: 1;">
+
+                    <HBox alignment="CENTER_LEFT" spacing="10"
+                          style="-fx-background-color: #f5f9ff;
+                                 -fx-background-radius: 12 12 0 0;
+                                 -fx-border-color: #e8eef5;
+                                 -fx-border-width: 0 0 1 0;">
+                        <padding><Insets top="11" right="18" bottom="11" left="16"/></padding>
+                        <StackPane prefWidth="3" prefHeight="16"
+                                   style="-fx-background-color: #8e5fd2; -fx-background-radius: 2;"/>
+                        <Label text="Course Breakdown"
+                               style="-fx-text-fill: #1a3a52;
+                                      -fx-font-size: 11px;
+                                      -fx-font-weight: bold;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="Select Course"
+                               style="-fx-text-fill: #8fa3b8;
+                                      -fx-font-size: 10px;"/>
+                        <ComboBox fx:id="courseComboBox" prefWidth="220"
+                                  style="-fx-background-color: #ffffff;
+                                         -fx-border-color: #d4e4f7;
+                                         -fx-border-radius: 8;
+                                         -fx-background-radius: 8;
+                                         -fx-text-fill: #1a3a52;
+                                         -fx-font-size: 12px;"/>
+                    </HBox>
+
+                    <HBox spacing="12">
+                        <padding><Insets top="16" right="18" bottom="18" left="18"/></padding>
+
+                        <VBox spacing="4" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: #f7f4ff;
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #e4dbf5;
+                                     -fx-border-radius: 10;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 12 16 12 16;">
+                            <Label text="Course ID"
+                                   style="-fx-text-fill: #8e5fd2;
+                                          -fx-font-size: 10px;
+                                          -fx-font-weight: bold;"/>
+                            <Label fx:id="courseIdLabel" text="—"
+                                   style="-fx-text-fill: #1a3a52;
+                                          -fx-font-size: 20px;
+                                          -fx-font-weight: bold;"/>
+                        </VBox>
+
+                        <VBox spacing="4" prefWidth="120"
+                              style="-fx-background-color: #f7f4ff;
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #e4dbf5;
+                                     -fx-border-radius: 10;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 12 16 12 16;">
+                            <Label text="Sessions"
+                                   style="-fx-text-fill: #8e5fd2;
+                                          -fx-font-size: 10px;
+                                          -fx-font-weight: bold;"/>
+                            <Label fx:id="courseTotalSessionsLabel" text="—"
+                                   style="-fx-text-fill: #1a3a52;
+                                          -fx-font-size: 22px;
+                                          -fx-font-weight: bold;"/>
+                        </VBox>
+
+                        <VBox spacing="4" prefWidth="120"
+                              style="-fx-background-color: #eefaf0;
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #d7f0dc;
+                                     -fx-border-radius: 10;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 12 16 12 16;">
+                            <Label text="Present"
+                                   style="-fx-text-fill: #4cba52;
+                                          -fx-font-size: 10px;
+                                          -fx-font-weight: bold;"/>
+                            <Label fx:id="coursePresentCountLabel" text="—"
+                                   style="-fx-text-fill: #1a3a52;
+                                          -fx-font-size: 22px;
+                                          -fx-font-weight: bold;"/>
+                        </VBox>
+
+                        <VBox spacing="4" prefWidth="120"
+                              style="-fx-background-color: #fff2f2;
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #f2d6d6;
+                                     -fx-border-radius: 10;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 12 16 12 16;">
+                            <Label text="Absent"
+                                   style="-fx-text-fill: #e85d5d;
+                                          -fx-font-size: 10px;
+                                          -fx-font-weight: bold;"/>
+                            <Label fx:id="courseAbsentCountLabel" text="—"
+                                   style="-fx-text-fill: #1a3a52;
+                                          -fx-font-size: 22px;
+                                          -fx-font-weight: bold;"/>
+                        </VBox>
+
+                        <VBox spacing="4" prefWidth="140"
+                              style="-fx-background-color: #fff8e8;
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #f5e2ac;
+                                     -fx-border-radius: 10;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 12 16 12 16;">
+                            <Label text="Attendance %"
+                                   style="-fx-text-fill: #f0a35a;
+                                          -fx-font-size: 10px;
+                                          -fx-font-weight: bold;"/>
+                            <Label fx:id="courseAttendancePercentageLabel" text="—"
+                                   style="-fx-text-fill: #1a3a52;
+                                          -fx-font-size: 22px;
+                                          -fx-font-weight: bold;"/>
+                        </VBox>
+
+                        <VBox spacing="4" prefWidth="130"
+                              style="-fx-background-color: #eef6ff;
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #d8e8fb;
+                                     -fx-border-radius: 10;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 12 16 12 16;">
+                            <Label text="Hours"
+                                   style="-fx-text-fill: #5b9fd9;
+                                          -fx-font-size: 10px;
+                                          -fx-font-weight: bold;"/>
+                            <Label fx:id="courseTotalHoursAttendedLabel" text="—"
+                                   style="-fx-text-fill: #1a3a52;
+                                          -fx-font-size: 22px;
+                                          -fx-font-weight: bold;"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+
+            <!-- Batch Summary -->
+            <VBox fx:id="batchSummaryPane" spacing="0" visible="false" managed="false"
+                  style="-fx-background-color: #ffffff;
+                         -fx-background-radius: 12;
+                         -fx-border-color: #d4e4f7;
+                         -fx-border-radius: 12;
+                         -fx-border-width: 1;">
+
+                <HBox alignment="CENTER_LEFT" spacing="10"
+                      style="-fx-background-color: #f5f9ff;
+                             -fx-background-radius: 12 12 0 0;
+                             -fx-border-color: #e8eef5;
+                             -fx-border-width: 0 0 1 0;">
+                    <padding><Insets top="11" right="18" bottom="11" left="16"/></padding>
+                    <StackPane prefWidth="3" prefHeight="16"
+                               style="-fx-background-color: #f0a35a; -fx-background-radius: 2;"/>
+                    <Label text="Batch Summary"
+                           style="-fx-text-fill: #1a3a52;
+                                  -fx-font-size: 11px;
+                                  -fx-font-weight: bold;"/>
+                </HBox>
+
+                <VBox>
+                    <padding><Insets top="14" right="16" bottom="16" left="16"/></padding>
+                    <TextArea fx:id="batchSummaryTextArea" prefHeight="180" wrapText="true"
+                              style="-fx-control-inner-background: #f5f9ff;
+                                     -fx-background-color: #f5f9ff;
+                                     -fx-border-color: #d4e4f7;
+                                     -fx-border-radius: 8;
+                                     -fx-background-radius: 8;
+                                     -fx-text-fill: #1a3a52;
+                                     -fx-font-size: 11px;
+                                     -fx-padding: 10;"/>
+                </VBox>
+            </VBox>
+
+            <!-- Details Records -->
+            <VBox spacing="0" VBox.vgrow="ALWAYS"
+                  style="-fx-background-color: #ffffff;
+                         -fx-background-radius: 12;
+                         -fx-border-color: #d4e4f7;
+                         -fx-border-radius: 12;
+                         -fx-border-width: 1;">
+
+                <HBox alignment="CENTER_LEFT" spacing="10"
+                      style="-fx-background-color: #f5f9ff;
+                             -fx-background-radius: 12 12 0 0;
+                             -fx-border-color: #e8eef5;
+                             -fx-border-width: 0 0 1 0;">
+                    <padding><Insets top="11" right="18" bottom="11" left="16"/></padding>
+                    <StackPane prefWidth="3" prefHeight="16"
+                               style="-fx-background-color: #5b9fd9; -fx-background-radius: 2;"/>
+                    <Label text="Attendance Records"
+                           style="-fx-text-fill: #1a3a52;
+                                  -fx-font-size: 11px;
+                                  -fx-font-weight: bold;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="LOG"
+                           style="-fx-background-color: #eef6ff;
+                                  -fx-text-fill: #5b9fd9;
+                                  -fx-font-size: 8px;
+                                  -fx-font-weight: bold;
+                                  -fx-background-radius: 4;
+                                  -fx-padding: 2 8 2 8;"/>
+                </HBox>
+
+                <VBox VBox.vgrow="ALWAYS">
+                    <padding><Insets top="14" right="16" bottom="16" left="16"/></padding>
+                    <TextArea fx:id="detailsTextArea" prefHeight="200" wrapText="true" VBox.vgrow="ALWAYS"
+                              style="-fx-control-inner-background: #f5f9ff;
+                                     -fx-background-color: #f5f9ff;
+                                     -fx-border-color: #d4e4f7;
+                                     -fx-border-radius: 8;
+                                     -fx-background-radius: 8;
+                                     -fx-text-fill: #1a3a52;
+                                     -fx-font-size: 11px;
+                                     -fx-padding: 12;"/>
+                </VBox>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

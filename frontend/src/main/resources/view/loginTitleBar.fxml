@@ -8,24 +8,48 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane fx:id="titleBar" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" prefHeight="84.0" prefWidth="450.0" style="-fx-background-color: #00A9FF;" styleClass="title-bar" xmlns="http://javafx.com/javafx/17.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.frontend.controller.CustomTitleBarApp">
-    <HBox alignment="CENTER_LEFT" layoutX="5.0" layoutY="-14.0" maxWidth="-Infinity" prefHeight="26.0" prefWidth="419.0" spacing="10" style="-fx-background-color: transparent;">
-        <Label fx:id="titleLabel" textFill="#efefef" />
-        <Label fx:id="timeLabel" prefHeight="34.0" prefWidth="96.0" />
+<AnchorPane fx:id="titleBar" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed"
+            prefHeight="84.0" prefWidth="450.0"
+            style="-fx-background-color: #1e5a8e;"
+            styleClass="title-bar"
+            xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.frontend.controller.CustomTitleBarApp">
+
+    <HBox alignment="CENTER_LEFT" layoutX="5.0" layoutY="10.0" maxWidth="-Infinity"
+          prefHeight="26.0" prefWidth="419.0" spacing="10"
+          style="-fx-background-color: transparent;">
+        <Label fx:id="titleLabel" textFill="#ffffff" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+        <Label fx:id="timeLabel" prefHeight="26.0" prefWidth="96.0"
+               textFill="#e8f4f8" style="-fx-font-size: 11px;"/>
         <Pane prefHeight="36.0" prefWidth="302.0" HBox.hgrow="ALWAYS" />
     </HBox>
-    <Button fx:id="closeButton" layoutX="423.0" layoutY="13.0" onAction="#closewindow" prefHeight="13.0" prefWidth="13.0" style="-fx-background-color: red; -fx-background-radius: 50%;" text="X" textFill="#fafafa">
+
+    <Label layoutX="14.0" layoutY="32.0" prefHeight="28.0" prefWidth="346.0"
+           style="-fx-font-family: 'Segoe UI'; -fx-font-weight: bold; -fx-text-fill: #ffffff; -fx-font-size: 16;"
+           text="FoT Portal - Management System" />
+
+    <Separator layoutX="5.0" layoutY="58.0" prefHeight="2.0" prefWidth="438.0"
+               style="-fx-background-color: rgba(255,255,255,0.25);"/>
+
+    <Button fx:id="minimizeButton" layoutX="385.0" layoutY="12.0" onAction="#minimizeWindow"
+            prefHeight="27.0" prefWidth="27.0"
+            style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 50%; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;"
+            text="–">
         <cursor>
             <Cursor fx:constant="HAND" />
         </cursor>
     </Button>
-    <Label layoutX="51.0" layoutY="35.0" prefHeight="28.0" prefWidth="346.0" style="-fx-font-family: Poppins; -fx-font-weight: Bold; -fx-text-fill: white; -fx-font-size: 18;" text="MANAGMENT INFORMATION SYSTEM" />
-    <Separator layoutX="5.0" layoutY="58.0" prefHeight="27.0" prefWidth="438.0" />
-       <Button fx:id="minimizeButton" layoutX="384.0" layoutY="12.0" onAction="#minimizeWindow" prefHeight="27.0" prefWidth="27.0" style="-fx-background-color: green; -fx-background-radius: 50%;" text="–" textFill="#f4efef">
-           <cursor>
-               <Cursor fx:constant="HAND" />
-           </cursor>
-       </Button>
+
+    <Button fx:id="closeButton" layoutX="423.0" layoutY="12.0" onAction="#closewindow"
+            prefHeight="27.0" prefWidth="27.0"
+            style="-fx-background-color: #e85d5d; -fx-background-radius: 50%; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;"
+            text="✕">
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </Button>
+
     <cursor>
         <Cursor fx:constant="HAND" />
     </cursor>

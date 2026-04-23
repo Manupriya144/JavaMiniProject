@@ -18,37 +18,34 @@ import java.time.format.DateTimeFormatter;
 
 public class AddMedicalController {
 
-    // FXML nodes
-    @FXML private TextField  studentIdField;
-    @FXML private TextField  courseIdField;
+    @FXML private TextField studentIdField;
+    @FXML private TextField courseIdField;
     @FXML private ComboBox<String> examTypeCombo;
     @FXML private DatePicker submittedDatePicker;
-    @FXML private TextField  medicalCopyField;
-    @FXML private Label      statusLabel;
-    @FXML private Label      officerNameLabel;
-    @FXML private Label      statusBarTime;
+    @FXML private TextField medicalCopyField;
+    @FXML private Label statusLabel;
+    @FXML private Label officerNameLabel;
+    @FXML private Label statusBarTime;
 
-    // ── Service
     private final MedicalService medicalService =
             new MedicalService(LoginController.client);
 
-    // ── Shared cell styles (popup cannot be reached via FXML) ─────
     private static final String CELL_NORMAL =
             "-fx-background-color: transparent;" +
-                    "-fx-text-fill: #c8dcf5;" +
+                    "-fx-text-fill: #1a3a52;" +
                     "-fx-font-size: 13px;" +
                     "-fx-font-family: 'Segoe UI';" +
                     "-fx-padding: 10 14;";
 
     private static final String CELL_HOVER =
-            "-fx-background-color: #1e3a5f;" +
-                    "-fx-text-fill: white;" +
+            "-fx-background-color: #eef6ff;" +
+                    "-fx-text-fill: #1a3a52;" +
                     "-fx-font-size: 13px;" +
                     "-fx-font-family: 'Segoe UI';" +
                     "-fx-padding: 10 14;";
 
     private static final String CELL_SELECTED =
-            "-fx-background-color: #0891b2;" +
+            "-fx-background-color: #5b9fd9;" +
                     "-fx-text-fill: white;" +
                     "-fx-font-size: 13px;" +
                     "-fx-font-family: 'Segoe UI';" +
@@ -56,35 +53,37 @@ public class AddMedicalController {
                     "-fx-padding: 10 14;";
 
     private static final String POPUP_STYLE =
-            "-fx-background-color: #091527;" +
+            "-fx-background-color: #ffffff;" +
                     "-fx-background-radius: 10;" +
-                    "-fx-border-color: #1e3a5f;" +
+                    "-fx-border-color: #d4e4f7;" +
                     "-fx-border-radius: 10;" +
-                    "-fx-border-width: 1.5;";
+                    "-fx-border-width: 1.2;";
 
-    // ── Lifecycle ─────────────────────────────────────────────────
     @FXML
     public void initialize() {
-        // Populate & style ComboBox
+        if (officerNameLabel != null) {
+            officerNameLabel.setText(
+                    LoginController.username != null && !LoginController.username.isBlank()
+                            ? LoginController.username
+                            : "Tech Officer"
+            );
+        }
+
         examTypeCombo.getItems().addAll("Mid", "Final", "Attendance");
         examTypeCombo.getSelectionModel().select("Attendance");
         applyComboBoxStyle(examTypeCombo);
-
-        // Style DatePicker editor
         applyDatePickerStyle(submittedDatePicker);
 
-        // Status bar date
         if (statusBarTime != null) {
             statusBarTime.setText(
                     LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy"))
             );
         }
+
+        showStatus("", StatusType.INFO);
     }
 
-    // ── ComboBox Styling ──────────────────────────────────────────
-
     private void applyComboBoxStyle(ComboBox<String> box) {
-        // Cell factory — styles each row in the popup list
         box.setCellFactory(lv -> new ListCell<>() {
             {
                 selectedProperty().addListener((obs, o, n) -> refreshStyle());
@@ -108,12 +107,11 @@ public class AddMedicalController {
                 } else {
                     setStyle(CELL_NORMAL);
                     setOnMouseEntered(e -> setStyle(CELL_HOVER));
-                    setOnMouseExited(e  -> setStyle(isSelected() ? CELL_SELECTED : CELL_NORMAL));
+                    setOnMouseExited(e -> setStyle(isSelected() ? CELL_SELECTED : CELL_NORMAL));
                 }
             }
         });
 
-        // Style the popup ListView background once it opens
         box.showingProperty().addListener((obs, wasShowing, isShowing) -> {
             if (isShowing) {
                 ComboBoxListViewSkin<?> skin = (ComboBoxListViewSkin<?>) box.getSkin();
@@ -126,7 +124,6 @@ public class AddMedicalController {
             }
         });
 
-        // Button cell (visible when popup is closed)
         box.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -134,10 +131,10 @@ public class AddMedicalController {
                 setStyle("-fx-background-color: transparent;");
                 if (empty || item == null) {
                     setText("— Select Exam Type —");
-                    setTextFill(Color.web("#4a7ab5"));
+                    setTextFill(Color.web("#8fa3b8"));
                 } else {
                     setText(item);
-                    setTextFill(Color.WHITE);
+                    setTextFill(Color.web("#1a3a52"));
                     setStyle("-fx-background-color: transparent;" +
                             "-fx-font-weight: bold;" +
                             "-fx-font-family: 'Segoe UI';");
@@ -146,26 +143,22 @@ public class AddMedicalController {
         });
     }
 
-    // ── DatePicker Styling ────────────────────────────────────────
-
     private void applyDatePickerStyle(DatePicker dp) {
-        // Style the text editor inside the DatePicker
         dp.getEditor().setStyle(
                 "-fx-background-color: transparent;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-prompt-text-fill: #334d6e;" +
+                        "-fx-text-fill: #1a3a52;" +
+                        "-fx-prompt-text-fill: #a8b8ca;" +
                         "-fx-font-size: 13px;" +
                         "-fx-font-family: 'Segoe UI';"
         );
 
-        // Style the popup calendar once it opens
         dp.showingProperty().addListener((obs, wasShowing, isShowing) -> {
             if (isShowing && dp.getSkin() != null) {
                 Node popupContent = dp.lookup(".date-picker-popup");
                 if (popupContent != null) {
                     popupContent.setStyle(
-                            "-fx-background-color: #091527;" +
-                                    "-fx-border-color: #1e3a5f;" +
+                            "-fx-background-color: #ffffff;" +
+                                    "-fx-border-color: #d4e4f7;" +
                                     "-fx-border-radius: 10;" +
                                     "-fx-background-radius: 10;"
                     );
@@ -174,42 +167,38 @@ public class AddMedicalController {
         });
     }
 
-    // ── Submit ────────────────────────────────────────────────────
     @FXML
     private void submitMedical() {
         String studentId = studentIdField.getText();
-        String courseId  = courseIdField.getText();
-        String examType  = examTypeCombo.getValue();
-        String date      = submittedDatePicker.getValue() == null
+        String courseId = courseIdField.getText();
+        String examType = examTypeCombo.getValue();
+        String date = submittedDatePicker.getValue() == null
                 ? null
                 : submittedDatePicker.getValue().toString();
-        String copy      = medicalCopyField.getText();
+        String copy = medicalCopyField.getText();
 
-        // Validation
         if (studentId == null || studentId.isBlank()) {
-            showStatus("✖  Student ID is required.", StatusType.ERROR);
+            showStatus("✖ Student ID is required.", StatusType.ERROR);
             return;
         }
         if (courseId == null || courseId.isBlank()) {
-            showStatus("✖  Course ID is required.", StatusType.ERROR);
+            showStatus("✖ Course ID is required.", StatusType.ERROR);
             return;
         }
         if (date == null || date.isBlank()) {
-            showStatus("✖  Date is required and must match the session date.", StatusType.ERROR);
+            showStatus("✖ Date is required and must match the session date.", StatusType.ERROR);
             return;
         }
 
         Medical added = medicalService.addMedical(studentId, courseId, examType, date, copy);
         if (added != null) {
-            showStatus("✔  Medical record #" + added.getMedicalId() + " submitted — status: Pending.",
-                    StatusType.SUCCESS);
+            showStatus("✔ Medical record #" + added.getMedicalId() + " submitted — status: Pending.", StatusType.SUCCESS);
             clearFormFields();
         } else {
-            showStatus("✖  " + medicalService.getLastMessage(), StatusType.ERROR);
+            showStatus("✖ " + medicalService.getLastMessage(), StatusType.ERROR);
         }
     }
 
-    // ── Clear ─────────────────────────────────────────────────────
     @FXML
     private void clearForm() {
         clearFormFields();
@@ -224,16 +213,15 @@ public class AddMedicalController {
         examTypeCombo.getSelectionModel().select("Attendance");
     }
 
-    // ── Navigation ────────────────────────────────────────────────
     @FXML
     private void backToDashboard() {
-        loadView("/view/techOfficerDashboard.fxml");
+        loadView("/view/techofficer/techOfficerDashboard.fxml");
     }
 
     private void loadView(String path) {
         try {
-            Parent root  = FXMLLoader.load(getClass().getResource(path));
-            Stage  stage = (Stage) statusLabel.getScene().getWindow();
+            Parent root = FXMLLoader.load(getClass().getResource(path));
+            Stage stage = (Stage) statusLabel.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
@@ -245,25 +233,21 @@ public class AddMedicalController {
         }
     }
 
-    // ── Status Helper ─────────────────────────────────────────────
     private enum StatusType { SUCCESS, ERROR, INFO }
 
     private void showStatus(String message, StatusType type) {
         statusLabel.setText(message);
         String color = switch (type) {
-            case SUCCESS -> "#4ade80";
-            case ERROR   -> "#f87171";
-            case INFO    -> "";
+            case SUCCESS -> "#4cba52";
+            case ERROR -> "#e85d5d";
+            case INFO -> "#8fa3b8";
         };
-        if (color.isEmpty()) {
-            statusLabel.setStyle("");
-        } else {
-            statusLabel.setStyle(
-                    "-fx-text-fill: " + color + ";" +
-                            "-fx-font-size: 13px;" +
-                            "-fx-font-family: 'Segoe UI';" +
-                            "-fx-font-weight: bold;"
-            );
-        }
+
+        statusLabel.setStyle(
+                "-fx-text-fill: " + color + ";" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-font-family: 'Segoe UI';" +
+                        "-fx-font-weight: bold;"
+        );
     }
 }

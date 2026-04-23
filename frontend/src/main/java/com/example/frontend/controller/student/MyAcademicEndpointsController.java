@@ -92,7 +92,7 @@ public class MyAcademicEndpointsController {
     @FXML
     private void onBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/studentDashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/student/studentDashboard.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) outputArea.getScene().getWindow();
             stage.setScene(new Scene(root));

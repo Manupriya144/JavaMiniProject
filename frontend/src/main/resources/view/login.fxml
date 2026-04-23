@@ -13,44 +13,62 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.frontend.controller.admin.LoginController"
       spacing="0" alignment="TOP_CENTER"
-      style="-fx-background-color: linear-gradient(to bottom right, #0f1b35, #0a1628);">
+      style="-fx-background-color: #f8fbff;">
 
     <!-- Include the existing title bar -->
     <fx:include source="loginTitleBar.fxml" />
 
     <!-- Main login form -->
     <StackPane VBox.vgrow="ALWAYS">
-        <VBox alignment="CENTER" spacing="25">
+        <VBox alignment="CENTER" spacing="28">
 
-            <VBox alignment="CENTER" prefHeight="300.0" prefWidth="470.0" spacing="15"
-                  style="-fx-background-color: #1e293b; -fx-background-radius: 0; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 20,0,0,10);">
+            <VBox alignment="CENTER" prefHeight="320.0" prefWidth="480.0" spacing="18"
+                  style="-fx-background-color: #fafbff; -fx-background-radius: 16; -fx-border-color: #d4e4f7; -fx-border-radius: 16; -fx-border-width: 1.5; -fx-effect: dropshadow(three-pass-box,rgba(91,159,217,0.15),16,0,0,6);">
                 <padding>
-                    <Insets top="40" bottom="40" left="40" right="40"/>
+                    <Insets top="44" bottom="44" left="44" right="44"/>
                 </padding>
 
+                <!-- Header -->
+                <VBox alignment="CENTER" spacing="6">
+                    <Label text="Welcome Back"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                    <Label text="Sign in to your account to continue"
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 12px;"/>
+                </VBox>
+
                 <!-- Username -->
-                <TextField fx:id="usernameField" alignment="CENTER" prefHeight="40" promptText="Username"
-                           style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #3a4b63; -fx-background-color: #283447; -fx-text-fill: white;">
-                    <font>
-                        <Font size="14.0"/>
-                    </font>
-                </TextField>
+                <VBox spacing="7">
+                    <Label text="Username"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="usernameField" alignment="CENTER_LEFT" prefHeight="44"
+                               promptText="Enter your username"
+                               style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #d4e4f7; -fx-background-color: #ffffff; -fx-text-fill: #1a3a52; -fx-prompt-text-fill: #a8b8ca; -fx-border-width: 1; -fx-font-size: 13px; -fx-padding: 10 14 10 14;">
+                        <font>
+                            <Font size="13.0"/>
+                        </font>
+                    </TextField>
+                </VBox>
 
                 <!-- Password -->
-                <PasswordField fx:id="passwordField" alignment="CENTER" prefHeight="40" promptText="Password"
-                               style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #3a4b63; -fx-background-color: #283447; -fx-text-fill: white;">
-                    <font>
-                        <Font size="14.0"/>
-                    </font>
-                </PasswordField>
+                <VBox spacing="7">
+                    <Label text="Password"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <PasswordField fx:id="passwordField" alignment="CENTER_LEFT" prefHeight="44"
+                                   promptText="Enter your password"
+                                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #d4e4f7; -fx-background-color: #ffffff; -fx-text-fill: #1a3a52; -fx-prompt-text-fill: #a8b8ca; -fx-border-width: 1; -fx-font-size: 13px; -fx-padding: 10 14 10 14;">
+                        <font>
+                            <Font size="13.0"/>
+                        </font>
+                    </PasswordField>
+                </VBox>
 
                 <!-- Login button -->
-                <Button onAction="#login" prefHeight="40" prefWidth="200" text="Login"
-                        style="-fx-background-color: linear-gradient(to right, #28a745, #1e7e34);
-                               -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 10;"/>
+                <Button onAction="#login" prefHeight="44" prefWidth="200" text="Sign In"
+                        style="-fx-background-color: #5b9fd9;
+                               -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;"/>
 
                 <!-- Status label -->
-                <Label fx:id="statusLabel" textFill="#ff4d4f" style="-fx-font-size: 12px;"/>
+                <Label fx:id="statusLabel" textFill="#e85d5d" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
 
             </VBox>
 
