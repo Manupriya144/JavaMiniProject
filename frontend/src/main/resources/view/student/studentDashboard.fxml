@@ -17,49 +17,104 @@
 <BorderPane xmlns="http://javafx.com/javafx/17.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.frontend.controller.student.StudentDashboardController"
-            prefWidth="1200" prefHeight="750"
-            style="-fx-background-color: #f8fbff;">
+            prefWidth="1200.0" prefHeight="750.0"
+            style="-fx-background-color: linear-gradient(to bottom right, #eef6ff, #fdfcff);">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="0"
-              style="-fx-background-color: #ffffff; -fx-border-color: #e8eef5; -fx-border-width: 0 0 1 0;">
+              style="-fx-background-color: linear-gradient(to right, #5b9fd9, #3f7fc2);
+                     -fx-effect: dropshadow(three-pass-box, rgba(63,127,194,0.25), 14, 0, 0, 3);">
 
-            <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="64"
-                  style="-fx-background-color: #ffffff;">
-                <padding><Insets left="28" right="28"/></padding>
-                <Label text="🎓" style="-fx-font-size: 28px;"/>
-                <VBox alignment="CENTER_LEFT" spacing="1">
-                    <Label text="FoT Portal" style="-fx-text-fill: #1a3a52; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-                    <Label text="Faculty of Technology" style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px;"/>
+            <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="72">
+                <padding>
+                    <Insets left="24" right="24"/>
+                </padding>
+
+                <StackPane prefWidth="44" prefHeight="44"
+                           style="-fx-background-color: rgba(255,255,255,0.18); -fx-background-radius: 22;">
+                    <Label text="🎓" style="-fx-font-size: 22px;"/>
+                </StackPane>
+
+                <VBox alignment="CENTER_LEFT" spacing="2">
+                    <Label text="FoT Portal"
+                           style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Label text="Student Portal"
+                           style="-fx-text-fill: rgba(255,255,255,0.80); -fx-font-size: 10px;"/>
                 </VBox>
             </HBox>
 
             <Region HBox.hgrow="ALWAYS"/>
 
             <HBox spacing="6" alignment="CENTER">
-                <padding><Insets left="16" right="16"/></padding>
+                <padding>
+                    <Insets left="16" right="16"/>
+                </padding>
+
                 <Button text="Dashboard"
-                        style="-fx-background-color: #e8f2ff; -fx-text-fill: #5b9fd9; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-weight: bold;"/>
+                        style="-fx-background-color: rgba(255,255,255,0.22);
+                               -fx-text-fill: white;
+                               -fx-font-size: 13px;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 10;
+                               -fx-padding: 8 18 8 18;
+                               -fx-cursor: hand;"/>
+
                 <Button text="My Courses" onAction="#openCourses"
-                        style="-fx-background-color: transparent; -fx-text-fill: #7f93a8; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                        style="-fx-background-color: transparent;
+                               -fx-text-fill: white;
+                               -fx-font-size: 13px;
+                               -fx-background-radius: 10;
+                               -fx-padding: 8 18 8 18;
+                               -fx-cursor: hand;"/>
+
                 <Button text="Attendance" onAction="#openAttendance"
-                        style="-fx-background-color: transparent; -fx-text-fill: #7f93a8; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                        style="-fx-background-color: transparent;
+                               -fx-text-fill: white;
+                               -fx-font-size: 13px;
+                               -fx-background-radius: 10;
+                               -fx-padding: 8 18 8 18;
+                               -fx-cursor: hand;"/>
+
                 <Button text="Medicals" onAction="#openMedical"
-                        style="-fx-background-color: transparent; -fx-text-fill: #7f93a8; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                        style="-fx-background-color: transparent;
+                               -fx-text-fill: white;
+                               -fx-font-size: 13px;
+                               -fx-background-radius: 10;
+                               -fx-padding: 8 18 8 18;
+                               -fx-cursor: hand;"/>
+
                 <Button text="Grades &amp; GPA" onAction="#openGrades"
-                        style="-fx-background-color: transparent; -fx-text-fill: #7f93a8; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                        style="-fx-background-color: transparent;
+                               -fx-text-fill: white;
+                               -fx-font-size: 13px;
+                               -fx-background-radius: 10;
+                               -fx-padding: 8 18 8 18;
+                               -fx-cursor: hand;"/>
+
                 <Button text="Timetable" onAction="#openTimetable"
-                        style="-fx-background-color: transparent; -fx-text-fill: #7f93a8; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                        style="-fx-background-color: transparent;
+                               -fx-text-fill: white;
+                               -fx-font-size: 13px;
+                               -fx-background-radius: 10;
+                               -fx-padding: 8 18 8 18;
+                               -fx-cursor: hand;"/>
+
                 <Button text="Notices" onAction="#openNotices"
-                        style="-fx-background-color: transparent; -fx-text-fill: #7f93a8; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                        style="-fx-background-color: transparent;
+                               -fx-text-fill: white;
+                               -fx-font-size: 13px;
+                               -fx-background-radius: 10;
+                               -fx-padding: 8 18 8 18;
+                               -fx-cursor: hand;"/>
             </HBox>
 
-            <Separator orientation="VERTICAL" style="-fx-background-color: #e8eef5;"/>
-
             <HBox alignment="CENTER" spacing="10">
-                <padding><Insets left="16" right="24"/></padding>
+                <padding>
+                    <Insets left="10" right="20"/>
+                </padding>
+
                 <StackPane fx:id="profileContainer">
-                    <Circle fx:id="profileCircle" radius="18" style="-fx-fill: #5b9fd9;"/>
+                    <Circle fx:id="profileCircle" radius="18" style="-fx-fill: white;"/>
                     <ImageView fx:id="profileImage"
                                fitWidth="36"
                                fitHeight="36"
@@ -67,154 +122,293 @@
                                visible="false"/>
                     <Label fx:id="profileInitial"
                            text="S"
-                           style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+                           style="-fx-text-fill: #3f7fc2; -fx-font-weight: bold; -fx-font-size: 14px;"/>
                 </StackPane>
 
                 <VBox alignment="CENTER_LEFT" spacing="1">
                     <Label fx:id="studentNameLabel" text="Student Name"
-                           style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                           style="-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold;"/>
                     <Label fx:id="studentIdLabel" text="Reg No: —"
-                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px;"/>
+                           style="-fx-text-fill: rgba(255,255,255,0.78); -fx-font-size: 10px;"/>
                 </VBox>
 
                 <Button text="My Profile" onAction="#openProfile"
-                        style="-fx-background-color: #e8eef5; -fx-text-fill: #5b9fd9; -fx-font-size: 12px;
-                               -fx-background-radius: 6; -fx-cursor: hand; -fx-font-weight: 600;
-                               -fx-border-color: #d4e4f7; -fx-border-radius: 6; -fx-border-width: 1;"/>
+                        style="-fx-background-color: rgba(255,255,255,0.18);
+                               -fx-text-fill: white;
+                               -fx-font-size: 12px;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 8;
+                               -fx-cursor: hand;
+                               -fx-border-color: rgba(255,255,255,0.22);
+                               -fx-border-radius: 8;
+                               -fx-border-width: 1;"/>
 
                 <Button text="Logout" onAction="#logout"
-                        style="-fx-background-color: #e85d5d; -fx-text-fill: white; -fx-font-size: 12px;
-                               -fx-background-radius: 6; -fx-cursor: hand; -fx-font-weight: bold;"/>
+                        style="-fx-background-color: white;
+                               -fx-text-fill: #e85d5d;
+                               -fx-font-size: 12px;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 8;
+                               -fx-cursor: hand;"/>
             </HBox>
         </HBox>
     </top>
 
     <center>
         <ScrollPane fitToWidth="true"
-                    style="-fx-background: transparent; -fx-background-color: transparent;"
-                    hbarPolicy="NEVER">
-            <VBox spacing="28" style="-fx-background-color: #f8fbff;">
-                <padding><Insets top="30" bottom="30" left="36" right="36"/></padding>
+                    hbarPolicy="NEVER"
+                    style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox spacing="26" style="-fx-background-color: transparent;">
+                <padding>
+                    <Insets top="28" bottom="28" left="34" right="34"/>
+                </padding>
 
-                <VBox spacing="4">
-                    <Label fx:id="welcomeLabel" text="Welcome back! 👋"
-                           style="-fx-text-fill: #1a3a52; -fx-font-size: 26px; -fx-font-weight: bold;"/>
-                    <Label fx:id="dateLabel" text="Thursday, March 13, 2026  •  Undergraduate Portal"
-                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 13px;"/>
-                </VBox>
+                <HBox spacing="18" alignment="CENTER_LEFT"
+                      style="-fx-background-color: linear-gradient(to right, #ffffff, #f3f8ff);
+                             -fx-background-radius: 18;
+                             -fx-border-color: #d7e7f8;
+                             -fx-border-radius: 18;
+                             -fx-border-width: 1;
+                             -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 16, 0, 0, 5);">
+                    <padding>
+                        <Insets top="22" bottom="22" left="24" right="24"/>
+                    </padding>
 
-                <FlowPane hgap="18" vgap="18" prefWrapLength="1200">
+                    <StackPane prefWidth="58" prefHeight="58"
+                               style="-fx-background-color: linear-gradient(to bottom right, #5b9fd9, #7cb7ea);
+                                      -fx-background-radius: 29;">
+                        <Label text="👋" style="-fx-font-size: 24px;"/>
+                    </StackPane>
 
-                    <VBox spacing="8" prefWidth="215" prefHeight="120"
-                          style="-fx-background-color: #eef6ff; -fx-background-radius: 14; -fx-border-color: #d8e8fb; -fx-border-radius: 14; -fx-border-width: 1;">
-                        <padding><Insets top="20" bottom="20" left="22" right="22"/></padding>
-                        <Label text="📋  Overall Attendance" style="-fx-text-fill: #5b9fd9; -fx-font-size: 12px;"/>
+                    <VBox spacing="5">
+                        <Label fx:id="welcomeLabel" text="Welcome back! 👋"
+                               style="-fx-text-fill: #1a3a52; -fx-font-size: 27px; -fx-font-weight: bold;"/>
+                        <Label fx:id="dateLabel" text="Thursday, March 13, 2026  •  Undergraduate Portal"
+                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 13px;"/>
+                    </VBox>
+                </HBox>
+
+                <FlowPane hgap="18" vgap="18" prefWrapLength="1100">
+
+                    <VBox spacing="8" prefWidth="215" prefHeight="122"
+                          style="-fx-background-color: linear-gradient(to bottom right, #eef8ff, #f8fbff);
+                                 -fx-background-radius: 16;
+                                 -fx-border-color: #d8e7f7;
+                                 -fx-border-radius: 16;
+                                 -fx-border-width: 1;
+                                 -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.16), 14, 0, 0, 5);">
+                        <padding>
+                            <Insets top="20" bottom="20" left="22" right="22"/>
+                        </padding>
+                        <Label text="📋  Overall Attendance"
+                               style="-fx-text-fill: #468ed0; -fx-font-size: 12px; -fx-font-weight: bold;"/>
                         <Label fx:id="overallAttendanceLabel" text="—%"
                                style="-fx-text-fill: #1a3a52; -fx-font-size: 34px; -fx-font-weight: bold;"/>
-                        <Label text="Across all modules" style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                        <Label text="Across all modules"
+                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
                     </VBox>
 
-                    <VBox spacing="8" prefWidth="215" prefHeight="120"
-                          style="-fx-background-color: #eefaf0; -fx-background-radius: 14; -fx-border-color: #d7f0dc; -fx-border-radius: 14; -fx-border-width: 1;">
-                        <padding><Insets top="20" bottom="20" left="22" right="22"/></padding>
-                        <Label text="📊  Current SGPA" style="-fx-text-fill: #4cba52; -fx-font-size: 12px;"/>
+                    <VBox spacing="8" prefWidth="215" prefHeight="122"
+                          style="-fx-background-color: linear-gradient(to bottom right, #effcf4, #f7fff9);
+                                 -fx-background-radius: 16;
+                                 -fx-border-color: #cfead7;
+                                 -fx-border-radius: 16;
+                                 -fx-border-width: 1;
+                                 -fx-effect: dropshadow(three-pass-box, rgba(109,186,130,0.14), 14, 0, 0, 5);">
+                        <padding>
+                            <Insets top="20" bottom="20" left="22" right="22"/>
+                        </padding>
+                        <Label text="📊  Current SGPA"
+                               style="-fx-text-fill: #35a053; -fx-font-size: 12px; -fx-font-weight: bold;"/>
                         <Label fx:id="sgpaLabel" text="—"
                                style="-fx-text-fill: #1a3a52; -fx-font-size: 34px; -fx-font-weight: bold;"/>
-                        <Label text="This semester" style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                        <Label text="This semester"
+                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
                     </VBox>
 
-                    <VBox spacing="8" prefWidth="215" prefHeight="120"
-                          style="-fx-background-color: #f4f7ff; -fx-background-radius: 14; -fx-border-color: #dde6fb; -fx-border-radius: 14; -fx-border-width: 1;">
-                        <padding><Insets top="20" bottom="20" left="22" right="22"/></padding>
-                        <Label text="🏆  Cumulative CGPA" style="-fx-text-fill: #5b9fd9; -fx-font-size: 12px;"/>
+                    <VBox spacing="8" prefWidth="215" prefHeight="122"
+                          style="-fx-background-color: linear-gradient(to bottom right, #f4f7ff, #fbfcff);
+                                 -fx-background-radius: 16;
+                                 -fx-border-color: #dde6fb;
+                                 -fx-border-radius: 16;
+                                 -fx-border-width: 1;
+                                 -fx-effect: dropshadow(three-pass-box, rgba(114,137,235,0.14), 14, 0, 0, 5);">
+                        <padding>
+                            <Insets top="20" bottom="20" left="22" right="22"/>
+                        </padding>
+                        <Label text="🏆  Cumulative CGPA"
+                               style="-fx-text-fill: #5b7ee5; -fx-font-size: 12px; -fx-font-weight: bold;"/>
                         <Label fx:id="cgpaLabel" text="—"
                                style="-fx-text-fill: #1a3a52; -fx-font-size: 34px; -fx-font-weight: bold;"/>
-                        <Label text="Overall GPA" style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                        <Label text="Overall GPA"
+                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
                     </VBox>
 
-                    <VBox spacing="8" prefWidth="215" prefHeight="120"
-                          style="-fx-background-color: #fff6ee; -fx-background-radius: 14; -fx-border-color: #fde2c8; -fx-border-radius: 14; -fx-border-width: 1;">
-                        <padding><Insets top="20" bottom="20" left="22" right="22"/></padding>
-                        <Label text="📚  Enrolled Courses" style="-fx-text-fill: #f0a35a; -fx-font-size: 12px;"/>
+                    <VBox spacing="8" prefWidth="215" prefHeight="122"
+                          style="-fx-background-color: linear-gradient(to bottom right, #fff8ef, #fffdf8);
+                                 -fx-background-radius: 16;
+                                 -fx-border-color: #ffe0aa;
+                                 -fx-border-radius: 16;
+                                 -fx-border-width: 1;
+                                 -fx-effect: dropshadow(three-pass-box, rgba(240,170,79,0.14), 14, 0, 0, 5);">
+                        <padding>
+                            <Insets top="20" bottom="20" left="22" right="22"/>
+                        </padding>
+                        <Label text="📚  Enrolled Courses"
+                               style="-fx-text-fill: #d98928; -fx-font-size: 12px; -fx-font-weight: bold;"/>
                         <Label fx:id="enrolledCoursesLabel" text="—"
                                style="-fx-text-fill: #1a3a52; -fx-font-size: 34px; -fx-font-weight: bold;"/>
-                        <Label text="This semester" style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                        <Label text="This semester"
+                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
                     </VBox>
 
                 </FlowPane>
 
-                <HBox fx:id="eligibilityAlertBox" spacing="12" alignment="CENTER_LEFT"
-                      style="-fx-background-color: #fffdf4; -fx-background-radius: 10; -fx-border-color: #f2c94c; -fx-border-radius: 10; -fx-border-width: 1;">
+                <HBox fx:id="eligibilityAlertBox" spacing="14" alignment="CENTER_LEFT"
+                      style="-fx-background-color: #fffdf4;
+                             -fx-background-radius: 14;
+                             -fx-border-color: #f2c94c;
+                             -fx-border-radius: 14;
+                             -fx-border-width: 1;
+                             -fx-effect: dropshadow(three-pass-box, rgba(242,201,76,0.08), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets top="16" bottom="16" left="18" right="18"/>
+                    </padding>
 
-                    <VBox spacing="12"
-                          style="-fx-background-color: #ffffff; -fx-background-radius: 14; -fx-border-color: #d4e4f7; -fx-border-radius: 14;">
-                        <padding>
-                            <Insets top="20" bottom="20" left="20" right="20"/>
-                        </padding>
-
-                        <Label text="🎓  My Academic Info"
-                               style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
-
-                        <FlowPane hgap="12" vgap="12">
-                            <Button text="📝  My Final Marks" onAction="#openStudentFinalMarks"
-                                    prefHeight="42" prefWidth="180"
-                                    style="-fx-background-color: #e8eef5; -fx-text-fill: #5b9fd9; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
-                            <Button text="📊  My Grades" onAction="#openStudentGrades"
-                                    prefHeight="42" prefWidth="180"
-                                    style="-fx-background-color: #e8eef5; -fx-text-fill: #5b9fd9; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
-                            <Button text="✅  My Eligibility" onAction="#openEligibility"
-                                    prefHeight="42" prefWidth="180"
-                                    style="-fx-background-color: #e8eef5; -fx-text-fill: #5b9fd9; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;"/>
-                        </FlowPane>
-                    </VBox>
-
-                    <padding><Insets top="14" bottom="14" left="18" right="18"/></padding>
                     <Label text="⚠️" style="-fx-font-size: 18px;"/>
+
                     <VBox spacing="2">
                         <Label text="Exam Eligibility Status"
                                style="-fx-text-fill: #d39b00; -fx-font-size: 13px; -fx-font-weight: bold;"/>
                         <Label fx:id="eligibilityStatusLabel" text="Checking eligibility..."
                                style="-fx-text-fill: #7f93a8; -fx-font-size: 12px;"/>
                     </VBox>
+
                     <Region HBox.hgrow="ALWAYS"/>
+
                     <Button text="View Details →" onAction="#openEligibility"
-                            style="-fx-background-color: #f2c94c; -fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-weight: bold;"/>
+                            style="-fx-background-color: #f2c94c;
+                                   -fx-text-fill: #1a3a52;
+                                   -fx-font-size: 12px;
+                                   -fx-font-weight: bold;
+                                   -fx-background-radius: 8;
+                                   -fx-cursor: hand;"/>
                 </HBox>
+
+                <VBox spacing="14"
+                      style="-fx-background-color: white;
+                             -fx-background-radius: 16;
+                             -fx-border-color: #d7e7f8;
+                             -fx-border-radius: 16;
+                             -fx-border-width: 1;
+                             -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 14, 0, 0, 5);">
+                    <padding>
+                        <Insets top="22" bottom="22" left="24" right="24"/>
+                    </padding>
+
+                    <Label text="🎓  My Academic Info"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+                    <Separator style="-fx-background-color: #e7eef7;"/>
+
+                    <FlowPane hgap="12" vgap="12">
+                        <Button text="📝  My Final Marks" onAction="#openStudentFinalMarks"
+                                prefHeight="42" prefWidth="180"
+                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
+                                       -fx-text-fill: white;
+                                       -fx-font-size: 13px;
+                                       -fx-font-weight: bold;
+                                       -fx-background-radius: 10;
+                                       -fx-cursor: hand;"/>
+                        <Button text="📊  My Grades" onAction="#openStudentGrades"
+                                prefHeight="42" prefWidth="180"
+                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
+                                       -fx-text-fill: white;
+                                       -fx-font-size: 13px;
+                                       -fx-font-weight: bold;
+                                       -fx-background-radius: 10;
+                                       -fx-cursor: hand;"/>
+                        <Button text="✅  My Eligibility" onAction="#openEligibility"
+                                prefHeight="42" prefWidth="180"
+                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
+                                       -fx-text-fill: white;
+                                       -fx-font-size: 13px;
+                                       -fx-font-weight: bold;
+                                       -fx-background-radius: 10;
+                                       -fx-cursor: hand;"/>
+                    </FlowPane>
+                </VBox>
 
                 <HBox spacing="18" alignment="TOP_LEFT">
 
                     <VBox spacing="14" HBox.hgrow="ALWAYS"
-                          style="-fx-background-color: #ffffff; -fx-background-radius: 14; -fx-border-color: #d4e4f7; -fx-border-radius: 14; -fx-border-width: 1;">
-                        <padding><Insets top="22" bottom="22" left="24" right="24"/></padding>
+                          style="-fx-background-color: white;
+                                 -fx-background-radius: 16;
+                                 -fx-border-color: #d7e7f8;
+                                 -fx-border-radius: 16;
+                                 -fx-border-width: 1;
+                                 -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 14, 0, 0, 5);">
+                        <padding>
+                            <Insets top="22" bottom="22" left="24" right="24"/>
+                        </padding>
+
                         <HBox alignment="CENTER_LEFT">
                             <Label text="📖  My Courses"
-                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 16px; -fx-font-weight: bold;"/>
                             <Region HBox.hgrow="ALWAYS"/>
                             <Button text="View All →" onAction="#openCourses"
-                                    style="-fx-background-color: transparent; -fx-text-fill: #5b9fd9; -fx-font-size: 12px; -fx-cursor: hand;"/>
+                                    style="-fx-background-color: transparent;
+                                           -fx-text-fill: #4c8fce;
+                                           -fx-font-size: 12px;
+                                           -fx-font-weight: bold;
+                                           -fx-cursor: hand;"/>
                         </HBox>
-                        <Separator style="-fx-background-color: #e8eef5;"/>
-                        <HBox spacing="0" style="-fx-background-color: #f5f9ff; -fx-background-radius: 8;">
-                            <padding><Insets top="8" bottom="8" left="12" right="12"/></padding>
-                            <Label text="Code" prefWidth="110" style="-fx-text-fill: #5b9fd9; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                            <Label text="Course Name" prefWidth="200" style="-fx-text-fill: #5b9fd9; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                            <Label text="Credits" prefWidth="70" style="-fx-text-fill: #5b9fd9; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                            <Label text="Grade" prefWidth="70" style="-fx-text-fill: #5b9fd9; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+
+                        <Separator style="-fx-background-color: #e7eef7;"/>
+
+                        <HBox spacing="0"
+                              style="-fx-background-color: #f5f9ff; -fx-background-radius: 10;">
+                            <padding>
+                                <Insets top="9" bottom="9" left="12" right="12"/>
+                            </padding>
+                            <Label text="Code" prefWidth="110"
+                                   style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                            <Label text="Course Name" prefWidth="200"
+                                   style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                            <Label text="Credits" prefWidth="70"
+                                   style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                            <Label text="Grade" prefWidth="70"
+                                   style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                         </HBox>
-                        <VBox fx:id="coursesContainer" spacing="4"/>
+
+                        <VBox fx:id="coursesContainer" spacing="6"/>
                     </VBox>
 
                     <VBox spacing="14" prefWidth="340"
-                          style="-fx-background-color: #ffffff; -fx-background-radius: 14; -fx-border-color: #d4e4f7; -fx-border-radius: 14; -fx-border-width: 1;">
-                        <padding><Insets top="22" bottom="22" left="24" right="24"/></padding>
+                          style="-fx-background-color: white;
+                                 -fx-background-radius: 16;
+                                 -fx-border-color: #d7e7f8;
+                                 -fx-border-radius: 16;
+                                 -fx-border-width: 1;
+                                 -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 14, 0, 0, 5);">
+                        <padding>
+                            <Insets top="22" bottom="22" left="24" right="24"/>
+                        </padding>
+
                         <HBox alignment="CENTER_LEFT">
                             <Label text="📢  Notices"
-                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 16px; -fx-font-weight: bold;"/>
                             <Region HBox.hgrow="ALWAYS"/>
                             <Button text="All →" onAction="#openNotices"
-                                    style="-fx-background-color: transparent; -fx-text-fill: #5b9fd9; -fx-font-size: 12px; -fx-cursor: hand;"/>
+                                    style="-fx-background-color: transparent;
+                                           -fx-text-fill: #4c8fce;
+                                           -fx-font-size: 12px;
+                                           -fx-font-weight: bold;
+                                           -fx-cursor: hand;"/>
                         </HBox>
-                        <Separator style="-fx-background-color: #e8eef5;"/>
+
+                        <Separator style="-fx-background-color: #e7eef7;"/>
+
                         <VBox fx:id="noticesContainer" spacing="10"/>
                     </VBox>
 
@@ -225,12 +419,18 @@
 
     <bottom>
         <HBox alignment="CENTER_LEFT" spacing="16"
-              style="-fx-background-color: #ffffff; -fx-border-color: #e8eef5; -fx-border-width: 1 0 0 0;">
-            <padding><Insets top="8" bottom="8" left="28" right="28"/></padding>
+              style="-fx-background-color: #fbfdff; -fx-border-color: #dfeaf6; -fx-border-width: 1 0 0 0;">
+            <padding>
+                <Insets top="9" bottom="9" left="28" right="28"/>
+            </padding>
+
             <Circle radius="4" style="-fx-fill: #4cba52;"/>
+
             <Label text="System Online  •  Faculty of Technology Management System  •  v1.0"
                    style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+
             <Region HBox.hgrow="ALWAYS"/>
+
             <Label fx:id="statusBarTime" text="13 March 2026"
                    style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
         </HBox>

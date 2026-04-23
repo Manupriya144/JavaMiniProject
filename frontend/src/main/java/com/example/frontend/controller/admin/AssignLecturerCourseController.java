@@ -11,13 +11,13 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -30,19 +30,16 @@ import java.util.ResourceBundle;
 
 public class AssignLecturerCourseController implements Initializable {
 
-    // ── FXML Nodes ──────────────────────────────────────────────────
     @FXML private ComboBox<LecturerResponseDTO> lecturerBox;
-    @FXML private ComboBox<CourseResponseDTO>   courseBox;
+    @FXML private ComboBox<CourseResponseDTO> courseBox;
     @FXML private Label statusLabel;
     @FXML private Label adminNameLabel;
     @FXML private Label statusBarTime;
 
-    // ── Services ─────────────────────────────────────────────────────
-    private LecturerService       lecturerService;
-    private CourseService         courseService;
+    private LecturerService lecturerService;
+    private CourseService courseService;
     private LecturerCourseService lecturerCourseService;
 
-    // ── Shared inline CSS for the popup list ─────────────────────────
     private static final String POPUP_STYLE =
             "-fx-background-color: #091527;" +
                     "-fx-background-radius: 10;" +
@@ -72,8 +69,9 @@ public class AssignLecturerCourseController implements Initializable {
                     "-fx-font-weight: bold;" +
                     "-fx-padding: 10 14;";
 
+    // FIXED: selected item shown in closed ComboBox is dark now
     private static final String BUTTON_CELL_FILLED =
-            "-fx-text-fill: white;" +
+            "-fx-text-fill: #1a3a52;" +
                     "-fx-font-size: 13px;" +
                     "-fx-font-family: 'Segoe UI';" +
                     "-fx-font-weight: bold;" +
@@ -85,17 +83,17 @@ public class AssignLecturerCourseController implements Initializable {
                     "-fx-font-family: 'Segoe UI';" +
                     "-fx-padding: 0 14;";
 
-    // ── Lifecycle ────────────────────────────────────────────────────
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ServerClient client = ServerClient.getInstance();
-        lecturerService       = new LecturerService(client);
-        courseService         = new CourseService(client);
+        lecturerService = new LecturerService(client);
+        courseService = new CourseService(client);
         lecturerCourseService = new LecturerCourseService(client);
 
         if (adminNameLabel != null) {
             adminNameLabel.setText(LoginController.username);
         }
+
         if (statusBarTime != null) {
             statusBarTime.setText(
                     LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy"))
@@ -103,33 +101,23 @@ public class AssignLecturerCourseController implements Initializable {
         }
 
         applyComboBoxStyle(lecturerBox, "— Select a Lecturer —");
-        applyComboBoxStyle(courseBox,   "— Select a Course —");
+        applyComboBoxStyle(courseBox, "— Select a Course —");
 
         loadLecturers();
         loadCourses();
     }
 
-    // ── ComboBox Styling ─────────────────────────────────────────────
-
-    /**
-     * Applies a complete dark-themed skin to a ComboBox, including:
-     *  • Popup list background
-     *  • Per-cell hover / selected / normal states
-     *  • Button cell (the value display area)
-     *
-     * The technique used here is the only reliable cross-platform way to
-     * style JavaFX ComboBox popup lists without an external CSS file, because
-     * the popup is a separate window/scene and inline FXML styles do NOT reach it.
-     */
     private <T> void applyComboBoxStyle(ComboBox<T> box, String placeholder) {
         box.setVisibleRowCount(8);
 
-        // ── Cell factory: styles each item in the dropdown list ──────
         Callback<ListView<T>, ListCell<T>> cellFactory = lv -> new ListCell<>() {
 
             @Override
             protected void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);
+
+                setOnMouseEntered(null);
+                setOnMouseExited(null);
 
                 if (empty || item == null) {
                     setText(null);
@@ -140,59 +128,61 @@ public class AssignLecturerCourseController implements Initializable {
                 }
             }
 
-            // Re-apply state on selection / focus changes
             private void applyState() {
                 if (isSelected()) {
                     setStyle(CELL_SELECTED);
                 } else {
                     setStyle(CELL_NORMAL);
                     setOnMouseEntered(e -> setStyle(CELL_HOVER));
-                    setOnMouseExited(e  -> setStyle(isSelected() ? CELL_SELECTED : CELL_NORMAL));
+                    setOnMouseExited(e -> setStyle(isSelected() ? CELL_SELECTED : CELL_NORMAL));
                 }
             }
 
-            { // instance initializer — run once per cell
-                selectedProperty().addListener((obs, o, n) -> applyState());
+            {
+                selectedProperty().addListener((obs, oldVal, newVal) -> applyState());
+                hoverProperty().addListener((obs, oldVal, newVal) -> applyState());
             }
         };
 
         box.setCellFactory(cellFactory);
 
-        // ── Popup list background ─────────────────────────────────────
-        // We hook into the popup after it is shown to style its inner ListView
         box.showingProperty().addListener((obs, wasShowing, isNowShowing) -> {
             if (isNowShowing) {
-                // The popup ListView is accessible via lookup after show()
-                javafx.scene.control.skin.ComboBoxListViewSkin<?> skin =
-                        (javafx.scene.control.skin.ComboBoxListViewSkin<?>) box.getSkin();
-                if (skin != null) {
-                    Node popupContent = skin.getPopupContent();
-                    if (popupContent != null) {
-                        popupContent.setStyle(POPUP_STYLE);
+                try {
+                    javafx.scene.control.skin.ComboBoxListViewSkin<?> skin =
+                            (javafx.scene.control.skin.ComboBoxListViewSkin<?>) box.getSkin();
+                    if (skin != null) {
+                        Node popupContent = skin.getPopupContent();
+                        if (popupContent != null) {
+                            popupContent.setStyle(POPUP_STYLE);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
 
-        // ── Button cell: the visible part when popup is closed ────────
         box.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);
+
                 setStyle("-fx-background-color: transparent;");
+
                 if (empty || item == null) {
                     setText(placeholder);
                     setTextFill(Color.web("#4a7ab5"));
                     setStyle(BUTTON_CELL_EMPTY + "-fx-background-color: transparent;");
                 } else {
                     setText(item.toString());
+                    setTextFill(Color.web("#1a3a52"));
                     setStyle(BUTTON_CELL_FILLED + "-fx-background-color: transparent;");
                 }
             }
         });
     }
 
-    // ── Data Loading ─────────────────────────────────────────────────
     private void loadLecturers() {
         List<LecturerResponseDTO> lecturers = lecturerService.getAllLecturers();
         lecturerBox.setItems(FXCollections.observableArrayList(lecturers));
@@ -203,11 +193,10 @@ public class AssignLecturerCourseController implements Initializable {
         courseBox.setItems(FXCollections.observableArrayList(courses));
     }
 
-    // ── Handlers ─────────────────────────────────────────────────────
     @FXML
     private void assignLecturerCourse() {
         LecturerResponseDTO lecturer = lecturerBox.getValue();
-        CourseResponseDTO   course   = courseBox.getValue();
+        CourseResponseDTO course = courseBox.getValue();
 
         if (lecturer == null || course == null) {
             showStatus("Please select both a lecturer and a course.", StatusType.ERROR);
@@ -245,8 +234,8 @@ public class AssignLecturerCourseController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/view/admin/AdminDashboard.fxml"));
-            Parent root  = loader.load();
-            Stage  stage = (Stage) lecturerBox.getScene().getWindow();
+            Parent root = loader.load();
+            Stage stage = (Stage) lecturerBox.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.centerOnScreen();
             stage.show();
@@ -255,16 +244,18 @@ public class AssignLecturerCourseController implements Initializable {
         }
     }
 
-    // ── Status Helper ─────────────────────────────────────────────────
-    private enum StatusType { SUCCESS, ERROR, INFO }
+    private enum StatusType {
+        SUCCESS, ERROR, INFO
+    }
 
     private void showStatus(String message, StatusType type) {
         statusLabel.setText(message);
         String color = switch (type) {
             case SUCCESS -> "#4cba52";
-            case ERROR   -> "#e85d5d";
-            case INFO    -> "#5b9fd9";
+            case ERROR -> "#e85d5d";
+            case INFO -> "#5b9fd9";
         };
+
         statusLabel.setStyle(
                 "-fx-text-fill: " + color + ";" +
                         "-fx-font-size: 13px;" +
