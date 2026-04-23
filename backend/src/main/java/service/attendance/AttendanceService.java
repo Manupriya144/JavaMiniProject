@@ -10,6 +10,10 @@ import java.util.Map;
 
 public class AttendanceService {
     private final AttendanceDAO attendanceDAO;
+    private static final int THEORY_SESSION_COUNT = 15;
+    private static final int PRACTICAL_SESSION_COUNT = 15;
+    private static final double HOURS_PER_THEORY_SESSION = 2.0;
+    private static final double HOURS_PER_PRACTICAL_SESSION = 2.0;
 
     public AttendanceService(AttendanceDAO attendanceDAO) {
         this.attendanceDAO = attendanceDAO;
@@ -76,14 +80,25 @@ public class AttendanceService {
         if (studentId == null || studentId.isBlank()) {
             return null;
         }
-        return attendanceDAO.getStudentAttendanceSummary(studentId.trim(), normalizeViewType(viewType));
+        String normalizedViewType = normalizeViewType(viewType);
+        Map<String, Object> summary = attendanceDAO.getStudentAttendanceSummary(studentId.trim(), normalizedViewType);
+        if (summary == null) {
+            return null;
+        }
+        applySessionAssumptions(summary, normalizedViewType);
+        return summary;
     }
 
     public List<Map<String, Object>> getBatchAttendanceSummary(String batch, String viewType) {
         if (batch == null || batch.isBlank()) {
             return List.of();
         }
-        return attendanceDAO.getBatchAttendanceSummary(batch.trim(), normalizeViewType(viewType));
+        String normalizedViewType = normalizeViewType(viewType);
+        List<Map<String, Object>> rows = attendanceDAO.getBatchAttendanceSummary(batch.trim(), normalizedViewType);
+        for (Map<String, Object> row : rows) {
+            applySessionAssumptions(row, normalizedViewType);
+        }
+        return rows;
     }
 
     private static final double ELIGIBILITY_THRESHOLD = 80.0;
@@ -101,9 +116,12 @@ public class AttendanceService {
             empty.put("studentId", studentId.trim());
             empty.put("viewType", vt);
             empty.put("totalSessions", 0);
+            empty.put("presentCount", 0);
             empty.put("attendancePercentage", 0.0);
+            applySessionAssumptions(empty, vt);
             return enrichEligibility(empty, hasMedical);
         }
+        applySessionAssumptions(summary, vt);
         return enrichEligibility(summary, hasMedical);
     }
 
@@ -118,9 +136,38 @@ public class AttendanceService {
             int medicalCount = ((Number) row.getOrDefault("medicalCount", 0)).intValue();
             boolean hasMedical = medicalCount > 0;
             row.remove("medicalCount");
+            applySessionAssumptions(row, vt);
             result.add(enrichEligibility(row, hasMedical));
         }
         return result;
+    }
+
+    private void applySessionAssumptions(Map<String, Object> row, String viewType) {
+        int expectedSessions = getExpectedSessions(viewType);
+        int presentCount = ((Number) row.getOrDefault("presentCount", 0)).intValue();
+        int absentCount = Math.max(0, expectedSessions - presentCount);
+        double attendancePercentage = expectedSessions == 0 ? 0.0 : (presentCount * 100.0) / expectedSessions;
+        double hoursPerSession = "Practical".equalsIgnoreCase(viewType) ? HOURS_PER_PRACTICAL_SESSION : HOURS_PER_THEORY_SESSION;
+        if ("Combined".equalsIgnoreCase(viewType)) {
+            hoursPerSession = (HOURS_PER_THEORY_SESSION + HOURS_PER_PRACTICAL_SESSION) / 2.0;
+        }
+        double totalHoursAttended = presentCount * hoursPerSession;
+
+        row.put("totalSessions", expectedSessions);
+        row.put("absentCount", absentCount);
+        row.put("attendancePercentage", round2(attendancePercentage));
+        row.put("totalHoursAttended", round2(totalHoursAttended));
+        row.put("sessionHours", round2(hoursPerSession));
+    }
+
+    private int getExpectedSessions(String viewType) {
+        if ("Theory".equalsIgnoreCase(viewType)) {
+            return THEORY_SESSION_COUNT;
+        }
+        if ("Practical".equalsIgnoreCase(viewType)) {
+            return PRACTICAL_SESSION_COUNT;
+        }
+        return THEORY_SESSION_COUNT + PRACTICAL_SESSION_COUNT;
     }
 
     private Map<String, Object> enrichEligibility(Map<String, Object> row, boolean hasMedical) {

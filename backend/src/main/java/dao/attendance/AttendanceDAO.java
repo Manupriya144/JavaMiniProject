@@ -291,7 +291,7 @@ public class AttendanceDAO {
     }
 
     public boolean hasAttendanceMedicalRecord(String studentId) {
-        String sql = "SELECT 1 FROM medical WHERE student_id = ? AND exam_type = 'Attendance' LIMIT 1";
+        String sql = "SELECT 1 FROM medical WHERE student_id = ? AND exam_type = 'Attendance' AND status = 'Approved' LIMIT 1";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, studentId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -309,7 +309,7 @@ public class AttendanceDAO {
                 "SUM(CASE WHEN a.status = 'Present' THEN 1 ELSE 0 END) AS presentCount, " +
                 "SUM(CASE WHEN a.status = 'Absent' THEN 1 ELSE 0 END) AS absentCount, " +
                 "SUM(CASE WHEN a.status = 'Present' THEN a.hours_attended ELSE 0 END) AS totalHoursAttended, " +
-                "(SELECT COUNT(*) FROM medical m WHERE m.student_id = s.user_id AND m.exam_type = 'Attendance') AS medicalCount " +
+                "(SELECT COUNT(*) FROM medical m WHERE m.student_id = s.user_id AND m.exam_type = 'Attendance' AND m.status = 'Approved') AS medicalCount " +
                 "FROM attendance a " +
                 "INNER JOIN students s ON a.student_id = s.user_id " +
                 "INNER JOIN users u ON s.user_id = u.user_id " +
