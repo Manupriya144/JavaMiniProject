@@ -11,6 +11,7 @@ module com.example.frontend {
     requires com.fasterxml.jackson.databind;
     requires java.desktop;
 
+
     opens com.example.frontend to javafx.fxml;
     opens com.example.frontend.controller to javafx.fxml;
     opens com.example.frontend.controller.admin to javafx.fxml;
