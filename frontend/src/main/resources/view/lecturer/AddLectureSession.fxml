@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.frontend.controller.lecturer.AddLectureSessionController"
+            prefWidth="860.0"
+            prefHeight="640.0"
+            style="-fx-background-color: #f8fbff;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              spacing="0.0"
+              style="-fx-background-color: #ffffff; -fx-border-color: #e8eef5; -fx-border-width: 0 0 1 0;">
+
+            <children>
+                <HBox alignment="CENTER_LEFT"
+                      spacing="12.0"
+                      prefHeight="64.0"
+                      style="-fx-background-color: #ffffff;">
+                    <padding>
+                        <Insets left="28.0" right="28.0"/>
+                    </padding>
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="64"
+                              style="-fx-background-color: #ffffff;">
+                            <padding><Insets left="28" right="28"/></padding>
+                            <Label text="🎓" style="-fx-font-size: 28px;"/>
+                            <VBox alignment="CENTER_LEFT" spacing="1">
+                                <Label text="FoT Portal" style="-fx-text-fill: #1a3a52; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                                <Label text="Faculty of Technology" style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px;"/>
+                            </VBox>
+                        </HBox>
+                    </children>
+                </HBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <HBox alignment="CENTER" spacing="8.0">
+                    <padding>
+                        <Insets left="16.0" right="16.0"/>
+                    </padding>
+                    <children>
+                        <Label text="Session"
+                               style="-fx-text-fill: #5b9fd9; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                    </children>
+                </HBox>
+
+                <Separator orientation="VERTICAL"/>
+
+                <HBox alignment="CENTER" spacing="10.0">
+                    <padding>
+                        <Insets left="16.0" right="24.0"/>
+                    </padding>
+                    <children>
+                        <StackPane>
+                            <children>
+                                <Circle radius="18.0" style="-fx-fill: #4cba52;"/>
+                                <Label text="L"
+                                       style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+                            </children>
+                        </StackPane>
+                        <VBox alignment="CENTER_LEFT" spacing="1.0">
+                            <children>
+                                <Label fx:id="lecturerNameLabel"
+                                       text="Lecturer"
+                                       style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                <Label text="Lecturer"
+                                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px;"/>
+                            </children>
+                        </VBox>
+                        <Button text="Back"
+                                onAction="#handleBack"
+                                style="-fx-background-color: #e8eef5; -fx-text-fill: #5b9fd9; -fx-font-size: 12px; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: #d4e4f7; -fx-border-radius: 6; -fx-border-width: 1; -fx-padding: 6 16 6 16;"/>
+                    </children>
+                </HBox>
+            </children>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    style="-fx-background-color: transparent; -fx-background: transparent;">
+            <content>
+                <VBox spacing="28.0" style="-fx-background-color: #f8fbff;">
+                    <padding>
+                        <Insets top="32.0" right="40.0" bottom="32.0" left="40.0"/>
+                    </padding>
+
+                    <children>
+                        <VBox spacing="4.0">
+                            <children>
+                                <Label text="Add Lecture Session"
+                                       style="-fx-text-fill: #1a3a52; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+                                <Label text="Create a new lecture session by entering the details below."
+                                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 13px;"/>
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="0.0"
+                              style="-fx-background-color: #fafbff; -fx-background-radius: 14; -fx-border-color: #d4e4f7; -fx-border-radius: 14; -fx-border-width: 1.5; -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.10), 12, 0, 0, 4);">
+
+                            <children>
+                                <HBox alignment="CENTER_LEFT"
+                                      spacing="10.0"
+                                      style="-fx-background-color: #f5f9ff; -fx-background-radius: 14 14 0 0; -fx-border-color: transparent transparent #e8eef5 transparent; -fx-border-width: 0 0 1 0;">
+                                    <padding>
+                                        <Insets top="18.0" right="24.0" bottom="18.0" left="24.0"/>
+                                    </padding>
+                                    <children>
+                                        <VBox spacing="1.0">
+                                            <children>
+                                                <Label text="Session Information"
+                                                       style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                                                <Label text="Lecture session details"
+                                                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <VBox spacing="20.0">
+                                    <padding>
+                                        <Insets top="28.0" right="28.0" bottom="28.0" left="28.0"/>
+                                    </padding>
+
+                                    <children>
+                                        <VBox spacing="7.0">
+                                            <children>
+                                                <Label text="Course"
+                                                       style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                                <ComboBox fx:id="courseComboBox"
+                                                          promptText="Select Course"
+                                                          prefHeight="38.0"
+                                                          maxWidth="1.7976931348623157E308"
+                                                          style="-fx-background-color: #ffffff; -fx-text-fill: #1a3a52; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-border-width: 1; -fx-font-size: 13px;"/>
+                                            </children>
+                                        </VBox>
+
+                                        <HBox spacing="20.0">
+                                            <children>
+                                                <VBox spacing="7.0" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label text="Session Date"
+                                                               style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                                        <DatePicker fx:id="sessionDatePicker"
+                                                                    prefHeight="38.0"
+                                                                    maxWidth="1.7976931348623157E308"
+                                                                    style="-fx-background-color: #ffffff; -fx-text-fill: #1a3a52; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-border-width: 1; -fx-font-size: 13px;"/>
+                                                    </children>
+                                                </VBox>
+
+                                                <VBox spacing="7.0" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label text="Session Type"
+                                                               style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                                        <ComboBox fx:id="typeComboBox"
+                                                                  promptText="Select Type"
+                                                                  prefHeight="38.0"
+                                                                  maxWidth="1.7976931348623157E308"
+                                                                  style="-fx-background-color: #ffffff; -fx-text-fill: #1a3a52; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-border-width: 1; -fx-font-size: 13px;"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+
+                                        <VBox spacing="7.0">
+                                            <children>
+                                                <Label text="Session Hours"
+                                                       style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                                <HBox alignment="CENTER_LEFT"
+                                                      style="-fx-background-color: #ffffff; -fx-background-radius: 8; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-border-width: 1;">
+                                                    <children>
+                                                        <Label text="H"
+                                                               style="-fx-text-fill: #5b9fd9; -fx-font-size: 13px; -fx-min-width: 36; -fx-pref-width: 36;"/>
+                                                        <TextField fx:id="hoursField"
+                                                                   promptText="e.g. 2 or 1.5"
+                                                                   prefHeight="38.0"
+                                                                   maxWidth="1.7976931348623157E308"
+                                                                   style="-fx-background-color: transparent; -fx-text-fill: #1a3a52; -fx-prompt-text-fill: #a8b8ca; -fx-font-size: 13px; -fx-border-color: transparent; -fx-background-radius: 0;"
+                                                                   HBox.hgrow="ALWAYS"/>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+
+                                        <Label fx:id="statusLabel"
+                                               text=""
+                                               visible="false"
+                                               managed="false"
+                                               style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+
+                                        <HBox spacing="14.0" alignment="CENTER_RIGHT">
+                                            <padding>
+                                                <Insets top="8.0"/>
+                                            </padding>
+                                            <children>
+                                                <Button text="Clear Form"
+                                                        onAction="#handleClear"
+                                                        prefHeight="44.0"
+                                                        prefWidth="140.0"
+                                                        style="-fx-background-color: #e8eef5; -fx-text-fill: #5b9fd9; -fx-font-size: 13px; -fx-background-radius: 8; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-border-width: 1; -fx-cursor: hand; -fx-font-weight: bold;"/>
+                                                <Button fx:id="saveBtn"
+                                                        text="Save Session"
+                                                        onAction="#handleSaveSession"
+                                                        prefHeight="44.0"
+                                                        prefWidth="180.0"
+                                                        style="-fx-background-color: #4cba52; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(76,186,82,0.20), 10, 0, 0, 3);"/>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_LEFT"
+              spacing="16.0"
+              style="-fx-background-color: #ffffff; -fx-border-color: #e8eef5; -fx-border-width: 1 0 0 0;">
+            <padding>
+                <Insets top="8.0" right="28.0" bottom="8.0" left="28.0"/>
+            </padding>
+            <children>
+                <Circle radius="4.0" style="-fx-fill: #4cba52;"/>
+                <Label text="System Online  -  Faculty of Technology Management System  -  v1.0"
+                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="statusBarTime"
+                       text="03 April 2026"
+                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>

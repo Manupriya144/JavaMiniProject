@@ -1,7 +1,11 @@
 package service.lecturerCourse;
 
-import dao.lecturerCourse.LecturerCourseDAO;
+
+import dao.lectureCourse.LecturerCourseDAO;
+import dto.responseDto.lecture_course.LecturerCourseItemDTO;
 import model.LecturerCourse;
+
+import java.util.List;
 
 public class LecturerCourseService {
 
@@ -22,5 +26,8 @@ public class LecturerCourseService {
 
         LecturerCourse lecturerCourse = new LecturerCourse(lecturerId, courseId);
         return lecturerCourseDAO.assignLecturerToCourse(lecturerCourse);
+    }
+    public List<LecturerCourseItemDTO> getLecturerCourses(String lecturerId) {
+        return lecturerCourseDAO.getCoursesByLecturerId(lecturerId);
     }
 }

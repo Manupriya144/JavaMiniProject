@@ -316,6 +316,14 @@
                                        -fx-background-radius: 10;
                                        -fx-cursor: hand;"/>
 
+                        <Button text="🗓  Add Session" onAction="#openAddSession" prefHeight="42" prefWidth="180"
+                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
+                                       -fx-text-fill: white;
+                                       -fx-font-size: 13px;
+                                       -fx-font-weight: bold;
+                                       -fx-background-radius: 10;
+                                       -fx-cursor: hand;"/>
+
                         <Button text="✅  Check Eligibility" onAction="#openEligibility" prefHeight="42" prefWidth="180"
                                 style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
                                        -fx-text-fill: white;

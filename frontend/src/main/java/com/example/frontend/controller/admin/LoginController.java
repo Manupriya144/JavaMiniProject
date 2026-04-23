@@ -77,7 +77,7 @@ public class LoginController {
                         loadDashboard("/view/student/studentDashboard.fxml",username);
                         break;
                     case "Lecturer":
-                        loadDashboard("/view/lecturerDashboard.fxml",username);
+                        loadDashboard("/view/lecturer/lecturerDashboard.fxml",username);
                         break;
                     case "Tech_Officer":
                         loadDashboard("/view/techofficer/techOfficerDashboard.fxml",username);

@@ -155,7 +155,7 @@ public class CAManagementController {
 
     @FXML
     private void backToDashboard() {
-        loadView("/view/lecturerDashboard.fxml");
+        loadView("/view/lecturer/lecturerDashboard.fxml");
     }
 
     private String formatCAMarks(List<CAMark> list) {

@@ -64,7 +64,6 @@ public class LecturerDashboardController implements Initializable {
     }
 
     private void loadStats() {
-        // TODO: Replace with DB queries filtered by lecturerId
         myCoursesLabel.setText("4");
         myStudentsLabel.setText("20");
         eligibleLabel.setText("16");
@@ -74,7 +73,6 @@ public class LecturerDashboardController implements Initializable {
     private void loadCourses() {
         coursesContainer.getChildren().clear();
 
-        // TODO: Replace with DB query
         String[][] courses = {
                 {"ICT2112", "Object Oriented Programming", "3", "20"},
                 {"ICT2132", "OOP Practicum", "2", "20"},
@@ -164,6 +162,11 @@ public class LecturerDashboardController implements Initializable {
     }
 
     @FXML
+    private void openAddSession() {
+        loadView("lecturer/AddLectureSession.fxml");
+    }
+
+    @FXML
     private void openGrades() {
         loadView("GradesGPA.fxml");
     }
@@ -235,7 +238,6 @@ public class LecturerDashboardController implements Initializable {
             e.printStackTrace();
         }
     }
-
 
     private void loadView(String fxmlFile) {
         try {

@@ -24,7 +24,7 @@ module com.example.frontend {
 
 
     opens com.example.frontend.dto to com.fasterxml.jackson.databind, javafx.base;
-    opens com.example.frontend.model to com.fasterxml.jackson.databind;
 
     exports com.example.frontend;
+    opens com.example.frontend.model to com.fasterxml.jackson.databind, javafx.fxml;
 }

@@ -358,7 +358,7 @@ public class DisplayTimeTableController implements Initializable {
                     dashboardFxml = "/view/techofficer/techOfficerDashboard.fxml";
                     break;
                 case "Lecturer":
-                    dashboardFxml = "/view/lecturerDashboard.fxml";
+                    dashboardFxml = "/view/lecturer/lecturerDashboard.fxml";
                     break;
                 case "Student":
                     dashboardFxml = "/view/student/studentDashboard.fxml";

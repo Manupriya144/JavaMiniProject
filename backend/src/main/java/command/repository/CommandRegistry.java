@@ -4,12 +4,14 @@ import command.course.GetAllCoursesCommand;
 import command.course.GetAllCoursesCommandFull;
 import command.lecturer.GetAllLecturersCommand;
 import command.lecturerCourse.AssignLecturerCourseCommand;
+import command.lecturerCourse.GetLecturerCoursesCommand;
 import command.login.LoginCommand;
 import command.login.LogoutCommand;
 import command.attendance.AddAttendanceCommand;
 import command.attendance.DeleteAttendanceCommand;
 import command.attendance.GetAttendanceByIdCommand;
 import command.attendance.GetAttendanceSessionsCommand;
+import command.session.AddLectureSessionCommand;
 import command.techofficer.GetTechOfficerDashboardStatsCommand;
 import command.techofficer.GetTechOfficerProfileCommand;
 import command.techofficer.UpdateTechOfficerProfileCommand;
@@ -46,13 +48,15 @@ import command.user.GetAllUsersCommand;
 import command.student.GetStudentByIdCommand;
 import command.user.GetUserByIdCommand;
 import dao.attendance.AttendanceDAO;
+import dao.lectureCourse.LecturerCourseDAO;
+import dao.session.SessionDAO;
 import dao.techofficer.TechOfficerDAO;
 import dao.ca.CAMarkDAO;
 import command.techofficer.GetMyTechOfficerProfileCommand;
 
 
 import dao.lecture.LecturerDAO;
-import dao.lecturerCourse.LecturerCourseDAO;
+
 import dao.medical.MedicalDAO;
 import dao.notice.NoticeDAO;
 import dao.student.StudentDAO;
@@ -67,6 +71,7 @@ import service.lecturerCourse.LecturerCourseService;
 import service.login.AuthService;
 import service.medical.MedicalService;
 import service.notice.NoticeService;
+import service.session.SessionService;
 import service.student.StudentService;
 import service.timetable.TimeTableService;
 import service.user.AdminDashboardService;
@@ -272,12 +277,15 @@ public class CommandRegistry {
             LecturerService lecturerService = new LecturerService(lecturerDAO);
             commands.put("GetAllLecturers", new GetAllLecturersCommand(lecturerService, authService));
             commands.put("GetAllCourses", new GetAllCoursesCommand(courseService, authService));
+
             LecturerCourseDAO lecturerCourseDAO = new LecturerCourseDAO();
             LecturerCourseService lecturerCourseService = new LecturerCourseService(lecturerCourseDAO);
             commands.put("AssignLecturerCourse", new AssignLecturerCourseCommand(lecturerCourseService, authService));
             commands.put("GET_ALL_COURSES_FULL", new GetAllCoursesCommandFull(courseService, authService));
-
-
+            SessionService sessionService = new SessionService(new SessionDAO());
+            commands.put("ADD_LECTURE_SESSION", new AddLectureSessionCommand(sessionService,authService));
+            commands.put("GET_LECTURER_COURSES",
+                    new GetLecturerCoursesCommand(lecturerCourseService, authService));
 
             //timetable related
             TimeTableDAO timeTableDAO = new TimeTableDAO();
