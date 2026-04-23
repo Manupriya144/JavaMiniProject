@@ -2,10 +2,6 @@ package command.repository;
 
 import command.course.GetAllCoursesCommand;
 import command.course.GetAllCoursesCommandFull;
-import command.courseMaterial.AddCourseMaterialCommand;
-import command.courseMaterial.DeleteCourseMaterialCommand;
-import command.courseMaterial.GetCourseMaterialsCommand;
-import command.courseMaterial.UpdateCourseMaterialDeadlineCommand;
 import command.lecturer.GetAllLecturersCommand;
 import command.lecturerCourse.AssignLecturerCourseCommand;
 import command.login.LoginCommand;
@@ -84,7 +80,6 @@ import command.eligibility.CheckFullEligibilityCommand;
 import command.eligibility.GetBatchFullEligibilityReportCommand;
 
 import command.grade.GenerateGradeCommand;
-import command.grade.GetGradeLookupOptionsCommand;
 import command.grade.GetStudentGradesCommand;
 import command.grade.GetBatchGradesCommand;
 import command.gpa.CalculateCGPACommand;
@@ -107,7 +102,6 @@ import dao.eligibility.EligibilityDAO;
 import dao.grade.GradeDAO;
 import dao.gpa.GPADAO;
 import dao.course.CourseDAO;
-import dao.courseMaterial.CourseMaterialDAO;
 import dao.report.AcademicReportDAO;
 import dao.report.UndergraduateViewDAO;
 
@@ -116,7 +110,6 @@ import service.eligibility.EligibilityService;
 import service.grade.GradeService;
 import service.gpa.GPAService;
 import service.course.CourseService;
-import service.courseMaterial.CourseMaterialService;
 import service.report.AcademicReportService;
 import service.report.UndergraduateViewService;
 
@@ -218,7 +211,6 @@ public class CommandRegistry {
             commands.put("GenerateGrade", new GenerateGradeCommand(gradeService));
             commands.put("GetStudentGrades", new GetStudentGradesCommand(gradeService));
             commands.put("GetBatchGrades", new GetBatchGradesCommand(gradeService));
-            commands.put("GetGradeLookupOptions", new GetGradeLookupOptionsCommand(gradeService));
 
             // ---------------- GPA ----------------
             GPADAO gpaDAO = new GPADAO();
@@ -277,13 +269,6 @@ public class CommandRegistry {
             LecturerCourseService lecturerCourseService = new LecturerCourseService(lecturerCourseDAO);
             commands.put("AssignLecturerCourse", new AssignLecturerCourseCommand(lecturerCourseService, authService));
             commands.put("GET_ALL_COURSES_FULL", new GetAllCoursesCommandFull(courseService, authService));
-
-            CourseMaterialDAO courseMaterialDAO = new CourseMaterialDAO();
-            CourseMaterialService courseMaterialService = new CourseMaterialService(courseMaterialDAO);
-            commands.put("ADD_COURSE_MATERIAL", new AddCourseMaterialCommand(courseMaterialService));
-            commands.put("GET_COURSE_MATERIALS", new GetCourseMaterialsCommand(courseMaterialService));
-            commands.put("UPDATE_COURSE_MATERIAL_DEADLINE", new UpdateCourseMaterialDeadlineCommand(courseMaterialService));
-            commands.put("DELETE_COURSE_MATERIAL", new DeleteCourseMaterialCommand(courseMaterialService));
 
 
 

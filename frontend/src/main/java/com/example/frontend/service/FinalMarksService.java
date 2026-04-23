@@ -16,22 +16,22 @@ public class FinalMarksService {
 
     public JsonNode uploadMarks(String studentId, String courseId, double marks) {
         return send("UploadFinalMarks",
-                String.format("{\"studentId\":\"%s\",\"courseId\":\"%s\",\"academicYear\":2026,\"semester\":1,\"marks\":%s}", studentId, courseId, marks));
+                String.format("{\"studentId\":\"%s\",\"courseId\":\"%s\",\"marks\":%s}", studentId, courseId, marks));
     }
 
     public JsonNode updateMarks(String studentId, String courseId, double marks) {
         return send("UpdateFinalMarks",
-                String.format("{\"studentId\":\"%s\",\"courseId\":\"%s\",\"academicYear\":2026,\"semester\":1,\"marks\":%s}", studentId, courseId, marks));
+                String.format("{\"studentId\":\"%s\",\"courseId\":\"%s\",\"marks\":%s}", studentId, courseId, marks));
     }
 
-    public JsonNode getStudentMarks(String studentId, String courseId) {
+    public JsonNode getStudentMarks(String studentId) {
         return send("GetStudentFinalMarks",
-                String.format("{\"studentId\":\"%s\",\"courseId\":\"%s\"}", studentId, courseId));
+                String.format("{\"studentId\":\"%s\"}", studentId));
     }
 
-    public JsonNode getBatchMarks(int academicYear, int semester) {
+    public JsonNode getBatchMarks(String batch) {
         return send("GetBatchFinalMarks",
-                String.format("{\"academicYear\":%d,\"semester\":%d}", academicYear, semester));
+                String.format("{\"batch\":\"%s\"}", batch));
     }
 
     private JsonNode send(String command, String data) {

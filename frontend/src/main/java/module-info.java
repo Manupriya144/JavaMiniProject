@@ -1,6 +1,7 @@
 module com.example.frontend {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.web;
     requires javafx.graphics;
     requires javafx.base;
 
@@ -19,9 +20,6 @@ module com.example.frontend {
     opens com.example.frontend.controller.tech_officer to javafx.fxml;
     opens com.example.frontend.controller.medical to javafx.fxml;
     opens com.example.frontend.controller.ca to javafx.fxml;
-    opens com.example.frontend.controller.eligibility to javafx.fxml;
-    opens com.example.frontend.controller.finalMarks to javafx.fxml;
-    opens com.example.frontend.controller.grade to javafx.fxml;
 
 
     opens com.example.frontend.dto to com.fasterxml.jackson.databind, javafx.base;

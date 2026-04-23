@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -108,14 +107,14 @@ public class LecturerDashboardController implements Initializable {
 
     @FXML private void openCourses()    { loadView("LecturerCourses.fxml"); }
     @FXML private void openCA()         { loadView("CAManagement.fxml"); }
-    @FXML private void openMarks()      { loadView("UploadFinalMarks.fxml"); }
-    @FXML private void openStudents()   { loadView("LecturerStudents.fxml"); }
-    @FXML private void openEligibility(){ loadView("FullEligibility.fxml"); }
-    @FXML private void openAttendance() { loadView("ViewAttendance.fxml"); }
-    @FXML private void openGrades()     { loadView("BatchGrades.fxml"); }
-    @FXML private void openNotices()    { loadView("NoticeDisplay.fxml"); }
-    @FXML private void openProfile()    { loadView("lecturerDashboard.fxml"); }
-    @FXML private void logout()         { loadView("login.fxml"); }
+    @FXML private void openMarks()      { loadView("MarksUpload.fxml"); }
+    @FXML private void openStudents()   { loadView("StudentDetails.fxml"); }
+    @FXML private void openEligibility(){ loadView("Eligibility.fxml"); }
+    @FXML private void openAttendance() { loadView("AttendanceView.fxml"); }
+    @FXML private void openGrades()     { loadView("GradesGPA.fxml"); }
+    @FXML private void openNotices()    { loadView("NoticesView.fxml"); }
+    @FXML private void openProfile()    { loadView("LecturerProfile.fxml"); }
+    @FXML private void logout()         { loadView("Login.fxml"); }
 
     @FXML private void openUploadFinalMarks() { loadView("UploadFinalMarks.fxml"); }
     @FXML private void openUpdateFinalMarks() { loadView("UpdateFinalMarks.fxml"); }
@@ -127,27 +126,14 @@ public class LecturerDashboardController implements Initializable {
 
     private void loadView(String fxmlFile) {
         try {
-            URL resource = getClass().getResource("/view/" + fxmlFile);
-            if (resource == null) {
-                showLoadError(fxmlFile);
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(resource);
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/" + fxmlFile));
             Parent root = loader.load();
             Stage stage = (Stage) welcomeLabel.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            showLoadError(fxmlFile);
+            e.printStackTrace();
         }
-    }
-
-    private void showLoadError(String fxmlFile) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Navigation Error");
-        alert.setHeaderText("Cannot open page");
-        alert.setContentText("Failed to load /view/" + fxmlFile);
-        alert.showAndWait();
     }
 }

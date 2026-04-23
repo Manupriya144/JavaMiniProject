@@ -3,7 +3,6 @@ package com.example.frontend.controller.attendance;
 import com.example.frontend.controller.admin.LoginController;
 import com.example.frontend.model.Attendance;
 import com.example.frontend.service.AttendanceService;
-import com.example.frontend.session.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -63,7 +62,7 @@ public class ViewAttendanceController {
 
     @FXML
     private void backToDashboard() {
-        loadView(resolveDashboardPath());
+        loadView("/view/techOfficerDashboard.fxml");
     }
 
     private void clearValues() {
@@ -91,13 +90,5 @@ public class ViewAttendanceController {
         alert.setHeaderText("Operation failed");
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    private String resolveDashboardPath() {
-        String role = SessionManager.getRole();
-        if ("Lecturer".equalsIgnoreCase(role)) {
-            return "/view/lecturerDashboard.fxml";
-        }
-        return "/view/techOfficerDashboard.fxml";
     }
 }

@@ -2,16 +2,14 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.frontend.controller.grade.StudentGradesController"
+      fx:controller="com.example.frontend.controller.StudentGradesController"
       alignment="CENTER"
       spacing="10"
       style="-fx-background-color: #0f1b35;">
@@ -23,15 +21,9 @@
     <Label text="Student Grades"
            style="-fx-text-fill: white; -fx-font-size: 18px;"/>
 
-    <HBox spacing="8" alignment="CENTER">
-        <ComboBox fx:id="studentIdCombo" promptText="Student ID" prefWidth="160"/>
-        <ComboBox fx:id="courseIdCombo" promptText="Course ID" prefWidth="140"/>
-        <ComboBox fx:id="academicYearCombo" promptText="Academic Year" prefWidth="140"/>
-        <ComboBox fx:id="semesterCombo" promptText="Semester" prefWidth="120"/>
-        <ComboBox fx:id="gradeFilterCombo" promptText="Optional Grade Filter" prefWidth="220"/>
-    </HBox>
+    <TextField fx:id="studentIdField" promptText="Student ID"/>
 
-    <Button text="Search Grades" onAction="#loadGrades"/>
+    <Button text="View Grades" onAction="#loadGrades"/>
 
     <TextArea fx:id="outputArea" prefHeight="300"/>
 

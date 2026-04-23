@@ -3,11 +3,9 @@ package com.example.frontend.controller.student;
 import com.example.frontend.controller.admin.LoginController;
 import com.example.frontend.model.Student;
 import com.example.frontend.network.ServerClient;
-import com.example.frontend.service.AcademicEndpointService;
 import com.example.frontend.service.AuthService;
 import com.example.frontend.service.StudentService;
 import com.example.frontend.session.SessionManager;
-import com.fasterxml.jackson.databind.JsonNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -125,22 +123,10 @@ public class StudentDashboardController implements Initializable {
     // ─── DB Methods ──────────────────────────────────────────────────────────
 
     private void loadStats() {
+        // TODO: replace with DB queries for this student
         overallAttendanceLabel.setText("87%");
-
-        AcademicEndpointService academicService = new AcademicEndpointService(client);
-        JsonNode gpaResponse = academicService.getMyGPA();
-
-        if (gpaResponse != null && gpaResponse.path("success").asBoolean(false)) {
-            JsonNode data = gpaResponse.path("data");
-            String sgpa = data.path("sgpa").isMissingNode() || data.path("sgpa").isNull() ? "—" : data.path("sgpa").asText("—");
-            String cgpa = data.path("cgpa").isMissingNode() || data.path("cgpa").isNull() ? "—" : data.path("cgpa").asText("—");
-            sgpaLabel.setText(sgpa);
-            cgpaLabel.setText(cgpa);
-        } else {
-            sgpaLabel.setText("—");
-            cgpaLabel.setText("—");
-        }
-
+        sgpaLabel.setText("3.45");
+        cgpaLabel.setText("3.28");
         enrolledCoursesLabel.setText("4");
     }
 

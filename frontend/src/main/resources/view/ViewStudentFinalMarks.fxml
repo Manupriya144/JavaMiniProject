@@ -9,7 +9,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml"
-    fx:controller="com.example.frontend.controller.finalMarks.ViewStudentFinalMarksController"
+      fx:controller="com.example.frontend.controller.ViewStudentFinalMarksController"
       alignment="CENTER"
       spacing="10"
       style="-fx-background-color: #0f1b35;">
@@ -22,7 +22,6 @@
            style="-fx-text-fill: white; -fx-font-size: 18px;"/>
 
     <TextField fx:id="studentIdField" promptText="Student ID"/>
-    <TextField fx:id="courseIdField" promptText="Course ID"/>
 
     <Button text="View Marks" onAction="#loadMarks"/>
 

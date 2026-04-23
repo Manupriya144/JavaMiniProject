@@ -5,12 +5,8 @@ import com.example.frontend.service.FinalMarksService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 public class UpdateFinalMarksController {
 
@@ -50,13 +46,5 @@ public class UpdateFinalMarksController {
         } catch (Exception e) {
             return "";
         }
-    }
-
-    @FXML
-    private void backToDashboard() throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/view/lecturerDashboard.fxml"));
-        Stage stage = (Stage) outputArea.getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
     }
 }

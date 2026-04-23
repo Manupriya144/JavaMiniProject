@@ -4,7 +4,6 @@ import com.example.frontend.network.ServerClient;
 import com.example.frontend.session.SessionManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class EligibilityService {
 
@@ -15,14 +14,14 @@ public class EligibilityService {
         this.client = client;
     }
 
-    public JsonNode checkEligibility(String studentId, String courseId) {
+    public JsonNode checkEligibility(String studentId) {
         return send("CheckFullEligibility",
-                String.format("{\"studentId\":\"%s\",\"courseId\":\"%s\"}", studentId, courseId));
+                String.format("{\"studentId\":\"%s\"}", studentId));
     }
 
-    public JsonNode getBatchEligibility(String academicYear, String semester) {
+    public JsonNode getBatchEligibility(String batch) {
         return send("GetBatchFullEligibilityReport",
-                String.format("{\"academicYear\":%s,\"semester\":%s}", academicYear, semester));
+                String.format("{\"batch\":\"%s\"}", batch));
     }
 
     private JsonNode send(String command, String data) {
@@ -34,10 +33,7 @@ public class EligibilityService {
             return mapper.readTree(client.sendRequest(request));
         } catch (Exception e) {
             e.printStackTrace();
-            ObjectNode error = mapper.createObjectNode();
-            error.put("success", false);
-            error.put("message", "Failed to contact backend service");
-            return error;
+            return null;
         }
     }
 }

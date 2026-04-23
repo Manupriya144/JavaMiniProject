@@ -5,14 +5,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 
 <VBox xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.frontend.controller.finalMarks.BatchFinalMarksController"
+      fx:controller="com.example.frontend.controller.BatchFinalMarksController"
       alignment="CENTER"
       spacing="10"
       style="-fx-background-color: #0f1b35;">
@@ -21,16 +19,10 @@
         <Insets top="20" bottom="20" left="20" right="20"/>
     </padding>
 
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Button text="Back Dashboard" onAction="#backToDashboard"/>
-        <Region HBox.hgrow="ALWAYS"/>
-    </HBox>
-
     <Label text="Batch Final Marks"
            style="-fx-text-fill: white; -fx-font-size: 18px;"/>
 
-        <TextField fx:id="academicYearField" promptText="Academic Year (e.g. 2026)"/>
-        <TextField fx:id="semesterField" promptText="Semester (1 or 2)"/>
+    <TextField fx:id="batchIdField" promptText="Batch ID"/>
 
     <Button text="View Batch Marks" onAction="#loadBatchMarks"/>
 
