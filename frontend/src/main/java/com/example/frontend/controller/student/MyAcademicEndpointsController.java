@@ -2,12 +2,16 @@ package com.example.frontend.controller.student;
 
 import com.example.frontend.controller.admin.LoginController;
 import com.example.frontend.service.AcademicEndpointService;
+import com.example.frontend.service.GradeService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -15,48 +19,95 @@ import javafx.stage.Stage;
 public class MyAcademicEndpointsController {
 
     @FXML
-    private TextField studentIdField;
+    private ComboBox<String> studentIdCombo;
     @FXML
-    private TextField batchField;
+    private ComboBox<String> batchCombo;
     @FXML
-    private TextField academicYearField;
+    private ComboBox<Integer> academicYearCombo;
     @FXML
-    private TextField semesterField;
+    private ComboBox<Integer> semesterCombo;
+    @FXML
+    private TextField gpaFilterField;
     @FXML
     private TextArea outputArea;
 
     private final AcademicEndpointService service = new AcademicEndpointService(LoginController.client);
+    private final GradeService lookupService = new GradeService(LoginController.client);
     private final ObjectMapper mapper = new ObjectMapper();
 
     @FXML
     private void initialize() {
-        studentIdField.setText(LoginController.userId);
-        if (academicYearField.getText() == null || academicYearField.getText().isBlank()) {
-            academicYearField.setText("2026");
+        studentIdCombo.setItems(FXCollections.observableArrayList(lookupService.fetchStudentIds()));
+        batchCombo.setItems(FXCollections.observableArrayList(lookupService.fetchBatches()));
+        academicYearCombo.setItems(FXCollections.observableArrayList(lookupService.fetchResultAcademicYears(null, null)));
+        semesterCombo.setItems(FXCollections.observableArrayList(lookupService.fetchResultSemesters(null, null, null)));
+        if (LoginController.userId != null && !LoginController.userId.isBlank()) {
+            studentIdCombo.setValue(LoginController.userId);
         }
-        if (semesterField.getText() == null || semesterField.getText().isBlank()) {
-            semesterField.setText("1");
+        if (!academicYearCombo.getItems().isEmpty()) {
+            academicYearCombo.setValue(academicYearCombo.getItems().get(academicYearCombo.getItems().size() - 1));
         }
+        if (!semesterCombo.getItems().isEmpty()) {
+            semesterCombo.setValue(semesterCombo.getItems().get(0));
+        }
+    }
+
+    @FXML
+    private void onSearchGPA() {
+        String studentId = studentIdCombo.getValue() == null ? "" : studentIdCombo.getValue().trim();
+        String batch = batchCombo.getValue() == null ? "" : batchCombo.getValue().trim();
+        String filter = gpaFilterField.getText() == null ? "" : gpaFilterField.getText().trim();
+
+        JsonNode response;
+        if (!batch.isBlank()) {
+            response = service.getBatchGPAReport(batch, selectedYear(), selectedSemester());
+        } else if (!studentId.isBlank()) {
+            response = service.getStudentGPAReport(studentId);
+        } else {
+            outputArea.setText("Enter Student ID or Batch to search GPA.");
+            return;
+        }
+
+        if (response == null) {
+            outputArea.setText("No response from server.");
+            return;
+        }
+
+        if (!filter.isBlank() && response.path("data").isArray()) {
+            ArrayNode filtered = mapper.createArrayNode();
+            for (JsonNode item : response.path("data")) {
+                if (item.toString().toLowerCase().contains(filter.toLowerCase())) {
+                    filtered.add(item);
+                }
+            }
+            if (filtered.isEmpty()) {
+                outputArea.setText("No GPA records match filter '" + filter + "'.");
+                return;
+            }
+            ((com.fasterxml.jackson.databind.node.ObjectNode) response).set("data", filtered);
+        }
+
+        print(response);
     }
 
     @FXML
     private void onCalculateSGPA() {
-        print(service.calculateSGPA(studentIdField.getText(), readInt(academicYearField, 2026), readInt(semesterField, 1)));
+        print(service.calculateSGPA(studentIdCombo.getValue(), selectedYear(), selectedSemester()));
     }
 
     @FXML
     private void onCalculateCGPA() {
-        print(service.calculateCGPA(studentIdField.getText()));
+        print(service.calculateCGPA(studentIdCombo.getValue()));
     }
 
     @FXML
     private void onGetStudentGPAReport() {
-        print(service.getStudentGPAReport(studentIdField.getText()));
+        print(service.getStudentGPAReport(studentIdCombo.getValue()));
     }
 
     @FXML
     private void onGetBatchGPAReport() {
-        print(service.getBatchGPAReport(batchField.getText(), readInt(academicYearField, 2026), readInt(semesterField, 1)));
+        print(service.getBatchGPAReport(batchCombo.getValue(), selectedYear(), selectedSemester()));
     }
 
     @FXML
@@ -84,10 +135,10 @@ public class MyAcademicEndpointsController {
     private void onGetAllNotices() { print(service.getAllNotices()); }
 
     @FXML
-    private void onGetStudentFullAcademicReport() { print(service.getStudentFullAcademicReport(studentIdField.getText())); }
+    private void onGetStudentFullAcademicReport() { print(service.getStudentFullAcademicReport(studentIdCombo.getValue())); }
 
     @FXML
-    private void onGetBatchFullAcademicReport() { print(service.getBatchFullAcademicReport(batchField.getText())); }
+    private void onGetBatchFullAcademicReport() { print(service.getBatchFullAcademicReport(batchCombo.getValue())); }
 
     @FXML
     private void onBack() {
@@ -114,11 +165,13 @@ public class MyAcademicEndpointsController {
         }
     }
 
-    private int readInt(TextField field, int fallback) {
-        try {
-            return Integer.parseInt(field.getText());
-        } catch (Exception e) {
-            return fallback;
-        }
+    private int selectedYear() {
+        Integer year = academicYearCombo.getValue();
+        return year == null ? 2026 : year;
+    }
+
+    private int selectedSemester() {
+        Integer semester = semesterCombo.getValue();
+        return semester == null ? 1 : semester;
     }
 }

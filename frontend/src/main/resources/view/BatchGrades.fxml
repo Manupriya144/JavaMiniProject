@@ -2,14 +2,17 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.frontend.controller.BatchGradesController"
+      fx:controller="com.example.frontend.controller.grade.BatchGradesController"
       alignment="CENTER"
       spacing="10"
       style="-fx-background-color: #0f1b35;">
@@ -18,12 +21,20 @@
         <Insets top="20" bottom="20" left="20" right="20"/>
     </padding>
 
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="Back Dashboard" onAction="#backToDashboard"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
     <Label text="Batch Grades"
            style="-fx-text-fill: white; -fx-font-size: 18px;"/>
 
-    <TextField fx:id="batchIdField" promptText="Batch ID"/>
+        <ComboBox fx:id="batchCombo" promptText="Batch ID" prefWidth="220"/>
+        <ComboBox fx:id="academicYearCombo" promptText="Academic Year" prefWidth="220"/>
+        <ComboBox fx:id="semesterCombo" promptText="Semester" prefWidth="220"/>
+        <ComboBox fx:id="gradeFilterCombo" promptText="Optional Grade Filter" prefWidth="220"/>
 
-    <Button text="View Batch Grades" onAction="#loadBatchGrades"/>
+    <Button text="Search Batch Grades" onAction="#loadBatchGrades"/>
 
     <TextArea fx:id="outputArea" prefHeight="300"/>
 

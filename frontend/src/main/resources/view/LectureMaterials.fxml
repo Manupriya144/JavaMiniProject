@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.frontend.controller.lecturer.LectureMaterialsController"
+            prefWidth="900" prefHeight="620"
+            style="-fx-background-color: #0f1b35;">
+
+    <top>
+        <VBox spacing="10" style="-fx-background-color: #0a1628; -fx-border-color: #1e3c72; -fx-border-width: 0 0 2 0;">
+            <padding>
+                <Insets top="16" right="20" bottom="16" left="20"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Button text="Back to Courses" onAction="#backToCourses"
+                        style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                <Label text="Lecture Materials"
+                       style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Course:" style="-fx-text-fill: #a0b8e0; -fx-font-size: 12px;"/>
+                <Label fx:id="courseCodeLabel" text="ICT2112"
+                       style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="16" style="-fx-background-color: #0f1b35;">
+            <padding>
+                <Insets top="24" right="24" bottom="24" left="24"/>
+            </padding>
+
+            <HBox spacing="16">
+                <VBox spacing="10" prefWidth="360" style="-fx-background-color: #162040; -fx-background-radius: 14; -fx-border-color: #1e3c72; -fx-border-radius: 14; -fx-border-width: 1;">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+
+                    <Label text="Upload material"
+                           style="-fx-text-fill: #a0c4ff; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+                    <Label text="Material Title" style="-fx-text-fill: #d0e4ff; -fx-font-size: 12px;"/>
+                    <TextField fx:id="titleField" promptText="e.g. Chapter 1 Slides"/>
+
+                    <Label text="File Path" style="-fx-text-fill: #d0e4ff; -fx-font-size: 12px;"/>
+                    <HBox spacing="8">
+                        <TextField fx:id="filePathField" promptText="Choose a PDF, DOCX, or PPT file" HBox.hgrow="ALWAYS"/>
+                        <Button text="Browse" onAction="#browseFile"
+                                style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                    </HBox>
+
+                    <Label text="Deadline" style="-fx-text-fill: #d0e4ff; -fx-font-size: 12px;"/>
+                    <DatePicker fx:id="deadlinePicker" promptText="Select deadline"/>
+
+                    <Button text="Upload Material" onAction="#uploadMaterial"
+                            style="-fx-background-color: #155724; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: bold;"/>
+
+                    <Label fx:id="statusLabel" text=""
+                           style="-fx-text-fill: #74c69d; -fx-font-size: 12px;"/>
+                </VBox>
+
+                <VBox spacing="10" VBox.vgrow="ALWAYS" style="-fx-background-color: #162040; -fx-background-radius: 14; -fx-border-color: #1e3c72; -fx-border-radius: 14; -fx-border-width: 1;">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Existing materials"
+                               style="-fx-text-fill: #a0c4ff; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Refresh" onAction="#refreshMaterials"
+                                style="-fx-background-color: #1e3c72; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                        <Button text="Extend Deadline" onAction="#extendSelectedDeadline"
+                                style="-fx-background-color: #7b2d00; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                        <Button text="Remove" onAction="#deleteSelectedMaterial"
+                                style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                    </HBox>
+
+                    <TableView fx:id="materialsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="materialIdColumn" text="ID" prefWidth="60"/>
+                            <TableColumn fx:id="titleColumn" text="Title" prefWidth="180"/>
+                            <TableColumn fx:id="filePathColumn" text="File Path" prefWidth="230"/>
+                            <TableColumn fx:id="deadlineColumn" text="Deadline" prefWidth="120"/>
+                            <TableColumn fx:id="uploadedAtColumn" text="Uploaded" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

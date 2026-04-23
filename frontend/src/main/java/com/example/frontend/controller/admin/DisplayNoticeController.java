@@ -3,6 +3,7 @@ package com.example.frontend.controller.admin;
 import com.example.frontend.dto.NoticeResponseDTO;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.service.NoticeService;
+import com.example.frontend.session.SessionManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -260,7 +261,7 @@ public class DisplayNoticeController implements Initializable {
     private void goBack() {
         try {
             javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
-                    getClass().getResource("/view/AdminDashboard.fxml")
+                    getClass().getResource(resolveDashboardPath())
             );
 
             javafx.scene.Parent root = loader.load();
@@ -273,6 +274,17 @@ public class DisplayNoticeController implements Initializable {
             e.printStackTrace();
             statusLabel.setText("Failed to go back.");
         }
+    }
+
+    private String resolveDashboardPath() {
+        String role = SessionManager.getRole();
+        if ("Lecturer".equalsIgnoreCase(role)) {
+            return "/view/lecturerDashboard.fxml";
+        }
+        if ("Technical Officer".equalsIgnoreCase(role)) {
+            return "/view/techOfficerDashboard.fxml";
+        }
+        return "/view/AdminDashboard.fxml";
     }
 
     private void startClock() {

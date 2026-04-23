@@ -13,6 +13,8 @@ public class ViewStudentFinalMarksController {
     @FXML
     private TextField studentIdField;
     @FXML
+    private TextField courseIdField;
+    @FXML
     private TextArea outputArea;
 
     private final FinalMarksService service =
@@ -22,7 +24,9 @@ public class ViewStudentFinalMarksController {
 
     @FXML
     private void loadMarks() {
-        JsonNode response = service.getStudentMarks(studentIdField.getText());
+        String studentId = studentIdField.getText() == null ? "" : studentIdField.getText().trim();
+        String courseId = courseIdField.getText() == null ? "" : courseIdField.getText().trim();
+        JsonNode response = service.getStudentMarks(studentId, courseId);
         outputArea.setText(pretty(response));
     }
 

@@ -3,6 +3,7 @@ package com.example.frontend.controller.admin;
 import com.example.frontend.dto.CourseAllResponseDTO;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.service.CourseService;
+import com.example.frontend.session.SessionManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -230,7 +231,7 @@ public class CourseDisplayController implements Initializable {
     @FXML
     private void goBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminDashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(resolveDashboardPath()));
             Parent root = loader.load();
 
             Stage stage = (Stage) courseTable.getScene().getWindow();
@@ -243,5 +244,16 @@ public class CourseDisplayController implements Initializable {
             statusLabel.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 13px; -fx-font-weight: bold;");
             statusLabel.setText("Failed to go back.");
         }
+    }
+
+    private String resolveDashboardPath() {
+        String role = SessionManager.getRole();
+        if ("Lecturer".equalsIgnoreCase(role)) {
+            return "/view/lecturerDashboard.fxml";
+        }
+        if ("Technical Officer".equalsIgnoreCase(role)) {
+            return "/view/techOfficerDashboard.fxml";
+        }
+        return "/view/AdminDashboard.fxml";
     }
 }

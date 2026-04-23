@@ -20,11 +20,23 @@ public class GetStudentGradesCommand implements Command {
     public void execute(Object data, ClientContext context) {
         try {
             @SuppressWarnings("unchecked")
-            String studentId = (String)((java.util.Map<String,Object>)data).get("studentId");
+            java.util.Map<String,Object> map = (java.util.Map<String,Object>) data;
             @SuppressWarnings("unchecked")
-            String courseId = (String)((java.util.Map<String,Object>)data).get("courseId");
+            String studentId = (String) map.get("studentId");
+            @SuppressWarnings("unchecked")
+            String courseId = (String) map.get("courseId");
 
-            Grade grade = service.getStudentGrade(studentId, courseId);
+            Integer academicYear = null;
+            if (map.get("academicYear") instanceof Number) {
+                academicYear = ((Number) map.get("academicYear")).intValue();
+            }
+
+            Integer semester = null;
+            if (map.get("semester") instanceof Number) {
+                semester = ((Number) map.get("semester")).intValue();
+            }
+
+            Grade grade = service.getStudentGrade(studentId, courseId, academicYear, semester);
             boolean success = grade != null;
             String message = success ? "Grade retrieved." : "No grade found.";
             GradeResponseDTO response = new GradeResponseDTO(success, message, grade);
