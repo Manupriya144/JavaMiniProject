@@ -195,8 +195,12 @@ public class AttendanceService {
             default -> "Below 80%";
         };
         String scenarioLabel = hasMedical
-                ? baseLabel + " (Medical +" + (int) MEDICAL_BONUS_PERCENT + "%)"
+                ? baseLabel + " (With Approved Medical)"
                 : baseLabel;
+        String eligibilityStatus = eligible ? "Eligible" : "Not Eligible";
+        String ruleNote = eligible
+                ? "Meets minimum attendance eligibility (>= 80%)."
+                : "Below minimum attendance eligibility (80%).";
 
         row.put("eligible", eligible);
         row.put("thresholdPercent", ELIGIBILITY_THRESHOLD);
@@ -207,6 +211,8 @@ public class AttendanceService {
         row.put("effectiveAttendancePercentage", round2(effectivePct));
         row.put("attendancePercentage", round2(effectivePct));
         row.put("scenarioLabel", scenarioLabel);
+        row.put("eligibilityStatus", eligibilityStatus);
+        row.put("ruleNote", ruleNote);
         return row;
     }
 

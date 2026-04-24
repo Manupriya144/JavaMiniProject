@@ -2,6 +2,7 @@ package com.example.frontend.controller.attendance;
 
 import com.example.frontend.controller.admin.LoginController;
 import com.example.frontend.model.AttendanceViewDetailRow;
+import com.example.frontend.model.AttendanceStudentOption;
 import com.example.frontend.service.AttendanceService;
 import com.fasterxml.jackson.databind.JsonNode;
 import javafx.fxml.FXML;
@@ -19,7 +20,9 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.HashMap;
 
 public class AdvancedAttendanceVisualViewController {
 
@@ -88,6 +91,7 @@ public class AdvancedAttendanceVisualViewController {
 
     private final AttendanceService attendanceService = new AttendanceService(LoginController.client);
     private List<AttendanceViewDetailRow> currentDetails = new ArrayList<>();
+    private final Map<String, String> regNoToUserId = new HashMap<>();
 
     @FXML
     public void initialize() {
@@ -97,8 +101,9 @@ public class AdvancedAttendanceVisualViewController {
         viewTypeComboBox.getItems().addAll("Theory", "Practical", "Combined");
         viewTypeComboBox.setValue("Combined");
 
-        targetLabel.setText("Student ID");
-        targetField.setPromptText("Enter student user_id");
+        targetLabel.setText("Student Reg No");
+        targetField.setPromptText("Enter student registration number");
+        loadStudentRegNoMap();
 
         onModeChanged();
         modeComboBox.setOnAction(e -> onModeChanged());
@@ -118,7 +123,12 @@ public class AdvancedAttendanceVisualViewController {
         String viewType = viewTypeComboBox.getValue();
 
         if ("Individual".equals(modeComboBox.getValue())) {
-            loadIndividualDetails(target, viewType);
+            String studentUserId = resolveStudentUserId(target);
+            if (studentUserId == null) {
+                showStatus("Invalid student reg no. Use a valid registration number.", StatusType.ERROR);
+                return;
+            }
+            loadIndividualDetails(studentUserId, viewType);
             showStatus("Individual details loaded.", StatusType.SUCCESS);
         } else {
             loadBatchDetails(target, viewType);
@@ -138,7 +148,12 @@ public class AdvancedAttendanceVisualViewController {
         String viewType = viewTypeComboBox.getValue();
 
         if ("Individual".equals(modeComboBox.getValue())) {
-            loadIndividualOverallSummary(target, viewType);
+            String studentUserId = resolveStudentUserId(target);
+            if (studentUserId == null) {
+                showStatus("Invalid student reg no. Use a valid registration number.", StatusType.ERROR);
+                return;
+            }
+            loadIndividualOverallSummary(studentUserId, viewType);
             showStatus("Overall summary loaded.", StatusType.SUCCESS);
         } else {
             loadBatchSummary(target, viewType);
@@ -154,8 +169,8 @@ public class AdvancedAttendanceVisualViewController {
     private void onModeChanged() {
         boolean individual = "Individual".equals(modeComboBox.getValue());
 
-        targetLabel.setText(individual ? "Student ID" : "Batch");
-        targetField.setPromptText(individual ? "Enter student user_id" : "Enter batch (e.g. 2023)");
+        targetLabel.setText(individual ? "Student Reg No" : "Batch");
+        targetField.setPromptText(individual ? "Enter student registration number" : "Enter batch (e.g. 2023)");
 
         individualSummaryPane.setVisible(individual);
         individualSummaryPane.setManaged(individual);
@@ -245,10 +260,11 @@ public class AdvancedAttendanceVisualViewController {
     }
 
     private void loadIndividualOverallSummary(String studentId, String viewType) {
-        JsonNode response = attendanceService.getStudentAttendanceSummary(studentId, viewType);
-        JsonNode dataNode = response == null ? null : response.path("data");
+        JsonNode eligibilityResponse = attendanceService.checkAttendanceEligibility(studentId, viewType);
+        JsonNode dataNode = eligibilityResponse == null ? null : eligibilityResponse.path("data");
 
-        if (dataNode == null || dataNode.isMissingNode() || dataNode.isNull()) {
+        if (dataNode == null || dataNode.isMissingNode() || dataNode.isNull()
+                || (eligibilityResponse != null && !eligibilityResponse.path("success").asBoolean(false))) {
             setOverallSummaryToDash();
             showStatus("No summary found.", StatusType.ERROR);
             return;
@@ -263,6 +279,12 @@ public class AdvancedAttendanceVisualViewController {
         overallTotalHoursAttendedLabel.setText(
                 String.valueOf(Math.round(dataNode.path("totalHoursAttended").asDouble(0) * 100.0) / 100.0)
         );
+
+        boolean eligible = dataNode.path("eligible").asBoolean(false);
+        String eligibilityStatus = dataNode.path("eligibilityStatus").asText(eligible ? "Eligible" : "Not Eligible");
+        String ruleNote = dataNode.path("ruleNote").asText("");
+        showStatus("Student eligibility: " + eligibilityStatus + (ruleNote.isBlank() ? "" : " | " + ruleNote),
+                eligible ? StatusType.SUCCESS : StatusType.ERROR);
     }
 
     private void loadBatchSummary(String batch, String viewType) {
@@ -418,5 +440,26 @@ public class AdvancedAttendanceVisualViewController {
                         "-fx-font-size: 12px;" +
                         "-fx-font-weight: bold;"
         );
+    }
+
+    private void loadStudentRegNoMap() {
+        regNoToUserId.clear();
+        List<AttendanceStudentOption> options = attendanceService.getStudentOptions();
+        for (AttendanceStudentOption option : options) {
+            if (option.getRegNo() != null && option.getUserId() != null) {
+                regNoToUserId.put(option.getRegNo().trim().toLowerCase(), option.getUserId().trim());
+            }
+        }
+    }
+
+    private String resolveStudentUserId(String input) {
+        if (input == null || input.isBlank()) {
+            return null;
+        }
+        String trimmed = input.trim();
+        if (trimmed.toUpperCase().startsWith("U")) {
+            return trimmed;
+        }
+        return regNoToUserId.get(trimmed.toLowerCase());
     }
 }

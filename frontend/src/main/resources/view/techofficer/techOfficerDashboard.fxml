@@ -7,6 +7,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
@@ -100,7 +101,16 @@
 
                 <StackPane>
                     <Circle radius="18" style="-fx-fill: white;"/>
-                    <Label text="T" style="-fx-text-fill: #3f7fc2; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+
+                    <ImageView fx:id="dashboardProfileImage"
+                               fitWidth="36"
+                               fitHeight="36"
+                               preserveRatio="false"
+                               visible="false"/>
+
+                    <Label fx:id="dashboardProfileInitial"
+                           text="T"
+                           style="-fx-text-fill: #3f7fc2; -fx-font-weight: bold; -fx-font-size: 14px;"/>
                 </StackPane>
 
                 <VBox alignment="CENTER_LEFT" spacing="1">
@@ -155,7 +165,16 @@
                     <StackPane prefWidth="58" prefHeight="58"
                                style="-fx-background-color: linear-gradient(to bottom right, #8e5fd2, #b083ea);
                                       -fx-background-radius: 29;">
-                        <Label text="🛠" style="-fx-font-size: 22px;"/>
+
+                        <ImageView fx:id="welcomeProfileImage"
+                                   fitWidth="58"
+                                   fitHeight="58"
+                                   preserveRatio="false"
+                                   visible="false"/>
+
+                        <Label fx:id="welcomeProfileInitial"
+                               text="🛠"
+                               style="-fx-font-size: 22px;"/>
                     </StackPane>
 
                     <VBox spacing="5">

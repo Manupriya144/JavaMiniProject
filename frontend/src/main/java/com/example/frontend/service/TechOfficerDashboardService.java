@@ -1,5 +1,6 @@
 package com.example.frontend.service;
 
+import com.example.frontend.controller.admin.LoginController;
 import com.example.frontend.model.TechOfficerDashboardStats;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.session.SessionManager;
@@ -13,6 +14,7 @@ public class TechOfficerDashboardService {
     private final ServerClient client;
     private final ObjectMapper mapper = new ObjectMapper();
     private String lastMessage = "";
+    private final UserService userService = new UserService(LoginController.client);
 
     public TechOfficerDashboardService(ServerClient client) {
         this.client = client;

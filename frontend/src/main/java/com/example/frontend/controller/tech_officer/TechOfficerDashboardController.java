@@ -2,9 +2,11 @@ package com.example.frontend.controller.tech_officer;
 
 import com.example.frontend.controller.admin.LoginController;
 import com.example.frontend.model.TechOfficerDashboardStats;
+import com.example.frontend.model.TechOfficerProfile;
 import com.example.frontend.service.AttendanceService;
 import com.example.frontend.service.AuthService;
 import com.example.frontend.service.TechOfficerDashboardService;
+import com.example.frontend.service.UserService;
 import com.example.frontend.session.SessionManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import javafx.event.ActionEvent;
@@ -18,11 +20,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -43,21 +49,28 @@ public class TechOfficerDashboardController implements Initializable {
     @FXML private TextField batchEligibilityField;
     @FXML private ComboBox<String> viewTypeEligibilityCombo;
 
+    @FXML private ImageView dashboardProfileImage;
+    @FXML private Label dashboardProfileInitial;
+    @FXML private ImageView welcomeProfileImage;
+    @FXML private Label welcomeProfileInitial;
+
     private String techName = LoginController.username;
+
     private final AttendanceService attendanceService = new AttendanceService(LoginController.client);
     private final TechOfficerDashboardService dashboardService = new TechOfficerDashboardService(LoginController.client);
+    private final UserService userService = new UserService(LoginController.client);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        String today = LocalDate.now()
-                .format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy"));
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy"));
+
         dateLabel.setText(today + "  •  Technical Officer Panel");
-        statusBarTime.setText(LocalDate.now()
-                .format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
+        statusBarTime.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
 
         welcomeLabel.setText("Welcome, " + techName + " 👋");
         techNameLabel.setText(techName);
 
+        loadDashboardProfilePicture();
         loadStats();
 
         if (viewTypeEligibilityCombo != null) {
@@ -66,6 +79,63 @@ public class TechOfficerDashboardController implements Initializable {
         }
 
         refreshAttendanceEligibilityReport();
+    }
+
+    private void loadDashboardProfilePicture() {
+        TechOfficerProfile profile = userService.getMyTechOfficerProfile();
+
+        String username = techName;
+        String profilePicture = null;
+
+        if (profile != null) {
+            if (profile.getUsername() != null && !profile.getUsername().isBlank()) {
+                username = profile.getUsername();
+            }
+
+            if (profile.getProfilePicture() != null && !profile.getProfilePicture().isBlank()) {
+                profilePicture = profile.getProfilePicture();
+            }
+        }
+
+        if (username == null || username.isBlank()) {
+            username = "Tech Officer";
+        }
+
+        techName = username;
+        techNameLabel.setText(username);
+        welcomeLabel.setText("Welcome, " + username + " 👋");
+
+        if (profilePicture != null && !profilePicture.isBlank()) {
+            try {
+                File file = new File(profilePicture);
+
+                if (file.exists()) {
+                    Image image = new Image(file.toURI().toString());
+
+                    dashboardProfileImage.setImage(image);
+                    dashboardProfileImage.setClip(new Circle(18, 18, 18));
+                    dashboardProfileImage.setVisible(true);
+                    dashboardProfileInitial.setVisible(false);
+
+                    welcomeProfileImage.setImage(image);
+                    welcomeProfileImage.setClip(new Circle(29, 29, 29));
+                    welcomeProfileImage.setVisible(true);
+                    welcomeProfileInitial.setVisible(false);
+
+                    return;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        dashboardProfileInitial.setText(username.substring(0, 1).toUpperCase());
+        dashboardProfileImage.setVisible(false);
+        dashboardProfileInitial.setVisible(true);
+
+        welcomeProfileImage.setVisible(false);
+        welcomeProfileInitial.setVisible(true);
     }
 
     public void setTechInfo(String name, int id) {
@@ -91,9 +161,7 @@ public class TechOfficerDashboardController implements Initializable {
 
     @FXML
     private void refreshAttendanceEligibilityReport() {
-        if (attendanceSummaryContainer == null) {
-            return;
-        }
+        if (attendanceSummaryContainer == null) return;
 
         attendanceSummaryContainer.getChildren().clear();
 
@@ -134,6 +202,8 @@ public class TechOfficerDashboardController implements Initializable {
 
         for (JsonNode row : data) {
             String category = row.path("eligibilityCategory").asText("Below80");
+            boolean eligible = row.path("eligible").asBoolean(false);
+            String eligibilityStatus = row.path("eligibilityStatus").asText(eligible ? "Eligible" : "Not Eligible");
 
             String dotColor = switch (category) {
                 case "Above80" -> "#4cba52";
@@ -150,8 +220,8 @@ public class TechOfficerDashboardController implements Initializable {
 
             double medicalBonus = row.path("medicalBonusPercent").asDouble(0.0);
             String note = medicalBonus > 0
-                    ? String.format("Raw %.1f%% + Medical %.0f%%", rawAp, medicalBonus)
-                    : String.format("Raw %.1f%%", rawAp);
+                    ? String.format("%s | Raw %.1f%% + Medical %.0f%%", eligibilityStatus, rawAp, medicalBonus)
+                    : String.format("%s | Raw %.1f%%", eligibilityStatus, rawAp);
 
             attendanceSummaryContainer.getChildren().add(
                     buildAttendanceRow(regNo, scenario, "●", dotColor, pct, note)
@@ -159,17 +229,9 @@ public class TechOfficerDashboardController implements Initializable {
         }
     }
 
-    private HBox buildAttendanceRow(String regNo, String scenario,
-                                    String dot, String dotColor,
-                                    String pct, String note) {
+    private HBox buildAttendanceRow(String regNo, String scenario, String dot, String dotColor, String pct, String note) {
         HBox row = new HBox(16);
-        row.setStyle(
-                "-fx-background-color: #ffffff; " +
-                        "-fx-background-radius: 8; " +
-                        "-fx-border-color: #d4e4f7; " +
-                        "-fx-border-radius: 8; " +
-                        "-fx-border-width: 1;"
-        );
+        row.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-border-width: 1;");
         row.setPadding(new Insets(10, 16, 10, 16));
 
         Label dotLbl = new Label(dot);
@@ -217,7 +279,6 @@ public class TechOfficerDashboardController implements Initializable {
             boolean success = authService.logout(SessionManager.getToken());
 
             if (success) {
-                System.out.println("Logout successful!");
                 SessionManager.clear();
 
                 Stage dashboardStage = (Stage) techNameLabel.getScene().getWindow();
@@ -230,8 +291,6 @@ public class TechOfficerDashboardController implements Initializable {
                 loginStage.initStyle(StageStyle.UNDECORATED);
                 loginStage.setScene(new Scene(root));
                 loginStage.show();
-            } else {
-                System.out.println("Logout failed");
             }
 
         } catch (Exception e) {
@@ -242,6 +301,7 @@ public class TechOfficerDashboardController implements Initializable {
     private boolean loadView(String fxmlFile) {
         try {
             URL resource = getClass().getResource("/view/" + fxmlFile);
+
             if (resource == null) {
                 showNotImplementedAlert(fxmlFile);
                 return false;
@@ -253,6 +313,7 @@ public class TechOfficerDashboardController implements Initializable {
             Stage stage = (Stage) welcomeLabel.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
+
             return true;
 
         } catch (IOException e) {
