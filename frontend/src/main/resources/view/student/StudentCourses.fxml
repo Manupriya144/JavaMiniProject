@@ -113,6 +113,7 @@
                     <TableColumn fx:id="colType" text="Registration Type" prefWidth="150">
                         <cellValueFactory><PropertyValueFactory property="registrationType"/></cellValueFactory>
                     </TableColumn>
+                    <TableColumn fx:id="colAction" text="Action" prefWidth="100"/>
                 </columns>
             </TableView>
         </VBox>

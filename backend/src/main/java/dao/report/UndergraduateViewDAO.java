@@ -230,4 +230,32 @@ public class UndergraduateViewDAO {
         }
         return rows;
     }
+
+    public List<Map<String, Object>> getCourseMaterials(String courseId) {
+        String sql = "SELECT material_id, course_id, lecturer_id, title, file_path, uploaded_at " +
+                "FROM course_material WHERE course_id = ? ORDER BY uploaded_at DESC";
+
+        List<Map<String, Object>> rows = new ArrayList<>();
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, courseId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("materialId", rs.getInt("material_id"));
+                    row.put("courseId", rs.getString("course_id"));
+                    row.put("lecturerId", rs.getString("lecturer_id"));
+                    row.put("title", rs.getString("title"));
+                    row.put("filePath", rs.getString("file_path"));
+                    row.put("uploadedAt", rs.getString("uploaded_at"));
+                    rows.add(row);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows;
+    }
 }

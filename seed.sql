@@ -28,3 +28,9 @@ VALUES
 ('U002', 'C002', 2023, '1', 'Proper'),
 ('U002', 'C003', 2023, '1', 'Proper'),
 ('U002', 'C004', 2023, '1', 'Proper');
+-- Insert into course_material
+INSERT IGNORE INTO course_material (course_id, lecturer_id, title, file_path)
+VALUES 
+('C001', NULL, 'Lecture 1 - Introduction to OOP', 'documents/materials/Lecture1.pdf'),
+('C001', NULL, 'Lecture 2 - Classes and Objects', 'documents/materials/Lecture2.pdf'),
+('C002', NULL, 'Practicum 1 - Basics', 'documents/materials/Lecture1.pdf');

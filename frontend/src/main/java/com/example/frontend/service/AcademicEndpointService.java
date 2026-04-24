@@ -38,6 +38,9 @@ public class AcademicEndpointService {
     public JsonNode getMyGPA() { return send("GetMyGPA", "{}"); }
     public JsonNode getMyTimetable() { return send("GetMyTimetable", "{}"); }
     public JsonNode getAllNotices() { return send("GetAllNotices", "{}"); }
+    public JsonNode getCourseMaterials(String courseId) { 
+        return send("GetCourseMaterials", String.format("{\"courseId\":\"%s\"}", courseId)); 
+    }
 
     public JsonNode getStudentFullAcademicReport(String studentId) {
         return send("GetStudentFullAcademicReport", String.format("{\"studentId\":\"%s\"}", studentId));

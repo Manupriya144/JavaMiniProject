@@ -107,6 +107,7 @@ import command.undergraduate.GetMyGradesCommand;
 import command.undergraduate.GetMyMarksCommand;
 import command.undergraduate.GetMyMedicalRecordsCommand;
 import command.undergraduate.GetMyTimetableCommand;
+import command.undergraduate.GetCourseMaterialsCommand;
 
 import dao.finalMarks.FinalMarksDAO;
 import dao.eligibility.EligibilityDAO;
@@ -249,6 +250,7 @@ public class CommandRegistry {
             commands.put("GetMyGPA", new GetMyGPACommand(gpaService));
             commands.put("GetMyTimetable", new GetMyTimetableCommand(undergraduateViewService));
             commands.put("GetAllNotices", new GetAllNoticesCommand(undergraduateViewService));
+            commands.put("GetCourseMaterials", new GetCourseMaterialsCommand(undergraduateViewService));
 
             // ---------------- Full Academic Reports ----------------
             AcademicReportDAO academicReportDAO = new AcademicReportDAO();

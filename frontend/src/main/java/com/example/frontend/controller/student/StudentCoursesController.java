@@ -14,6 +14,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
+import javafx.util.Callback;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -25,8 +28,10 @@ public class StudentCoursesController implements Initializable {
     @FXML private TableView<CourseProperty> coursesTable;
     @FXML private Label totalCoursesLabel;
     @FXML private Label statusLabel;
+    @FXML private TableColumn<CourseProperty, Void> colAction;
 
     public static class CourseProperty {
+        private String courseId;
         private String courseCode;
         private String courseName;
         private String courseCredit;
@@ -34,7 +39,8 @@ public class StudentCoursesController implements Initializable {
         private String semester;
         private String registrationType;
 
-        public CourseProperty(String courseCode, String courseName, String courseCredit, String academicYear, String semester, String registrationType) {
+        public CourseProperty(String courseId, String courseCode, String courseName, String courseCredit, String academicYear, String semester, String registrationType) {
+            this.courseId = courseId;
             this.courseCode = courseCode;
             this.courseName = courseName;
             this.courseCredit = courseCredit;
@@ -43,6 +49,7 @@ public class StudentCoursesController implements Initializable {
             this.registrationType = registrationType;
         }
 
+        public String getCourseId() { return courseId; }
         public String getCourseCode() { return courseCode; }
         public String getCourseName() { return courseName; }
         public String getCourseCredit() { return courseCredit; }
@@ -55,7 +62,55 @@ public class StudentCoursesController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setupActionColumn();
         loadCourses();
+    }
+
+    private void setupActionColumn() {
+        Callback<TableColumn<CourseProperty, Void>, TableCell<CourseProperty, Void>> cellFactory = new Callback<>() {
+            @Override
+            public TableCell<CourseProperty, Void> call(final TableColumn<CourseProperty, Void> param) {
+                return new TableCell<>() {
+                    private final Button btn = new Button("View");
+
+                    {
+                        btn.setStyle("-fx-background-color: #5b9fd9; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 4;");
+                        btn.setOnAction((ActionEvent event) -> {
+                            CourseProperty course = getTableView().getItems().get(getIndex());
+                            openSingleCourseView(course);
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+            }
+        };
+
+        colAction.setCellFactory(cellFactory);
+    }
+
+    private void openSingleCourseView(CourseProperty course) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/student/SingleCourseView.fxml"));
+            Parent root = loader.load();
+
+            SingleCourseViewController controller = loader.getController();
+            controller.initData(course);
+
+            Stage stage = (Stage) coursesTable.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadCourses() {
@@ -68,6 +123,7 @@ public class StudentCoursesController implements Initializable {
             JsonNode data = response.get("data");
             if (data != null && data.isArray()) {
                 for (JsonNode node : data) {
+                    String id = node.has("courseId") ? node.get("courseId").asText() : "";
                     String code = node.has("courseCode") ? node.get("courseCode").asText() : "N/A";
                     String name = node.has("courseName") ? node.get("courseName").asText() : "N/A";
                     String credits = node.has("courseCredit") ? node.get("courseCredit").asText() : "N/A";
@@ -75,7 +131,7 @@ public class StudentCoursesController implements Initializable {
                     String sem = node.has("semester") ? node.get("semester").asText() : "N/A";
                     String type = node.has("registrationType") ? node.get("registrationType").asText() : "N/A";
 
-                    courseList.add(new CourseProperty(code, name, credits, year, sem, type));
+                    courseList.add(new CourseProperty(id, code, name, credits, year, sem, type));
                 }
                 statusLabel.setText("Courses loaded successfully.");
                 statusLabel.setStyle("-fx-text-fill: #4cba52;");

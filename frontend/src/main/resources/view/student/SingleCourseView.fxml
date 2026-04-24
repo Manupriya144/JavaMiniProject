@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.frontend.controller.student.SingleCourseViewController"
+            prefWidth="1000.0" prefHeight="700.0"
+            style="-fx-background-color: linear-gradient(to bottom right, #eef6ff, #fdfcff);">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="0"
+              style="-fx-background-color: linear-gradient(to right, #5b9fd9, #3f7fc2);
+                     -fx-effect: dropshadow(three-pass-box, rgba(63,127,194,0.25), 14, 0, 0, 3);">
+
+            <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="72">
+                <padding>
+                    <Insets left="24" right="24"/>
+                </padding>
+
+                <StackPane prefWidth="44" prefHeight="44"
+                           style="-fx-background-color: rgba(255,255,255,0.18); -fx-background-radius: 22;">
+                    <Label text="📘" style="-fx-font-size: 22px;"/>
+                </StackPane>
+
+                <VBox alignment="CENTER_LEFT" spacing="2">
+                    <Label fx:id="courseTitleLabel" text="Course Name"
+                           style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Label fx:id="courseCodeLabel" text="Course Code"
+                           style="-fx-text-fill: rgba(255,255,255,0.80); -fx-font-size: 11px;"/>
+                </VBox>
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox spacing="10" alignment="CENTER">
+                <padding>
+                    <Insets left="10" right="24"/>
+                </padding>
+                <Button text="← Back to Courses" onAction="#backToCourses"
+                        style="-fx-background-color: rgba(255,255,255,0.22);
+                               -fx-text-fill: white;
+                               -fx-font-size: 13px;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 8;
+                               -fx-cursor: hand;
+                               -fx-border-color: rgba(255,255,255,0.3);
+                               -fx-border-radius: 8;
+                               -fx-border-width: 1;"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="30" bottom="30" left="40" right="40"/>
+            </padding>
+            
+            <HBox alignment="CENTER_LEFT" spacing="15"
+                  style="-fx-background-color: white;
+                         -fx-background-radius: 12;
+                         -fx-border-color: #d7e7f8;
+                         -fx-border-radius: 12;
+                         -fx-border-width: 1;
+                         -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.1), 10, 0, 0, 3);">
+                <padding>
+                    <Insets top="15" bottom="15" left="20" right="20"/>
+                </padding>
+                <Label text="Course Materials (PDFs)" style="-fx-text-fill: #1a3a52; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="statusLabel" text="Loading materials..." style="-fx-text-fill: #8fa3b8; -fx-font-size: 12px;"/>
+            </HBox>
+
+            <ListView fx:id="materialsListView" VBox.vgrow="ALWAYS"
+                      style="-fx-background-radius: 8;
+                             -fx-border-radius: 8;
+                             -fx-border-color: #d7e7f8;
+                             -fx-border-width: 1;
+                             -fx-font-family: 'Segoe UI', Arial, sans-serif;
+                             -fx-font-size: 14px;
+                             -fx-padding: 5;"/>
+        </VBox>
+    </center>
+
+</BorderPane>

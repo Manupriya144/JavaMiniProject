@@ -40,4 +40,8 @@ public class UndergraduateViewService {
     public List<Map<String, Object>> getAllNotices() {
         return dao.getAllNotices();
     }
+
+    public List<Map<String, Object>> getCourseMaterials(String courseId) {
+        return dao.getCourseMaterials(courseId);
+    }
 }
