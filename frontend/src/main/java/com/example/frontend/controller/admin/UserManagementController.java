@@ -3,6 +3,7 @@ package com.example.frontend.controller.admin;
 import com.example.frontend.dto.UserResponseDTO;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.service.UserService;
+import com.example.frontend.session.SessionManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,6 +30,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class UserManagementController implements Initializable {
@@ -123,11 +125,20 @@ public class UserManagementController implements Initializable {
         });
 
         styleTableColumns();
+        if(Objects.equals(SessionManager.getRole(), "Lecturer")){
+            roleFilterBox.setItems(FXCollections.observableArrayList(
+                    "Student"
+            ));
+            roleFilterBox.setValue("Student");
+        }
+        else{
+            roleFilterBox.setItems(FXCollections.observableArrayList(
+                    "All", "Admin", "Dean", "Lecturer", "Student", "Tech_Officer"
+            ));
+            roleFilterBox.setValue("All");
+        }
 
-        roleFilterBox.setItems(FXCollections.observableArrayList(
-                "All", "Admin", "Dean", "Lecturer", "Student", "Tech_Officer"
-        ));
-        roleFilterBox.setValue("All");
+
 
         loadUsers();
 
@@ -153,6 +164,13 @@ public class UserManagementController implements Initializable {
 
     private void loadUsers() {
         List<UserResponseDTO> users = userService.getAllUsers();
+
+        if (Objects.equals(SessionManager.getRole(), "Lecturer")) {
+            users = users.stream()
+                    .filter(u -> "Student".equalsIgnoreCase(u.getRole()))
+                    .toList();
+        }
+
         masterList.setAll(users);
 
         filteredList = new FilteredList<>(masterList, p -> true);

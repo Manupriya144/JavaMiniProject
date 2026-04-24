@@ -36,7 +36,7 @@ public class LecturerDashboardController implements Initializable {
     @FXML private VBox coursesContainer;
 
     private String lecturerName = LoginController.username;
-    private int lecturerId = -1;
+    private String lecturerId = LoginController.userId;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -58,7 +58,7 @@ public class LecturerDashboardController implements Initializable {
         loadCourses();
     }
 
-    public void setLecturerInfo(String name, int id) {
+    public void setLecturerInfo(String name, String id) {
         this.lecturerName = name;
         this.lecturerId = id;
     }
@@ -125,7 +125,7 @@ public class LecturerDashboardController implements Initializable {
                         "-fx-background-radius: 8;" +
                         "-fx-cursor: hand;"
         );
-        actionBtn.setOnAction(e -> openMarks());
+        actionBtn.setOnAction(e -> openFinalMarks());
 
         row.getChildren().addAll(codeLbl, nameLbl, credLbl, studLbl, actionBtn);
         return row;
@@ -148,7 +148,12 @@ public class LecturerDashboardController implements Initializable {
 
     @FXML
     private void openStudents() {
-        loadView("StudentDetails.fxml");
+        loadView("admin/UserManagement.fxml");
+    }
+
+    @FXML
+    private void openFinalMarks() {
+        loadView("lecturer/UploadFinalMarks.fxml");
     }
 
     @FXML
@@ -183,12 +188,12 @@ public class LecturerDashboardController implements Initializable {
 
     @FXML
     private void openUploadFinalMarks() {
-        loadView("UploadFinalMarks.fxml");
+        loadView("lecturer/UploadFinalMarks.fxml");
     }
 
     @FXML
     private void openUpdateFinalMarks() {
-        loadView("UpdateFinalMarks.fxml");
+        loadView("lecturer/UpdateFinalMarks.fxml");
     }
 
     @FXML

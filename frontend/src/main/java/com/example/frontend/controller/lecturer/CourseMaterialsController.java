@@ -9,9 +9,10 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -54,31 +55,88 @@ public class CourseMaterialsController {
 
                 if (empty || item == null) {
                     setText(null);
+                    setGraphic(null);
                     setStyle("");
-                } else {
-                    String fileName = getFileNameOnly(item.getFilePath());
-
-                    setText("📄  " + safe(item.getTitle()) + "\n     " + fileName);
-
-                    setStyle("""
-                            -fx-font-size: 13px;
-                            -fx-padding: 14;
-                            -fx-text-fill: #1a3a52;
-                            -fx-background-color: white;
-                            -fx-border-color: #e8eef5;
-                            -fx-border-width: 0 0 1 0;
-                            """);
+                    return;
                 }
+
+                Label fileLabel = new Label(
+                        "📄  " + safe(item.getTitle()) + "\n     " + getFileNameOnly(item.getFilePath())
+                );
+                fileLabel.setStyle("-fx-text-fill: #1a3a52; -fx-font-size: 13px;");
+
+                Button openBtn = new Button("Open");
+                openBtn.setStyle("""
+                    -fx-background-color: #5b9fd9;
+                    -fx-text-fill: white;
+                    -fx-font-weight: bold;
+                    -fx-background-radius: 8;
+                    -fx-cursor: hand;
+                    """);
+                openBtn.setOnAction(e -> openMaterialFile(item));
+
+                Button deleteBtn = new Button("Delete");
+                deleteBtn.setStyle("""
+                    -fx-background-color: #ef4444;
+                    -fx-text-fill: white;
+                    -fx-font-weight: bold;
+                    -fx-background-radius: 8;
+                    -fx-cursor: hand;
+                    """);
+                deleteBtn.setOnAction(e -> deleteMaterial(item));
+
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+
+                HBox row = new HBox(12, fileLabel, spacer, openBtn, deleteBtn);
+                row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                row.setStyle("""
+                    -fx-padding: 14;
+                    -fx-background-color: white;
+                    -fx-border-color: #e8eef5;
+                    -fx-border-width: 0 0 1 0;
+                    """);
+
+                setText(null);
+                setGraphic(row);
             }
         });
+    }
 
-        materialListView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                CourseMaterial selected = materialListView.getSelectionModel().getSelectedItem();
+    private void deleteMaterial(CourseMaterial material) {
 
-                if (selected != null) {
-                    openMaterialFile(selected);
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Delete Confirmation");
+        confirmAlert.setHeaderText("Delete Course Material");
+        confirmAlert.setContentText(
+                "Are you sure you want to delete:\n\n" +
+                        material.getTitle() + "\n(" + getFileNameOnly(material.getFilePath()) + ")"
+        );
+
+        ButtonType yesBtn = new ButtonType("Yes, Delete", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelBtn = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        confirmAlert.getButtonTypes().setAll(yesBtn, cancelBtn);
+
+        confirmAlert.showAndWait().ifPresent(response -> {
+
+            if (response == yesBtn) {
+
+                try {
+                    boolean deleted = courseMaterialService.deleteMaterial(material.getMaterialId());
+
+                    if (deleted) {
+                        showInfo("Material deleted successfully.");
+                        loadMaterials();
+                    } else {
+                        showError("Failed to delete material.");
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showError("Error while deleting material.");
                 }
+
             }
         });
     }

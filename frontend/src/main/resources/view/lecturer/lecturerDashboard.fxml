@@ -13,435 +13,198 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.frontend.controller.lecturer.LecturerDashboardController"
-            prefWidth="1200.0"
-            prefHeight="750.0"
-            style="-fx-background-color: linear-gradient(to bottom right, #eef6ff, #fdfcff);">
+<BorderPane prefHeight="750.0" prefWidth="1200.0" style="-fx-background-color: linear-gradient(to bottom right, #eef6ff, #fdfcff);" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.frontend.controller.lecturer.LecturerDashboardController">
 
     <top>
-        <HBox alignment="CENTER_LEFT"
-              spacing="0"
-              style="-fx-background-color: linear-gradient(to right, #5b9fd9, #3f7fc2);
-                     -fx-effect: dropshadow(three-pass-box, rgba(63,127,194,0.25), 14, 0, 0, 3);">
+        <HBox alignment="CENTER_LEFT" spacing="0" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #3f7fc2);                      -fx-effect: dropshadow(three-pass-box, rgba(63,127,194,0.25), 14, 0, 0, 3);">
 
-            <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="72">
+            <HBox alignment="CENTER_LEFT" prefHeight="72" spacing="12">
                 <padding>
-                    <Insets top="0" right="0" bottom="0" left="24"/>
+                    <Insets bottom="0" left="24" right="0" top="0" />
                 </padding>
 
-                <StackPane prefWidth="42" prefHeight="42"
-                           style="-fx-background-color: rgba(255,255,255,0.18); -fx-background-radius: 21;">
-                    <Label text="🎓" style="-fx-font-size: 20px;"/>
+                <StackPane prefHeight="42" prefWidth="42" style="-fx-background-color: rgba(255,255,255,0.18); -fx-background-radius: 21;">
+                    <Label style="-fx-font-size: 20px;" text="🎓" />
                 </StackPane>
 
                 <VBox spacing="2">
-                    <Label text="FoT Portal"
-                           style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-                    <Label text="Lecturer Panel"
-                           style="-fx-text-fill: rgba(255,255,255,0.82); -fx-font-size: 10px;"/>
+                    <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="FoT Portal" />
+                    <Label style="-fx-text-fill: rgba(255,255,255,0.82); -fx-font-size: 10px;" text="Lecturer Panel" />
                 </VBox>
             </HBox>
 
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
 
             <HBox alignment="CENTER" spacing="6">
                 <padding>
-                    <Insets top="0" right="12" bottom="0" left="12"/>
+                    <Insets bottom="0" left="12" right="12" top="0" />
                 </padding>
 
-                <Button text="Dashboard"
-                        style="-fx-background-color: rgba(255,255,255,0.22);
-                               -fx-text-fill: white;
-                               -fx-font-size: 13px;
-                               -fx-font-weight: bold;
-                               -fx-background-radius: 10;
-                               -fx-padding: 8 18 8 18;
-                               -fx-cursor: hand;"/>
+                <Button style="-fx-background-color: rgba(255,255,255,0.22);                                -fx-text-fill: white;                                -fx-font-size: 13px;                                -fx-font-weight: bold;                                -fx-background-radius: 10;                                -fx-padding: 8 18 8 18;                                -fx-cursor: hand;" text="Dashboard" />
 
-                <Button text="My Courses" onAction="#openCourses"
-                        style="-fx-background-color: transparent;
-                               -fx-text-fill: white;
-                               -fx-font-size: 13px;
-                               -fx-background-radius: 10;
-                               -fx-padding: 8 18 8 18;
-                               -fx-cursor: hand;"/>
+                <Button onAction="#openCourses" style="-fx-background-color: transparent;                                -fx-text-fill: white;                                -fx-font-size: 13px;                                -fx-background-radius: 10;                                -fx-padding: 8 18 8 18;                                -fx-cursor: hand;" text="My Courses" />
 
-                <Button text="Marks" onAction="#openMarks"
-                        style="-fx-background-color: transparent;
-                               -fx-text-fill: white;
-                               -fx-font-size: 13px;
-                               -fx-background-radius: 10;
-                               -fx-padding: 8 18 8 18;
-                               -fx-cursor: hand;"/>
+                <Button onAction="#openMarks" style="-fx-background-color: transparent;                                -fx-text-fill: white;                                -fx-font-size: 13px;                                -fx-background-radius: 10;                                -fx-padding: 8 18 8 18;                                -fx-cursor: hand;" text="Marks" />
 
-                <Button text="CA Management" onAction="#openCA"
-                        style="-fx-background-color: transparent;
-                               -fx-text-fill: white;
-                               -fx-font-size: 13px;
-                               -fx-background-radius: 10;
-                               -fx-padding: 8 18 8 18;
-                               -fx-cursor: hand;"/>
+                <Button onAction="#openCA" style="-fx-background-color: transparent;                                -fx-text-fill: white;                                -fx-font-size: 13px;                                -fx-background-radius: 10;                                -fx-padding: 8 18 8 18;                                -fx-cursor: hand;" text="CA Management" />
 
-                <Button text="Students" onAction="#openStudents"
-                        style="-fx-background-color: transparent;
-                               -fx-text-fill: white;
-                               -fx-font-size: 13px;
-                               -fx-background-radius: 10;
-                               -fx-padding: 8 18 8 18;
-                               -fx-cursor: hand;"/>
+                <Button onAction="#openStudents" style="-fx-background-color: transparent;                                -fx-text-fill: white;                                -fx-font-size: 13px;                                -fx-background-radius: 10;                                -fx-padding: 8 18 8 18;                                -fx-cursor: hand;" text="Students" />
 
-                <Button text="Eligibility" onAction="#openEligibility"
-                        style="-fx-background-color: transparent;
-                               -fx-text-fill: white;
-                               -fx-font-size: 13px;
-                               -fx-background-radius: 10;
-                               -fx-padding: 8 18 8 18;
-                               -fx-cursor: hand;"/>
+                <Button onAction="#openEligibility" style="-fx-background-color: transparent;                                -fx-text-fill: white;                                -fx-font-size: 13px;                                -fx-background-radius: 10;                                -fx-padding: 8 18 8 18;                                -fx-cursor: hand;" text="Eligibility" />
 
-                <Button text="Attendance" onAction="#openAttendance"
-                        style="-fx-background-color: transparent;
-                               -fx-text-fill: white;
-                               -fx-font-size: 13px;
-                               -fx-background-radius: 10;
-                               -fx-padding: 8 18 8 18;
-                               -fx-cursor: hand;"/>
+                <Button onAction="#openAttendance" style="-fx-background-color: transparent;                                -fx-text-fill: white;                                -fx-font-size: 13px;                                -fx-background-radius: 10;                                -fx-padding: 8 18 8 18;                                -fx-cursor: hand;" text="Attendance" />
 
-                <Button text="Notices" onAction="#openNotices"
-                        style="-fx-background-color: transparent;
-                               -fx-text-fill: white;
-                               -fx-font-size: 13px;
-                               -fx-background-radius: 10;
-                               -fx-padding: 8 18 8 18;
-                               -fx-cursor: hand;"/>
+                <Button onAction="#openNotices" style="-fx-background-color: transparent;                                -fx-text-fill: white;                                -fx-font-size: 13px;                                -fx-background-radius: 10;                                -fx-padding: 8 18 8 18;                                -fx-cursor: hand;" text="Notices" />
             </HBox>
 
             <HBox alignment="CENTER" spacing="10">
                 <padding>
-                    <Insets top="0" right="20" bottom="0" left="10"/>
+                    <Insets bottom="0" left="10" right="20" top="0" />
                 </padding>
 
                 <StackPane>
-                    <Circle radius="18" style="-fx-fill: white;"/>
-                    <Label text="L" style="-fx-text-fill: #3f7fc2; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Circle radius="18" style="-fx-fill: white;" />
+                    <Label style="-fx-text-fill: #3f7fc2; -fx-font-weight: bold; -fx-font-size: 14px;" text="L" />
                 </StackPane>
 
                 <VBox spacing="1">
-                    <Label fx:id="lecturerNameLabel" text="Dr. Lecturer"
-                           style="-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                    <Label text="Lecturer"
-                           style="-fx-text-fill: rgba(255,255,255,0.78); -fx-font-size: 10px;"/>
+                    <Label fx:id="lecturerNameLabel" style="-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold;" text="Dr. Lecturer" />
+                    <Label style="-fx-text-fill: rgba(255,255,255,0.78); -fx-font-size: 10px;" text="Lecturer" />
                 </VBox>
 
-                <Button text="My Profile" onAction="#openProfile"
-                        style="-fx-background-color: rgba(255,255,255,0.18);
-                               -fx-text-fill: white;
-                               -fx-font-size: 12px;
-                               -fx-font-weight: bold;
-                               -fx-background-radius: 8;
-                               -fx-cursor: hand;
-                               -fx-border-color: rgba(255,255,255,0.22);
-                               -fx-border-radius: 8;
-                               -fx-border-width: 1;"/>
+                <Button onAction="#openProfile" style="-fx-background-color: rgba(255,255,255,0.18);                                -fx-text-fill: white;                                -fx-font-size: 12px;                                -fx-font-weight: bold;                                -fx-background-radius: 8;                                -fx-cursor: hand;                                -fx-border-color: rgba(255,255,255,0.22);                                -fx-border-radius: 8;                                -fx-border-width: 1;" text="My Profile" />
 
-                <Button text="Logout" onAction="#logout"
-                        style="-fx-background-color: white;
-                               -fx-text-fill: #e85d5d;
-                               -fx-font-size: 12px;
-                               -fx-font-weight: bold;
-                               -fx-background-radius: 8;
-                               -fx-cursor: hand;"/>
+                <Button onAction="#logout" style="-fx-background-color: white;                                -fx-text-fill: #e85d5d;                                -fx-font-size: 12px;                                -fx-font-weight: bold;                                -fx-background-radius: 8;                                -fx-cursor: hand;" text="Logout" />
             </HBox>
         </HBox>
     </top>
 
     <center>
-        <ScrollPane fitToWidth="true"
-                    hbarPolicy="NEVER"
-                    style="-fx-background-color: transparent; -fx-background: transparent;">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;">
             <VBox spacing="26" style="-fx-background-color: transparent;">
                 <padding>
-                    <Insets top="28" right="34" bottom="28" left="34"/>
+                    <Insets bottom="28" left="34" right="34" top="28" />
                 </padding>
 
-                <HBox alignment="CENTER_LEFT"
-                      spacing="18"
-                      style="-fx-background-color: linear-gradient(to right, #ffffff, #f3f8ff);
-                             -fx-background-radius: 18;
-                             -fx-border-color: #d7e7f8;
-                             -fx-border-radius: 18;
-                             -fx-border-width: 1;
-                             -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 16, 0, 0, 5);">
+                <HBox alignment="CENTER_LEFT" spacing="18" style="-fx-background-color: linear-gradient(to right, #ffffff, #f3f8ff);                              -fx-background-radius: 18;                              -fx-border-color: #d7e7f8;                              -fx-border-radius: 18;                              -fx-border-width: 1;                              -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 16, 0, 0, 5);">
                     <padding>
-                        <Insets top="22" right="24" bottom="22" left="24"/>
+                        <Insets bottom="22" left="24" right="24" top="22" />
                     </padding>
 
-                    <StackPane prefWidth="58" prefHeight="58"
-                               style="-fx-background-color: linear-gradient(to bottom right, #5b9fd9, #7cb7ea);
-                                      -fx-background-radius: 29;">
-                        <Label text="👨‍🏫" style="-fx-font-size: 22px;"/>
+                    <StackPane prefHeight="58" prefWidth="58" style="-fx-background-color: linear-gradient(to bottom right, #5b9fd9, #7cb7ea);                                       -fx-background-radius: 29;">
+                        <Label style="-fx-font-size: 22px;" text="👨‍🏫" />
                     </StackPane>
 
                     <VBox spacing="5">
-                        <Label fx:id="welcomeLabel" text="Welcome, Dr. Lecturer 👋"
-                               style="-fx-text-fill: #1a3a52; -fx-font-size: 27px; -fx-font-weight: bold;"/>
-                        <Label fx:id="dateLabel" text="Thursday, March 13, 2026  •  Lecturer Panel"
-                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 13px;"/>
+                        <Label fx:id="welcomeLabel" style="-fx-text-fill: #1a3a52; -fx-font-size: 27px; -fx-font-weight: bold;" text="Welcome, Dr. Lecturer 👋" />
+                        <Label fx:id="dateLabel" style="-fx-text-fill: #8fa3b8; -fx-font-size: 13px;" text="Thursday, March 13, 2026  •  Lecturer Panel" />
                     </VBox>
                 </HBox>
 
-                <FlowPane hgap="18" vgap="18" prefWrapLength="1100">
+                <FlowPane hgap="18" prefWrapLength="1100" vgap="18">
 
-                    <VBox spacing="8"
-                          prefWidth="210"
-                          prefHeight="122"
-                          style="-fx-background-color: linear-gradient(to bottom right, #eef8ff, #f8fbff);
-                                 -fx-background-radius: 16;
-                                 -fx-border-color: #d8e7f7;
-                                 -fx-border-radius: 16;
-                                 -fx-border-width: 1;
-                                 -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.16), 14, 0, 0, 5);">
+                    <VBox prefHeight="122" prefWidth="210" spacing="8" style="-fx-background-color: linear-gradient(to bottom right, #eef8ff, #f8fbff);                                  -fx-background-radius: 16;                                  -fx-border-color: #d8e7f7;                                  -fx-border-radius: 16;                                  -fx-border-width: 1;                                  -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.16), 14, 0, 0, 5);">
                         <padding>
-                            <Insets top="20" right="22" bottom="20" left="22"/>
+                            <Insets bottom="20" left="22" right="22" top="20" />
                         </padding>
-                        <Label text="📚  My Courses"
-                               style="-fx-text-fill: #468ed0; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                        <Label fx:id="myCoursesLabel" text="4"
-                               style="-fx-text-fill: #1a3a52; -fx-font-size: 38px; -fx-font-weight: bold;"/>
-                        <Label text="This semester"
-                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                        <Label style="-fx-text-fill: #468ed0; -fx-font-size: 12px; -fx-font-weight: bold;" text="📚  My Courses" />
+                        <Label fx:id="myCoursesLabel" style="-fx-text-fill: #1a3a52; -fx-font-size: 38px; -fx-font-weight: bold;" text="4" />
+                        <Label style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;" text="This semester" />
                     </VBox>
 
-                    <VBox spacing="8"
-                          prefWidth="210"
-                          prefHeight="122"
-                          style="-fx-background-color: linear-gradient(to bottom right, #effcf4, #f7fff9);
-                                 -fx-background-radius: 16;
-                                 -fx-border-color: #cfead7;
-                                 -fx-border-radius: 16;
-                                 -fx-border-width: 1;
-                                 -fx-effect: dropshadow(three-pass-box, rgba(109,186,130,0.14), 14, 0, 0, 5);">
+                    <VBox prefHeight="122" prefWidth="210" spacing="8" style="-fx-background-color: linear-gradient(to bottom right, #effcf4, #f7fff9);                                  -fx-background-radius: 16;                                  -fx-border-color: #cfead7;                                  -fx-border-radius: 16;                                  -fx-border-width: 1;                                  -fx-effect: dropshadow(three-pass-box, rgba(109,186,130,0.14), 14, 0, 0, 5);">
                         <padding>
-                            <Insets top="20" right="22" bottom="20" left="22"/>
+                            <Insets bottom="20" left="22" right="22" top="20" />
                         </padding>
-                        <Label text="🎓  My Students"
-                               style="-fx-text-fill: #35a053; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                        <Label fx:id="myStudentsLabel" text="20"
-                               style="-fx-text-fill: #1a3a52; -fx-font-size: 38px; -fx-font-weight: bold;"/>
-                        <Label text="Assigned students"
-                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                        <Label style="-fx-text-fill: #35a053; -fx-font-size: 12px; -fx-font-weight: bold;" text="🎓  My Students" />
+                        <Label fx:id="myStudentsLabel" style="-fx-text-fill: #1a3a52; -fx-font-size: 38px; -fx-font-weight: bold;" text="20" />
+                        <Label style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;" text="Assigned students" />
                     </VBox>
 
-                    <VBox spacing="8"
-                          prefWidth="210"
-                          prefHeight="122"
-                          style="-fx-background-color: linear-gradient(to bottom right, #f4f7ff, #fbfcff);
-                                 -fx-background-radius: 16;
-                                 -fx-border-color: #dde6fb;
-                                 -fx-border-radius: 16;
-                                 -fx-border-width: 1;
-                                 -fx-effect: dropshadow(three-pass-box, rgba(114,137,235,0.14), 14, 0, 0, 5);">
+                    <VBox prefHeight="122" prefWidth="210" spacing="8" style="-fx-background-color: linear-gradient(to bottom right, #f4f7ff, #fbfcff);                                  -fx-background-radius: 16;                                  -fx-border-color: #dde6fb;                                  -fx-border-radius: 16;                                  -fx-border-width: 1;                                  -fx-effect: dropshadow(three-pass-box, rgba(114,137,235,0.14), 14, 0, 0, 5);">
                         <padding>
-                            <Insets top="20" right="22" bottom="20" left="22"/>
+                            <Insets bottom="20" left="22" right="22" top="20" />
                         </padding>
-                        <Label text="✅  Eligible Students"
-                               style="-fx-text-fill: #5b7ee5; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                        <Label fx:id="eligibleLabel" text="16"
-                               style="-fx-text-fill: #1a3a52; -fx-font-size: 38px; -fx-font-weight: bold;"/>
-                        <Label text="Attendance + CA"
-                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                        <Label style="-fx-text-fill: #5b7ee5; -fx-font-size: 12px; -fx-font-weight: bold;" text="✅  Eligible Students" />
+                        <Label fx:id="eligibleLabel" style="-fx-text-fill: #1a3a52; -fx-font-size: 38px; -fx-font-weight: bold;" text="16" />
+                        <Label style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;" text="Attendance + CA" />
                     </VBox>
 
-                    <VBox spacing="8"
-                          prefWidth="210"
-                          prefHeight="122"
-                          style="-fx-background-color: linear-gradient(to bottom right, #fff8ef, #fffdf8);
-                                 -fx-background-radius: 16;
-                                 -fx-border-color: #ffe0aa;
-                                 -fx-border-radius: 16;
-                                 -fx-border-width: 1;
-                                 -fx-effect: dropshadow(three-pass-box, rgba(240,170,79,0.14), 14, 0, 0, 5);">
+                    <VBox prefHeight="122" prefWidth="210" spacing="8" style="-fx-background-color: linear-gradient(to bottom right, #fff8ef, #fffdf8);                                  -fx-background-radius: 16;                                  -fx-border-color: #ffe0aa;                                  -fx-border-radius: 16;                                  -fx-border-width: 1;                                  -fx-effect: dropshadow(three-pass-box, rgba(240,170,79,0.14), 14, 0, 0, 5);">
                         <padding>
-                            <Insets top="20" right="22" bottom="20" left="22"/>
+                            <Insets bottom="20" left="22" right="22" top="20" />
                         </padding>
-                        <Label text="⏳  Pending Marks"
-                               style="-fx-text-fill: #d98928; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                        <Label fx:id="pendingMarksLabel" text="2"
-                               style="-fx-text-fill: #1a3a52; -fx-font-size: 38px; -fx-font-weight: bold;"/>
-                        <Label text="Need update"
-                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                        <Label style="-fx-text-fill: #d98928; -fx-font-size: 12px; -fx-font-weight: bold;" text="⏳  Pending Marks" />
+                        <Label fx:id="pendingMarksLabel" style="-fx-text-fill: #1a3a52; -fx-font-size: 38px; -fx-font-weight: bold;" text="2" />
+                        <Label style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;" text="Need update" />
                     </VBox>
 
                 </FlowPane>
 
-                <VBox spacing="14"
-                      style="-fx-background-color: white;
-                             -fx-background-radius: 16;
-                             -fx-border-color: #d7e7f8;
-                             -fx-border-radius: 16;
-                             -fx-border-width: 1;
-                             -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 14, 0, 0, 5);">
+                <VBox spacing="14" style="-fx-background-color: white;                              -fx-background-radius: 16;                              -fx-border-color: #d7e7f8;                              -fx-border-radius: 16;                              -fx-border-width: 1;                              -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 14, 0, 0, 5);">
                     <padding>
-                        <Insets top="22" right="24" bottom="22" left="24"/>
+                        <Insets bottom="22" left="24" right="24" top="22" />
                     </padding>
 
-                    <Label text="Quick Actions"
-                           style="-fx-text-fill: #1a3a52; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                    <Label style="-fx-text-fill: #1a3a52; -fx-font-size: 16px; -fx-font-weight: bold;" text="Quick Actions" />
 
-                    <Separator style="-fx-background-color: #e7eef7;"/>
+                    <Separator style="-fx-background-color: #e7eef7;" />
 
                     <FlowPane hgap="12" vgap="12">
-                        <Button text="📝  Upload Marks" onAction="#openMarks" prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <Button onAction="#openFinalMarks" prefHeight="42" prefWidth="180" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                        -fx-text-fill: white;                                        -fx-font-size: 13px;                                        -fx-font-weight: bold;                                        -fx-background-radius: 10;                                        -fx-cursor: hand;" text="📝  Upload Marks" />
 
-                        <Button text="📊  CA Management" onAction="#openCA" prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <Button onAction="#openCA" prefHeight="42" prefWidth="180" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                        -fx-text-fill: white;                                        -fx-font-size: 13px;                                        -fx-font-weight: bold;                                        -fx-background-radius: 10;                                        -fx-cursor: hand;" text="📊  CA Management" />
 
-                        <Button text="📋  View Attendance" onAction="#openAttendance" prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <Button onAction="#openAttendance" prefHeight="42" prefWidth="180" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                        -fx-text-fill: white;                                        -fx-font-size: 13px;                                        -fx-font-weight: bold;                                        -fx-background-radius: 10;                                        -fx-cursor: hand;" text="📋  View Attendance" />
 
-                        <Button text="🗓  Add Session" onAction="#openAddSession" prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <Button onAction="#openAddSession" prefHeight="42" prefWidth="180" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                        -fx-text-fill: white;                                        -fx-font-size: 13px;                                        -fx-font-weight: bold;                                        -fx-background-radius: 10;                                        -fx-cursor: hand;" text="🗓  Add Session" />
 
-                        <Button text="✅  Check Eligibility" onAction="#openEligibility" prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <Button onAction="#openEligibility" prefHeight="42" prefWidth="180" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                        -fx-text-fill: white;                                        -fx-font-size: 13px;                                        -fx-font-weight: bold;                                        -fx-background-radius: 10;                                        -fx-cursor: hand;" text="✅  Check Eligibility" />
 
-                        <Button text="📊  Grades &amp; GPA" onAction="#openGrades" prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <Button onAction="#openGrades" prefHeight="42" prefWidth="180" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                        -fx-text-fill: white;                                        -fx-font-size: 13px;                                        -fx-font-weight: bold;                                        -fx-background-radius: 10;                                        -fx-cursor: hand;" text="📊  Grades &amp; GPA" />
 
-                        <Button text="📖  Course Materials" onAction="#openCourses" prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <Button onAction="#openCourses" prefHeight="42" prefWidth="180" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                        -fx-text-fill: white;                                        -fx-font-size: 13px;                                        -fx-font-weight: bold;                                        -fx-background-radius: 10;                                        -fx-cursor: hand;" text="📖  Course Materials" />
 
-                        <Button text="📝  Upload Final Marks" onAction="#openUploadFinalMarks" prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <Button onAction="#openUploadFinalMarks" prefHeight="42" prefWidth="180" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                        -fx-text-fill: white;                                        -fx-font-size: 13px;                                        -fx-font-weight: bold;                                        -fx-background-radius: 10;                                        -fx-cursor: hand;" text="📝  Upload Final Marks" />
 
-                        <Button text="✏️  Update Final Marks" onAction="#openUpdateFinalMarks" prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <Button onAction="#openUpdateFinalMarks" prefHeight="42" prefWidth="180" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                        -fx-text-fill: white;                                        -fx-font-size: 13px;                                        -fx-font-weight: bold;                                        -fx-background-radius: 10;                                        -fx-cursor: hand;" text="✏️  Update Final Marks" />
 
-                        <Button text="📦  Batch Final Marks" onAction="#openBatchFinalMarks" prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <Button onAction="#openBatchFinalMarks" prefHeight="42" prefWidth="180" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                        -fx-text-fill: white;                                        -fx-font-size: 13px;                                        -fx-font-weight: bold;                                        -fx-background-radius: 10;                                        -fx-cursor: hand;" text="📦  Batch Final Marks" />
 
-                        <Button text="📊  Generate Grades" onAction="#openGenerateGrades" prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <Button onAction="#openGenerateGrades" prefHeight="42" prefWidth="180" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                        -fx-text-fill: white;                                        -fx-font-size: 13px;                                        -fx-font-weight: bold;                                        -fx-background-radius: 10;                                        -fx-cursor: hand;" text="📊  Generate Grades" />
 
-                        <Button text="📑  Batch Grades" onAction="#openBatchGrades" prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <Button onAction="#openBatchGrades" prefHeight="42" prefWidth="180" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                        -fx-text-fill: white;                                        -fx-font-size: 13px;                                        -fx-font-weight: bold;                                        -fx-background-radius: 10;                                        -fx-cursor: hand;" text="📑  Batch Grades" />
 
-                        <Button text="✅  Batch Eligibility" onAction="#openBatchEligibility" prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <Button onAction="#openBatchEligibility" prefHeight="42" prefWidth="180" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                        -fx-text-fill: white;                                        -fx-font-size: 13px;                                        -fx-font-weight: bold;                                        -fx-background-radius: 10;                                        -fx-cursor: hand;" text="✅  Batch Eligibility" />
                     </FlowPane>
                 </VBox>
 
-                <VBox spacing="14"
-                      style="-fx-background-color: white;
-                             -fx-background-radius: 16;
-                             -fx-border-color: #d7e7f8;
-                             -fx-border-radius: 16;
-                             -fx-border-width: 1;
-                             -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 14, 0, 0, 5);">
+                <VBox spacing="14" style="-fx-background-color: white;                              -fx-background-radius: 16;                              -fx-border-color: #d7e7f8;                              -fx-border-radius: 16;                              -fx-border-width: 1;                              -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 14, 0, 0, 5);">
                     <padding>
-                        <Insets top="22" right="24" bottom="22" left="24"/>
+                        <Insets bottom="22" left="24" right="24" top="22" />
                     </padding>
 
                     <HBox alignment="CENTER_LEFT">
-                        <Label text="📚  My Assigned Courses"
-                               style="-fx-text-fill: #1a3a52; -fx-font-size: 16px; -fx-font-weight: bold;"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Button text="View All →" onAction="#openCourses"
-                                style="-fx-background-color: transparent;
-                                       -fx-text-fill: #4c8fce;
-                                       -fx-font-size: 12px;
-                                       -fx-font-weight: bold;
-                                       -fx-cursor: hand;"/>
+                        <Label style="-fx-text-fill: #1a3a52; -fx-font-size: 16px; -fx-font-weight: bold;" text="📚  My Assigned Courses" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#openCourses" style="-fx-background-color: transparent;                                        -fx-text-fill: #4c8fce;                                        -fx-font-size: 12px;                                        -fx-font-weight: bold;                                        -fx-cursor: hand;" text="View All →" />
                     </HBox>
 
-                    <Separator style="-fx-background-color: #e7eef7;"/>
+                    <Separator style="-fx-background-color: #e7eef7;" />
 
-                    <HBox spacing="0"
-                          style="-fx-background-color: #f5f9ff; -fx-background-radius: 10;">
+                    <HBox spacing="0" style="-fx-background-color: #f5f9ff; -fx-background-radius: 10;">
                         <padding>
-                            <Insets top="10" right="16" bottom="10" left="16"/>
+                            <Insets bottom="10" left="16" right="16" top="10" />
                         </padding>
 
-                        <Label text="Course Code" prefWidth="160"
-                               style="-fx-text-fill: #4c8fce; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                        <Label text="Course Name" prefWidth="300"
-                               style="-fx-text-fill: #4c8fce; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                        <Label text="Credits" prefWidth="100"
-                               style="-fx-text-fill: #4c8fce; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                        <Label text="Students" prefWidth="100"
-                               style="-fx-text-fill: #4c8fce; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                        <Label text="Action" prefWidth="120"
-                               style="-fx-text-fill: #4c8fce; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                        <Label prefWidth="160" style="-fx-text-fill: #4c8fce; -fx-font-size: 12px; -fx-font-weight: bold;" text="Course Code" />
+                        <Label prefWidth="300" style="-fx-text-fill: #4c8fce; -fx-font-size: 12px; -fx-font-weight: bold;" text="Course Name" />
+                        <Label prefWidth="100" style="-fx-text-fill: #4c8fce; -fx-font-size: 12px; -fx-font-weight: bold;" text="Credits" />
+                        <Label prefWidth="100" style="-fx-text-fill: #4c8fce; -fx-font-size: 12px; -fx-font-weight: bold;" text="Students" />
+                        <Label prefWidth="120" style="-fx-text-fill: #4c8fce; -fx-font-size: 12px; -fx-font-weight: bold;" text="Action" />
                     </HBox>
 
-                    <VBox fx:id="coursesContainer" spacing="6"/>
+                    <VBox fx:id="coursesContainer" spacing="6" />
                 </VBox>
 
             </VBox>
@@ -449,20 +212,17 @@
     </center>
 
     <bottom>
-        <HBox alignment="CENTER_LEFT" spacing="16"
-              style="-fx-background-color: #fbfdff; -fx-border-color: #dfeaf6; -fx-border-width: 1 0 0 0;">
+        <HBox alignment="CENTER_LEFT" spacing="16" style="-fx-background-color: #fbfdff; -fx-border-color: #dfeaf6; -fx-border-width: 1 0 0 0;">
             <padding>
-                <Insets top="9" right="24" bottom="9" left="24"/>
+                <Insets bottom="9" left="24" right="24" top="9" />
             </padding>
 
-            <Label text="●" style="-fx-text-fill: #28a745; -fx-font-size: 10px;"/>
-            <Label text="System Online  •  Faculty of Technology Management System  •  v1.0"
-                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+            <Label style="-fx-text-fill: #28a745; -fx-font-size: 10px;" text="●" />
+            <Label style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;" text="System Online  •  Faculty of Technology Management System  •  v1.0" />
 
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
 
-            <Label fx:id="statusBarTime" text="13 March 2026"
-                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+            <Label fx:id="statusBarTime" style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;" text="13 March 2026" />
         </HBox>
     </bottom>
 

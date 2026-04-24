@@ -1,80 +1,92 @@
 package dao.finalMarks;
 
-import model.FinalMarks;
+import utility.DataSource;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
 
 public class FinalMarksDAO {
-    private final Connection connection;
 
-    public FinalMarksDAO(Connection connection) {
-        this.connection = connection;
-    }
+    public String getStudentIdByRegNo(String regNo) {
+        String sql = "SELECT user_id FROM students WHERE reg_no = ?";
 
-    public boolean insertFinalMarks(FinalMarks marks) {
-        String sql = "INSERT INTO student_marks (student_id, assessment_type_id, marks) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, marks.getStudentId());
-            ps.setString(2, marks.getCourseId()); // assume courseId is assessment_type_id
-            ps.setDouble(3, marks.getMarks());
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-    public boolean updateFinalMarks(FinalMarks marks) {
-        String sql = "UPDATE student_marks SET marks = ? WHERE student_id = ? AND assessment_type_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setDouble(1, marks.getMarks());
-            ps.setString(2, marks.getStudentId());
-            ps.setString(3, marks.getCourseId());
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+            ps.setString(1, regNo);
 
-    public FinalMarks getStudentMarks(String studentId, String courseId) {
-        String sql = "SELECT * FROM student_marks WHERE student_id = ? AND assessment_type_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, studentId);
-            ps.setString(2, courseId);
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
-                return new FinalMarks(
-                        rs.getString("student_id"),
-                        rs.getString("assessment_type_id"),
-                        0, // academicYear unknown, skip
-                        0, // semester unknown
-                        rs.getDouble("marks")
-                );
+                return rs.getString("user_id");
             }
-        } catch (Exception e) { e.printStackTrace(); }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
-    public List<FinalMarks> getBatchMarks(int academicYear, int semester) {
-        String sql = "SELECT * FROM student_marks"; // simplified
-        List<FinalMarks> list = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+    private int getFinalAssessmentId(Connection con, String courseId) throws SQLException {
+
+        String find = """
+                SELECT assessment_type_id 
+                FROM assessment_type
+                WHERE course_id = ? AND name = 'Final'
+                """;
+
+        try (PreparedStatement ps = con.prepareStatement(find)) {
+            ps.setString(1, courseId);
+
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(new FinalMarks(
-                        rs.getString("student_id"),
-                        rs.getString("assessment_type_id"),
-                        academicYear,
-                        semester,
-                        rs.getDouble("marks")
-                ));
+
+            if (rs.next()) {
+                return rs.getInt("assessment_type_id");
             }
-        } catch (Exception e) { e.printStackTrace(); }
-        return list;
+        }
+
+        String insert = """
+                INSERT INTO assessment_type(course_id, name, weight, component)
+                VALUES (?, 'Final', 100, 'Final')
+                """;
+
+        try (PreparedStatement ps = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, courseId);
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+
+        throw new SQLException("Cannot create assessment type");
+    }
+
+    public boolean saveMarks(String studentId, String courseId, double marks) {
+
+        String sql = """
+                INSERT INTO student_marks(student_id, assessment_type_id, marks)
+                VALUES (?, ?, ?)
+                ON DUPLICATE KEY UPDATE marks = VALUES(marks)
+                """;
+
+        try (Connection con = DataSource.getInstance().getConnection()) {
+
+            int assessmentId = getFinalAssessmentId(con, courseId);
+
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setString(1, studentId);
+                ps.setInt(2, assessmentId);
+                ps.setDouble(3, marks);
+
+                return ps.executeUpdate() > 0;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

@@ -1,31 +1,37 @@
 package service.finalMarks;
 
 import dao.finalMarks.FinalMarksDAO;
-import model.FinalMarks;
-
-import java.util.List;
+import dto.requestDto.finalMarks.FinalMarksRequestDTO;
 
 public class FinalMarksService {
 
     private final FinalMarksDAO finalMarksDAO;
-
-    public FinalMarksService(FinalMarksDAO finalMarksDAO) {
+    public FinalMarksService( FinalMarksDAO finalMarksDAO){
         this.finalMarksDAO = finalMarksDAO;
     }
 
-    public boolean uploadFinalMarks(FinalMarks marks) {
-        return finalMarksDAO.insertFinalMarks(marks);
-    }
+    public String upload(FinalMarksRequestDTO dto) {
 
-    public boolean updateFinalMarks(FinalMarks marks) {
-        return finalMarksDAO.updateFinalMarks(marks);
-    }
+        if (dto.getRegNo() == null || dto.getRegNo().isBlank()) {
+            return "Reg No required";
+        }
 
-    public FinalMarks getStudentFinalMarks(String studentId, String courseId) {
-        return finalMarksDAO.getStudentMarks(studentId, courseId);
-    }
+        if (dto.getCourseId() == null || dto.getCourseId().isBlank()) {
+            return "Course required";
+        }
 
-    public List<FinalMarks> getBatchFinalMarks(int academicYear, int semester) {
-        return finalMarksDAO.getBatchMarks(academicYear, semester);
+        if (dto.getMarks() < 0 || dto.getMarks() > 100) {
+            return "Invalid marks";
+        }
+
+        String studentId = finalMarksDAO.getStudentIdByRegNo(dto.getRegNo());
+
+        if (studentId == null) {
+            return "Student not found";
+        }
+
+        boolean success = finalMarksDAO.saveMarks(studentId, dto.getCourseId(), dto.getMarks());
+
+        return success ? "Marks saved successfully" : "Failed to save marks";
     }
 }

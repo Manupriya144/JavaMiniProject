@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS lecturers (
     specialization VARCHAR(100),
     designation VARCHAR(100),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-    );
+);
 
 -- Courses
 CREATE TABLE IF NOT EXISTS course (
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS assessment_type (
     weight DECIMAL(5,2) NOT NULL,    -- Percentage
     component ENUM('CA','Final') NOT NULL,
     FOREIGN KEY (course_id) REFERENCES course(course_id) ON DELETE CASCADE
-    );
+);
 
 -- Student Marks
 CREATE TABLE IF NOT EXISTS student_marks (
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS course_result (
     UNIQUE (student_id, course_id, academic_year, semester),
     FOREIGN KEY (student_id) REFERENCES students(user_id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES course(course_id) ON DELETE CASCADE
-    );
+);
 
 -- Semester Result
 CREATE TABLE IF NOT EXISTS semester_result (
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS semester_result (
     sgpa DECIMAL(3,2),
     cgpa DECIMAL(3,2),
     FOREIGN KEY (student_id) REFERENCES students(user_id) ON DELETE CASCADE
-    );
+);
 
 -- Lecturer-Course
 CREATE TABLE IF NOT EXISTS lecturer_course (

@@ -76,4 +76,26 @@ public class CourseMaterialService {
             return false;
         }
     }
+
+    public boolean deleteMaterial(int materialId) {
+        try {
+            ObjectNode root = mapper.createObjectNode();
+            root.put("command", "DELETE_COURSE_MATERIAL");
+            root.put("token", SessionManager.getToken());
+
+            ObjectNode data = root.putObject("data");
+            data.put("materialId", materialId);
+
+            String requestJson = mapper.writeValueAsString(root);
+            String responseJson = client.sendRequest(requestJson);
+
+            JsonNode responseNode = mapper.readTree(responseJson);
+
+            return responseNode.path("success").asBoolean(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

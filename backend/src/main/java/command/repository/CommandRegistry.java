@@ -3,7 +3,9 @@ package command.repository;
 import command.course.GetAllCoursesCommand;
 import command.course.GetAllCoursesCommandFull;
 import command.courseMeterial.AddCourseMaterialCommand;
+import command.courseMeterial.DeleteCourseMaterialCommand;
 import command.courseMeterial.GetCourseMaterialsCommand;
+import command.finalMarks.UploadFinalMarksCommand;
 import command.lecturer.GetAllLecturersCommand;
 import command.lecturerCourse.AssignLecturerCourseCommand;
 import command.lecturerCourse.GetLecturerCoursesCommand;
@@ -52,6 +54,7 @@ import command.user.GetAllUsersCommand;
 import command.student.GetStudentByIdCommand;
 import command.user.GetUserByIdCommand;
 import dao.attendance.AttendanceDAO;
+import dao.finalMarks.FinalMarksDAO;
 import dao.lectureCourse.LecturerCourseDAO;
 import dao.lecturerMeterial.CourseMaterialDAO;
 import dao.session.SessionDAO;
@@ -72,6 +75,7 @@ import dao.user.UserDAO;
 import service.attendance.AttendanceService;
 import service.ca.CAMarkService;
 import service.courseMeterial.CourseMaterialService;
+import service.finalMarks.FinalMarksService;
 import service.lecture.LecturerService;
 import service.lecturerCourse.LecturerCourseService;
 import service.login.AuthService;
@@ -84,49 +88,15 @@ import service.user.AdminDashboardService;
 import service.user.UserService;
 import service.techofficer.TechOfficerService;
 import utility.DataSource;
-import service.techofficer.TechOfficerService;
-
-import command.finalMarks.UploadFinalMarksCommand;
-import command.finalMarks.UpdateFinalMarksCommand;
-import command.finalMarks.GetStudentFinalMarksCommand;
-import command.finalMarks.GetBatchFinalMarksCommand;
-
-import command.eligibility.CheckFullEligibilityCommand;
-import command.eligibility.GetBatchFullEligibilityReportCommand;
-
-import command.grade.GenerateGradeCommand;
-import command.grade.GetStudentGradesCommand;
-import command.grade.GetBatchGradesCommand;
-import command.gpa.CalculateCGPACommand;
-import command.gpa.CalculateSGPACommand;
-import command.gpa.GetBatchGPAReportCommand;
-import command.gpa.GetStudentGPAReportCommand;
 import command.report.GetBatchFullAcademicReportCommand;
 import command.report.GetStudentFullAcademicReportCommand;
-import command.undergraduate.GetAllNoticesCommand;
-import command.undergraduate.GetMyAttendanceCommand;
-import command.undergraduate.GetMyCoursesCommand;
-import command.undergraduate.GetMyGPACommand;
-import command.undergraduate.GetMyGradesCommand;
-import command.undergraduate.GetMyMarksCommand;
-import command.undergraduate.GetMyMedicalRecordsCommand;
-import command.undergraduate.GetMyTimetableCommand;
 
-import dao.finalMarks.FinalMarksDAO;
-import dao.eligibility.EligibilityDAO;
-import dao.grade.GradeDAO;
-import dao.gpa.GPADAO;
 import dao.course.CourseDAO;
 import dao.report.AcademicReportDAO;
-import dao.report.UndergraduateViewDAO;
 
-import service.finalMarks.FinalMarksService;
-import service.eligibility.EligibilityService;
-import service.grade.GradeService;
-import service.gpa.GPAService;
+
 import service.course.CourseService;
 import service.report.AcademicReportService;
-import service.report.UndergraduateViewService;
 
 import java.sql.Connection;
 import java.util.HashMap;
@@ -208,51 +178,7 @@ public class CommandRegistry {
             commands.put("GetBatchMedicalRecords", new GetBatchMedicalRecordsCommand(medicalService));
 
 
-              // ---------------- Final Marks ----------------
-            FinalMarksDAO finalMarksDAO = new FinalMarksDAO(connection);
-            FinalMarksService finalMarksService = new FinalMarksService(finalMarksDAO);
 
-            commands.put("UploadFinalMarks", new UploadFinalMarksCommand(finalMarksService));
-            commands.put("UpdateFinalMarks", new UpdateFinalMarksCommand(finalMarksService));
-            commands.put("GetStudentFinalMarks", new GetStudentFinalMarksCommand(finalMarksService));
-            commands.put("GetBatchFinalMarks", new GetBatchFinalMarksCommand(finalMarksService));
-
-            // ---------------- Full Eligibility ----------------
-            EligibilityDAO eligibilityDAO = new EligibilityDAO(connection);
-            EligibilityService eligibilityService = new EligibilityService(eligibilityDAO);
-
-            commands.put("CheckFullEligibility", new CheckFullEligibilityCommand(eligibilityService));
-            commands.put("GetBatchFullEligibilityReport", new GetBatchFullEligibilityReportCommand(eligibilityService));
-
-            // ---------------- Grading ----------------
-            GradeDAO gradeDAO = new GradeDAO(connection);
-            GradeService gradeService = new GradeService(gradeDAO);
-
-            commands.put("GenerateGrade", new GenerateGradeCommand(gradeService));
-            commands.put("GetStudentGrades", new GetStudentGradesCommand(gradeService));
-            commands.put("GetBatchGrades", new GetBatchGradesCommand(gradeService));
-
-            // ---------------- GPA ----------------
-            GPADAO gpaDAO = new GPADAO();
-            GPAService gpaService = new GPAService(gpaDAO);
-
-            commands.put("CalculateSGPA", new CalculateSGPACommand(gpaService));
-            commands.put("CalculateCGPA", new CalculateCGPACommand(gpaService));
-            commands.put("GetStudentGPAReport", new GetStudentGPAReportCommand(gpaService));
-            commands.put("GetBatchGPAReport", new GetBatchGPAReportCommand(gpaService));
-
-            // ---------------- Undergraduate View ----------------
-            UndergraduateViewDAO undergraduateViewDAO = new UndergraduateViewDAO();
-            UndergraduateViewService undergraduateViewService = new UndergraduateViewService(undergraduateViewDAO);
-
-            commands.put("GetMyAttendance", new GetMyAttendanceCommand(undergraduateViewService));
-            commands.put("GetMyMedicalRecords", new GetMyMedicalRecordsCommand(undergraduateViewService));
-            commands.put("GetMyCourses", new GetMyCoursesCommand(undergraduateViewService));
-            commands.put("GetMyMarks", new GetMyMarksCommand(undergraduateViewService));
-            commands.put("GetMyGrades", new GetMyGradesCommand(undergraduateViewService));
-            commands.put("GetMyGPA", new GetMyGPACommand(gpaService));
-            commands.put("GetMyTimetable", new GetMyTimetableCommand(undergraduateViewService));
-            commands.put("GetAllNotices", new GetAllNoticesCommand(undergraduateViewService));
 
             // ---------------- Full Academic Reports ----------------
             AcademicReportDAO academicReportDAO = new AcademicReportDAO();
@@ -305,6 +231,15 @@ public class CommandRegistry {
             TimeTableService timeTableService = new TimeTableService(timeTableDAO);
             commands.put("CREATE_TIMETABLE",new AddTimeTableCommand(timeTableService,authService));
             commands.put("GET_ALL_TIMETABLES", new GetAllTimeTablesCommand(timeTableService, authService));
+            commands.put("DELETE_COURSE_MATERIAL",
+                    new DeleteCourseMaterialCommand(courseMaterialService, authService));
+
+
+            //final marks related
+            FinalMarksDAO finalMarksDAO = new FinalMarksDAO();
+            FinalMarksService finalMarksService = new FinalMarksService(finalMarksDAO);
+            commands.put("UPLOAD_FINAL_MARKS",new UploadFinalMarksCommand(finalMarksService,authService));
+
 
         } catch (Exception e) {
             e.printStackTrace();

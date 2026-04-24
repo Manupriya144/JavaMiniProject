@@ -81,4 +81,24 @@ public class CourseMaterialDAO {
 
         return list;
     }
+
+    public boolean deleteMaterial(int materialId, String lecturerId) {
+        String sql = """
+            DELETE FROM course_material
+            WHERE material_id = ? AND lecturer_id = ?
+            """;
+
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, materialId);
+            ps.setString(2, lecturerId);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

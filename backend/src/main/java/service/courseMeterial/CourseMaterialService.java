@@ -27,4 +27,10 @@ public class CourseMaterialService {
     public List<CourseMaterial> getMaterialsByCourse(String courseId, String lecturerId) {
         return courseMaterialDAO.getMaterialsByCourse(courseId, lecturerId);
     }
+
+    public boolean deleteMaterial(int materialId, String lecturerId) {
+        return courseMaterialDAO.deleteMaterial(materialId, lecturerId);
+    }
+
+
 }
