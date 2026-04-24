@@ -152,15 +152,29 @@ public class StudentDashboardController implements Initializable {
     private void loadCourses() {
         coursesContainer.getChildren().clear();
 
-        String[][] courses = {
-                {"ICT2112", "Object Oriented Programming", "3", "B+"},
-                {"ICT2132", "OOP Practicum", "2", "A"},
-                {"ICT2142", "Data Structures", "3", "B"},
-                {"ICT2152", "Web Technologies", "3", "A-"},
-        };
+        com.example.frontend.service.AcademicEndpointService academicService = new com.example.frontend.service.AcademicEndpointService(client);
+        com.fasterxml.jackson.databind.JsonNode response = academicService.getMyCourses();
 
-        for (String[] c : courses) {
-            coursesContainer.getChildren().add(buildCourseRow(c[0], c[1], c[2], c[3]));
+        if (response != null && response.has("success") && response.get("success").asBoolean()) {
+            com.fasterxml.jackson.databind.JsonNode data = response.get("data");
+            if (data != null && data.isArray()) {
+                int count = 0;
+                for (com.fasterxml.jackson.databind.JsonNode node : data) {
+                    if (count >= 4) break; // limit to 4 on dashboard
+                    String code = node.has("courseCode") ? node.get("courseCode").asText() : "";
+                    String name = node.has("courseName") ? node.get("courseName").asText() : "";
+                    String credits = node.has("courseCredit") ? node.get("courseCredit").asText() : "";
+                    String type = node.has("registrationType") ? node.get("registrationType").asText() : "";
+                    coursesContainer.getChildren().add(buildCourseRow(code, name, credits, type));
+                    count++;
+                }
+                
+                enrolledCoursesLabel.setText(String.valueOf(data.size()));
+            } else {
+                enrolledCoursesLabel.setText("0");
+            }
+        } else {
+            enrolledCoursesLabel.setText("0");
         }
     }
 
@@ -302,7 +316,7 @@ public class StudentDashboardController implements Initializable {
         return item;
     }
 
-    @FXML private void openCourses() { loadView("StudentCourses.fxml"); }
+    @FXML private void openCourses() { loadView("student/StudentCourses.fxml"); }
     @FXML private void openAttendance() { loadView("StudentAttendance.fxml"); }
     @FXML private void openMedical() { loadView("StudentMedical.fxml"); }
     @FXML private void openGrades() { loadView("StudentGrades.fxml"); }

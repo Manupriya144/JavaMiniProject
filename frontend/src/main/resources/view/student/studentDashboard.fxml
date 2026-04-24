@@ -377,7 +377,7 @@
                                    style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                             <Label text="Credits" prefWidth="70"
                                    style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                            <Label text="Grade" prefWidth="70"
+                            <Label text="Type" prefWidth="70"
                                    style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                         </HBox>
 
