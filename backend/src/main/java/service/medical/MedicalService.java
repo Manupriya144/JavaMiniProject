@@ -33,8 +33,13 @@ public class MedicalService {
             return null;
         }
         if ("Attendance".equalsIgnoreCase(examType)
-                && !medicalDAO.hasAttendanceSessionForDate(studentId.trim(), courseId.trim(), date)) {
+                && !medicalDAO.hasSessionForDate(courseId.trim(), date)) {
             lastValidationMessage = "Submitted date must match an existing attendance session date for this student and course";
+            return null;
+        }
+        if ("Attendance".equalsIgnoreCase(examType)
+                && !medicalDAO.hasAbsentAttendanceForDate(studentId.trim(), courseId.trim(), date)) {
+            lastValidationMessage = "Medical can be submitted only when attendance status is Absent for the selected date";
             return null;
         }
 
@@ -74,8 +79,13 @@ public class MedicalService {
             return false;
         }
         if ("Attendance".equalsIgnoreCase(examType)
-                && !medicalDAO.hasAttendanceSessionForDate(studentId.trim(), courseId.trim(), date)) {
+                && !medicalDAO.hasSessionForDate(courseId.trim(), date)) {
             lastValidationMessage = "Submitted date must match an existing attendance session date for this student and course";
+            return false;
+        }
+        if ("Attendance".equalsIgnoreCase(examType)
+                && !medicalDAO.hasAbsentAttendanceForDate(studentId.trim(), courseId.trim(), date)) {
+            lastValidationMessage = "Medical can be submitted only when attendance status is Absent for the selected date";
             return false;
         }
         Medical medical = new Medical(

@@ -15,6 +15,14 @@ public class AttendanceStudentOption {
         return userId;
     }
 
+    public String getRegNo() {
+        return regNo;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
     @Override
     public String toString() {
         return regNo + " - " + username + " (" + userId + ")";
