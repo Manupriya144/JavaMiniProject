@@ -258,4 +258,57 @@ public class UndergraduateViewDAO {
         }
         return rows;
     }
+
+    public List<Map<String, Object>> getMyAttendanceSummaryByCourse(String studentId) {
+        // Strategy: pull from actual attendance records grouped by course.
+        // This works even if course_registration is incomplete/missing for the student.
+        String sql =
+            "SELECT se.course_id, COALESCE(c.name, se.course_id) AS course_name, " +
+            "COUNT(a.attendance_id) AS total_sessions, " +
+            "SUM(CASE WHEN a.status = 'Present' THEN 1 ELSE 0 END) AS present_count, " +
+            "SUM(CASE WHEN a.status = 'Absent'  THEN 1 ELSE 0 END) AS absent_count, " +
+            "SUM(CASE WHEN a.status = 'Present' THEN a.hours_attended ELSE 0 END) AS total_hours_attended " +
+            "FROM attendance a " +
+            "INNER JOIN session se ON a.session_id = se.session_id " +
+            "LEFT  JOIN course  c  ON c.course_id  = se.course_id " +
+            "WHERE a.student_id = ? " +
+            "GROUP BY se.course_id, c.name " +
+            "ORDER BY se.course_id";
+
+        List<Map<String, Object>> rows = new ArrayList<>();
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, studentId);
+            System.out.println("[DEBUG] getMyAttendanceSummaryByCourse studentId=" + studentId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("courseId",   rs.getString("course_id"));
+                    row.put("courseName", rs.getString("course_name"));
+
+                    int total   = rs.getInt("total_sessions");
+                    int present = rs.getInt("present_count");
+                    int absent  = rs.getInt("absent_count");
+                    double hours = rs.getDouble("total_hours_attended");
+                    double pct   = total == 0 ? 0.0 : (present * 100.0) / total;
+
+                    row.put("totalSessions",      total);
+                    row.put("presentCount",       present);
+                    row.put("absentCount",        absent);
+                    row.put("totalHoursAttended", hours);
+                    row.put("attendancePercentage", Math.round(pct * 100.0) / 100.0);
+
+                    System.out.println("[DEBUG] row: " + row);
+                    rows.add(row);
+                }
+            }
+            System.out.println("[DEBUG] total rows returned: " + rows.size());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows;
+    }
 }

@@ -44,4 +44,8 @@ public class UndergraduateViewService {
     public List<Map<String, Object>> getCourseMaterials(String courseId) {
         return dao.getCourseMaterials(courseId);
     }
+
+    public List<Map<String, Object>> getMyAttendanceSummaryByCourse(String studentId) {
+        return dao.getMyAttendanceSummaryByCourse(studentId);
+    }
 }

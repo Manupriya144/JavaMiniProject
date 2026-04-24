@@ -201,3 +201,67 @@ CREATE TABLE attendance (
     FOREIGN KEY(student_id) REFERENCES students(user_id) ON DELETE CASCADE,
     FOREIGN KEY(session_id) REFERENCES session(session_id) ON DELETE CASCADE
 );
+
+-- Dummy Data for Testing Attendance
+INSERT IGNORE INTO department (department_id, name) VALUES ('DPT01', 'Computer Science');
+INSERT IGNORE INTO users (user_id, username, email, password, contact_number, role) VALUES ('STU001', 'John Doe', 'john@example.com', 'password', '1234567890', 'Student');
+INSERT IGNORE INTO students (user_id, reg_no, batch, academic_level, department_id) VALUES ('STU001', 'REG001', '2023', 1, 'DPT01');
+INSERT IGNORE INTO course (course_id, course_code, name, course_credit, academic_level, semester, department_id) VALUES ('CRS001', 'CS101', 'Programming I', 3, 1, '1', 'DPT01');
+INSERT IGNORE INTO course (course_id, course_code, name, course_credit, academic_level, semester, department_id) VALUES ('CRS002', 'CS102', 'Database Systems', 3, 1, '1', 'DPT01');
+INSERT IGNORE INTO course_registration (student_id, course_id, academic_year, semester) VALUES ('STU001', 'CRS001', 2023, '1');
+INSERT IGNORE INTO course_registration (student_id, course_id, academic_year, semester) VALUES ('STU001', 'CRS002', 2023, '1');
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (1, 'CRS001', '2023-01-10', 2.0, 'Theory');
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (2, 'CRS001', '2023-01-12', 2.0, 'Practical');
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (3, 'CRS002', '2023-01-11', 2.0, 'Theory');
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (4, 'CRS002', '2023-01-13', 2.0, 'Practical');
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('STU001', 1, 'Present', 2.0);
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('STU001', 2, 'Present', 2.0);
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('STU001', 3, 'Present', 2.0);
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('STU001', 4, 'Absent', 0.0);
+
+-- Seed data for U001 (nimal) attendance
+INSERT IGNORE INTO department (department_id, name) VALUES ('DPT02', 'Information Technology');
+
+-- Courses for U001
+INSERT IGNORE INTO course (course_id, course_code, name, course_credit, academic_level, semester, department_id)
+    VALUES ('CRS101', 'IT101', 'Introduction to Programming', 3, 1, '1', 'DPT02');
+INSERT IGNORE INTO course (course_id, course_code, name, course_credit, academic_level, semester, department_id)
+    VALUES ('CRS102', 'IT102', 'Database Management', 3, 1, '1', 'DPT02');
+INSERT IGNORE INTO course (course_id, course_code, name, course_credit, academic_level, semester, department_id)
+    VALUES ('CRS103', 'IT103', 'Web Technologies', 3, 1, '1', 'DPT02');
+
+-- Sessions for CRS101
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (10, 'CRS101', '2024-01-08', 2.0, 'Theory');
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (11, 'CRS101', '2024-01-10', 2.0, 'Theory');
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (12, 'CRS101', '2024-01-15', 3.0, 'Practical');
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (13, 'CRS101', '2024-01-17', 2.0, 'Theory');
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (14, 'CRS101', '2024-01-22', 3.0, 'Practical');
+
+-- Sessions for CRS102
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (15, 'CRS102', '2024-01-09', 2.0, 'Theory');
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (16, 'CRS102', '2024-01-11', 2.0, 'Theory');
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (17, 'CRS102', '2024-01-16', 3.0, 'Practical');
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (18, 'CRS102', '2024-01-18', 2.0, 'Theory');
+
+-- Sessions for CRS103
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (19, 'CRS103', '2024-01-12', 2.0, 'Theory');
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (20, 'CRS103', '2024-01-19', 2.0, 'Theory');
+INSERT IGNORE INTO session (session_id, course_id, session_date, session_hours, type) VALUES (21, 'CRS103', '2024-01-26', 3.0, 'Practical');
+
+-- Attendance for U001 (nimal) — CRS101: 4/5 Present = 80%
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('U001', 10, 'Present', 2.0);
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('U001', 11, 'Present', 2.0);
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('U001', 12, 'Present', 3.0);
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('U001', 13, 'Absent',  0.0);
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('U001', 14, 'Present', 3.0);
+
+-- Attendance for U001 (nimal) — CRS102: 3/4 Present = 75%
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('U001', 15, 'Present', 2.0);
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('U001', 16, 'Absent',  0.0);
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('U001', 17, 'Present', 3.0);
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('U001', 18, 'Present', 2.0);
+
+-- Attendance for U001 (nimal) — CRS103: 3/3 Present = 100%
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('U001', 19, 'Present', 2.0);
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('U001', 20, 'Present', 2.0);
+INSERT IGNORE INTO attendance (student_id, session_id, status, hours_attended) VALUES ('U001', 21, 'Present', 3.0);

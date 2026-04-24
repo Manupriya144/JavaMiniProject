@@ -317,7 +317,7 @@ public class StudentDashboardController implements Initializable {
     }
 
     @FXML private void openCourses() { loadView("student/StudentCourses.fxml"); }
-    @FXML private void openAttendance() { loadView("StudentAttendance.fxml"); }
+    @FXML private void openAttendance() { loadView("student/StudentAttendance.fxml"); }
     @FXML private void openMedical() { loadView("StudentMedical.fxml"); }
     @FXML private void openGrades() { loadView("StudentGrades.fxml"); }
     @FXML private void openTimetable() { loadView("admin/DisplayTimeTable.fxml"); }

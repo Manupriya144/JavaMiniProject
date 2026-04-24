@@ -101,6 +101,7 @@ import command.report.GetBatchFullAcademicReportCommand;
 import command.report.GetStudentFullAcademicReportCommand;
 import command.undergraduate.GetAllNoticesCommand;
 import command.undergraduate.GetMyAttendanceCommand;
+import command.undergraduate.GetMyAttendanceSummaryByCourseCommand;
 import command.undergraduate.GetMyCoursesCommand;
 import command.undergraduate.GetMyGPACommand;
 import command.undergraduate.GetMyGradesCommand;
@@ -243,6 +244,7 @@ public class CommandRegistry {
             UndergraduateViewService undergraduateViewService = new UndergraduateViewService(undergraduateViewDAO);
 
             commands.put("GetMyAttendance", new GetMyAttendanceCommand(undergraduateViewService));
+            commands.put("GetMyAttendanceSummaryByCourse", new GetMyAttendanceSummaryByCourseCommand(undergraduateViewService));
             commands.put("GetMyMedicalRecords", new GetMyMedicalRecordsCommand(undergraduateViewService));
             commands.put("GetMyCourses", new GetMyCoursesCommand(undergraduateViewService));
             commands.put("GetMyMarks", new GetMyMarksCommand(undergraduateViewService));
