@@ -1,6 +1,7 @@
 package com.example.frontend.service;
 
 import com.example.frontend.model.Attendance;
+import com.example.frontend.model.AttendanceCourseOption;
 import com.example.frontend.model.AttendanceSessionOption;
 import com.example.frontend.model.AttendanceStudentOption;
 import com.example.frontend.network.ServerClient;
@@ -114,6 +115,66 @@ public class AttendanceService {
 
     public String getLastMessage() {
         return lastMessage;
+    }
+    /**
+     * Students who have at least one attendance record (registration numbers for medical forms).
+     */
+    public List<AttendanceStudentOption> getMedicalEligibleStudents() {
+        List<AttendanceStudentOption> result = new ArrayList<>();
+        try {
+            JsonNode node = send("GetMedicalEligibleStudents", new HashMap<>());
+            if (node != null && node.path("success").asBoolean(false) && node.has("data")) {
+                for (JsonNode item : node.get("data")) {
+                    result.add(new AttendanceStudentOption(
+                            item.path("userId").asText(),
+                            item.path("regNo").asText(),
+                            item.path("username").asText()
+                    ));
+                }
+            } else if (node != null) {
+                lastMessage = node.path("message").asText("Failed to load students");
+            } else {
+                lastMessage = "No response from server";
+            }
+        } catch (Exception e) {
+            String detail = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
+            lastMessage = "Failed to load students: " + detail;
+        }
+        return result;
+    }
+
+    /**
+     * Course IDs for medical form: sessions this student attended, scoped to their department timetable.
+     */
+    public List<AttendanceCourseOption> getMedicalEligibleCourseIds(String studentUserId) {
+        List<AttendanceCourseOption> result = new ArrayList<>();
+        try {
+            Map<String, Object> data = new HashMap<>();
+            data.put("student_id", studentUserId);
+            JsonNode node = send("GetMedicalEligibleCourses", data);
+            if (node != null && node.path("success").asBoolean(false) && node.has("data") && node.get("data").isArray()) {
+                for (JsonNode item : node.get("data")) {
+                    if (item.isTextual()) {
+                        String courseId = item.asText();
+                        result.add(new AttendanceCourseOption(courseId, ""));
+                    } else if (item.isObject()) {
+                        String courseId = item.path("courseId").asText();
+                        String courseName = item.path("courseName").asText("");
+                        if (!courseId.isBlank()) {
+                            result.add(new AttendanceCourseOption(courseId, courseName));
+                        }
+                    }
+                }
+            } else if (node != null) {
+                lastMessage = node.path("message").asText("Failed to load courses");
+            } else {
+                lastMessage = "No response from server";
+            }
+        } catch (Exception e) {
+            String detail = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
+            lastMessage = "Failed to load courses: " + detail;
+        }
+        return result;
     }
 
     public List<AttendanceStudentOption> getStudentOptions() {

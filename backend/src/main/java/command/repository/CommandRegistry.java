@@ -11,6 +11,8 @@ import command.attendance.AddAttendanceCommand;
 import command.attendance.DeleteAttendanceCommand;
 import command.attendance.GetAttendanceByIdCommand;
 import command.attendance.GetAttendanceSessionsCommand;
+import command.attendance.GetMedicalEligibleCoursesCommand;
+import command.attendance.GetMedicalEligibleStudentsCommand;
 import command.session.AddLectureSessionCommand;
 import command.techofficer.GetTechOfficerDashboardStatsCommand;
 import command.techofficer.GetTechOfficerProfileCommand;
@@ -178,6 +180,8 @@ public class CommandRegistry {
             commands.put("GetBatchAttendanceSummary", new GetBatchAttendanceSummaryCommand(attendanceService));
             commands.put("CheckAttendanceEligibility", new CheckAttendanceEligibilityCommand(attendanceService));
             commands.put("GetBatchAttendanceEligibilityReport", new GetBatchAttendanceEligibilityReportCommand(attendanceService));
+            commands.put("GetMedicalEligibleStudents", new GetMedicalEligibleStudentsCommand(attendanceService));
+            commands.put("GetMedicalEligibleCourses", new GetMedicalEligibleCoursesCommand(attendanceService));
 
             // CA marks related
             CAMarkDAO caMarkDAO = new CAMarkDAO(connection);
@@ -190,7 +194,7 @@ public class CommandRegistry {
             commands.put("GetBatchCAEligibilityReport", new GetBatchCAEligibilityReportCommand(caMarkService));
 
             // medical related
-            MedicalDAO medicalDAO = new MedicalDAO();
+            MedicalDAO medicalDAO = new MedicalDAO(connection);
             MedicalService medicalService = new MedicalService(medicalDAO);
             commands.put("AddMedical", new AddMedicalCommand(medicalService));
             commands.put("UpdateMedical", new UpdateMedicalCommand(medicalService));

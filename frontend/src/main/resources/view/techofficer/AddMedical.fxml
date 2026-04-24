@@ -151,24 +151,27 @@
                         <HBox spacing="20">
                             <VBox spacing="8" HBox.hgrow="ALWAYS">
                                 <HBox spacing="4" alignment="CENTER_LEFT">
-                                    <Label text="Student ID"
+                                    <Label text="Student Reg NO"
                                            style="-fx-text-fill: #1a3a52; -fx-font-size: 12px;
                                                   -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
                                     <Label text="*" style="-fx-text-fill: #e85d5d; -fx-font-size: 12px;"/>
                                 </HBox>
-                                <TextField fx:id="studentIdField"
-                                           promptText="e.g. 677"
-                                           prefHeight="44"
-                                           style="-fx-background-color: #ffffff;
-                                                  -fx-text-fill: #1a3a52;
-                                                  -fx-prompt-text-fill: #a8b8ca;
-                                                  -fx-background-radius: 10;
-                                                  -fx-border-color: #d4e4f7;
-                                                  -fx-border-radius: 10;
-                                                  -fx-border-width: 1.4;
-                                                  -fx-font-size: 13px;
-                                                  -fx-font-family: 'Segoe UI';
-                                                  -fx-padding: 0 14;"/>
+                                <ComboBox fx:id="studentRegCombo"
+                                          editable="true"
+                                          maxWidth="Infinity"
+                                          prefHeight="44"
+                                          visibleRowCount="8"
+                                          promptText="e.g. ICT/2019/019"
+                                          style="-fx-background-color: #ffffff;
+                                                 -fx-text-fill: #1a3a52;
+                                                 -fx-prompt-text-fill: #a8b8ca;
+                                                 -fx-background-radius: 10;
+                                                 -fx-border-color: #d4e4f7;
+                                                 -fx-border-radius: 10;
+                                                 -fx-border-width: 1.4;
+                                                 -fx-font-size: 13px;
+                                                 -fx-font-family: 'Segoe UI';
+                                                 -fx-padding: 0 14;"/>
                                 <Label text="Numeric student registration number"
                                        style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
                             </VBox>
@@ -180,19 +183,22 @@
                                                   -fx-font-weight: bold; -fx-font-family: 'Segoe UI';"/>
                                     <Label text="*" style="-fx-text-fill: #e85d5d; -fx-font-size: 12px;"/>
                                 </HBox>
-                                <TextField fx:id="courseIdField"
-                                           promptText="e.g. ICT1203"
-                                           prefHeight="44"
-                                           style="-fx-background-color: #ffffff;
-                                                  -fx-text-fill: #1a3a52;
-                                                  -fx-prompt-text-fill: #a8b8ca;
-                                                  -fx-background-radius: 10;
-                                                  -fx-border-color: #d4e4f7;
-                                                  -fx-border-radius: 10;
-                                                  -fx-border-width: 1.4;
-                                                  -fx-font-size: 13px;
-                                                  -fx-font-family: 'Segoe UI';
-                                                  -fx-padding: 0 14;"/>
+                                <ComboBox fx:id="courseIdCombo"
+                                          editable="true"
+                                          maxWidth="Infinity"
+                                          prefHeight="44"
+                                          visibleRowCount="8"
+                                          promptText="e.g. ICT1203"
+                                          style="-fx-background-color: #ffffff;
+                                                 -fx-text-fill: #1a3a52;
+                                                 -fx-prompt-text-fill: #a8b8ca;
+                                                 -fx-background-radius: 10;
+                                                 -fx-border-color: #d4e4f7;
+                                                 -fx-border-radius: 10;
+                                                 -fx-border-width: 1.4;
+                                                 -fx-font-size: 13px;
+                                                 -fx-font-family: 'Segoe UI';
+                                                 -fx-padding: 0 14;"/>
                                 <Label text="Module code from the timetable"
                                        style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px; -fx-font-family: 'Segoe UI';"/>
                             </VBox>

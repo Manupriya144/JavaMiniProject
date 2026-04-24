@@ -92,6 +92,59 @@ public class AttendanceDAO {
         }
         return null;
     }
+    /**
+     * Students who have at least one attendance row (for medical / eligibility pickers).
+     */
+    public List<Map<String, Object>> getStudentsWithAttendance() {
+        String sql = "SELECT DISTINCT s.user_id, s.reg_no, u.username " +
+                "FROM attendance a " +
+                "INNER JOIN students s ON a.student_id = s.user_id " +
+                "INNER JOIN users u ON s.user_id = u.user_id " +
+                "ORDER BY s.reg_no";
+        List<Map<String, Object>> rows = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Map<String, Object> row = new HashMap<>();
+                row.put("userId", rs.getString("user_id"));
+                row.put("regNo", rs.getString("reg_no"));
+                row.put("username", rs.getString("username"));
+                rows.add(row);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows;
+    }
+
+
+    //  * Course IDs the student has attendance for, restricted to their department via timetable
+
+
+    public List<Map<String, Object>> getCourseIdsForStudentDepartmentAttendance(String studentUserId) {
+        String sql = "SELECT DISTINCT se.course_id, COALESCE(c.name, '') AS course_name " +
+                "FROM attendance a " +
+                "INNER JOIN session se ON a.session_id = se.session_id " +
+                "INNER JOIN students st ON a.student_id = st.user_id " +
+                "LEFT JOIN course c ON c.course_id = se.course_id " +
+                "WHERE a.student_id = ? " +
+                "ORDER BY se.course_id";
+        List<Map<String, Object>> rows = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, studentUserId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("courseId", rs.getString("course_id"));
+                    row.put("courseName", rs.getString("course_name"));
+                    rows.add(row);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows;
+    }
 
     public List<Map<String, Object>> getStudentOptions() {
         String sql = "SELECT s.user_id, s.reg_no, u.username " +

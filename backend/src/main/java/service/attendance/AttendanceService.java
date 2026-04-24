@@ -53,6 +53,16 @@ public class AttendanceService {
         }
         return attendanceDAO.getAttendanceById(attendanceId);
     }
+    public List<Map<String, Object>> getStudentsWithAttendance() {
+        return attendanceDAO.getStudentsWithAttendance();
+    }
+
+    public List<Map<String, Object>> getMedicalEligibleCourseIds(String studentUserId) {
+        if (studentUserId == null || studentUserId.isBlank()) {
+            return List.of();
+        }
+        return attendanceDAO.getCourseIdsForStudentDepartmentAttendance(studentUserId.trim());
+    }
 
     public List<Map<String, Object>> getStudentOptions() {
         return attendanceDAO.getStudentOptions();

@@ -1,7 +1,6 @@
 package dao.medical;
 
 import model.Medical;
-import utility.DataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,23 +10,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MedicalDAO {
+    private final Connection connection;
+
+    public MedicalDAO(Connection connection) {
+        this.connection = connection;
+    }
 
     public Medical addMedical(Medical medical) {
         String sql = "INSERT INTO medical (student_id, course_id, exam_type, date_submitted, medical_copy, status) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, medical.getStudentId());
-            ps.setString(2, medical.getCourseId());
-            ps.setString(3, medical.getExamType());
-            ps.setString(4, medical.getDateSubmitted());
-            ps.setString(5, medical.getMedicalCopy());
-            ps.setString(6, medical.getStatus());
-            int rows = ps.executeUpdate();
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, medical.getStudentId());
+            stmt.setString(2, medical.getCourseId());
+            stmt.setString(3, medical.getExamType());
+            stmt.setString(4, medical.getDateSubmitted());
+            stmt.setString(5, medical.getMedicalCopy());
+            stmt.setString(6, medical.getStatus());
+            int rows = stmt.executeUpdate();
             if (rows == 0) {
                 return null;
             }
-            try (ResultSet rs = ps.getGeneratedKeys()) {
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     medical.setMedicalId(rs.getInt(1));
                 }
@@ -42,8 +45,7 @@ public class MedicalDAO {
     public boolean updateMedical(Medical medical) {
         String sql = "UPDATE medical SET student_id = ?, course_id = ?, exam_type = ?, date_submitted = ?, medical_copy = ? " +
                 "WHERE medical_id = ?";
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS))  {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, medical.getStudentId());
             stmt.setString(2, medical.getCourseId());
             stmt.setString(3, medical.getExamType());
@@ -59,8 +61,7 @@ public class MedicalDAO {
 
     public boolean updateStatus(int medicalId, String status) {
         String sql = "UPDATE medical SET status = ? WHERE medical_id = ?";
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS))  {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, status);
             stmt.setInt(2, medicalId);
             return stmt.executeUpdate() > 0;
@@ -74,8 +75,7 @@ public class MedicalDAO {
         String sql = "SELECT medical_id, student_id, course_id, exam_type, date_submitted, medical_copy, status " +
                 "FROM medical WHERE student_id = ? ORDER BY date_submitted DESC, medical_id DESC";
         List<Medical> list = new ArrayList<>();
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS))  {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, studentId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -93,8 +93,7 @@ public class MedicalDAO {
                 "FROM medical m INNER JOIN students s ON m.student_id = s.user_id " +
                 "WHERE s.batch = ? ORDER BY m.date_submitted DESC, m.medical_id DESC";
         List<Medical> list = new ArrayList<>();
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, batch);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -107,12 +106,30 @@ public class MedicalDAO {
         return list;
     }
 
-    public boolean hasAttendanceSessionForDate(String studentId, String courseId, String sessionDate) {
-        String sql = "SELECT 1 FROM attendance a " +
+    public boolean hasSessionForDate(String courseId, String sessionDate) {
+        String sql = "SELECT 1 FROM session s WHERE s.course_id = ? AND s.session_date = ? LIMIT 1";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, courseId);
+            stmt.setString(2, sessionDate);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean hasAbsentAttendanceForDate(String studentId, String courseId, String sessionDate) {
+        String sql = "SELECT 1 " +
+                "FROM attendance a " +
                 "INNER JOIN session s ON a.session_id = s.session_id " +
-                "WHERE a.student_id = ? AND s.course_id = ? AND s.session_date = ? LIMIT 1";
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS))  {
+                "WHERE a.student_id = ? " +
+                "  AND s.course_id = ? " +
+                "  AND s.session_date = ? " +
+                "  AND a.status = 'Absent' " +
+                "LIMIT 1";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, studentId);
             stmt.setString(2, courseId);
             stmt.setString(3, sessionDate);
