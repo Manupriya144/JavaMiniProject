@@ -133,7 +133,7 @@ public class LecturerDashboardController implements Initializable {
 
     @FXML
     private void openCourses() {
-        loadView("LecturerCourses.fxml");
+        loadView("lecturer/LecturerCourses.fxml");
     }
 
     @FXML
@@ -173,7 +173,7 @@ public class LecturerDashboardController implements Initializable {
 
     @FXML
     private void openNotices() {
-        loadView("NoticesView.fxml");
+        loadView("admin/NoticeDisplay.fxml");
     }
 
     @FXML

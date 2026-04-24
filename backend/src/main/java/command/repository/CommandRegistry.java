@@ -2,6 +2,8 @@ package command.repository;
 
 import command.course.GetAllCoursesCommand;
 import command.course.GetAllCoursesCommandFull;
+import command.courseMeterial.AddCourseMaterialCommand;
+import command.courseMeterial.GetCourseMaterialsCommand;
 import command.lecturer.GetAllLecturersCommand;
 import command.lecturerCourse.AssignLecturerCourseCommand;
 import command.lecturerCourse.GetLecturerCoursesCommand;
@@ -51,6 +53,7 @@ import command.student.GetStudentByIdCommand;
 import command.user.GetUserByIdCommand;
 import dao.attendance.AttendanceDAO;
 import dao.lectureCourse.LecturerCourseDAO;
+import dao.lecturerMeterial.CourseMaterialDAO;
 import dao.session.SessionDAO;
 import dao.techofficer.TechOfficerDAO;
 import dao.ca.CAMarkDAO;
@@ -68,6 +71,7 @@ import dao.user.AdminDashboardDAOImpl;
 import dao.user.UserDAO;
 import service.attendance.AttendanceService;
 import service.ca.CAMarkService;
+import service.courseMeterial.CourseMaterialService;
 import service.lecture.LecturerService;
 import service.lecturerCourse.LecturerCourseService;
 import service.login.AuthService;
@@ -290,6 +294,11 @@ public class CommandRegistry {
             commands.put("ADD_LECTURE_SESSION", new AddLectureSessionCommand(sessionService,authService));
             commands.put("GET_LECTURER_COURSES",
                     new GetLecturerCoursesCommand(lecturerCourseService, authService));
+
+            CourseMaterialDAO courseMaterialDAO = new CourseMaterialDAO();
+            CourseMaterialService courseMaterialService = new CourseMaterialService(courseMaterialDAO);
+            commands.put("ADD_COURSE_MATERIAL", new AddCourseMaterialCommand(courseMaterialService,authService));
+            commands.put("GET_COURSE_MATERIALS", new GetCourseMaterialsCommand(courseMaterialService,authService));
 
             //timetable related
             TimeTableDAO timeTableDAO = new TimeTableDAO();

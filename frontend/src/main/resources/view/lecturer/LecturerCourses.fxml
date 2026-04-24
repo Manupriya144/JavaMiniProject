@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.frontend.controller.lecturer.LecturerCoursesController"
+            prefWidth="900"
+            prefHeight="650"
+            style="-fx-background-color: #f8fbff;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              spacing="0"
+              style="-fx-background-color: linear-gradient(to right, #5b9fd9, #3f7fc2);
+                 -fx-effect: dropshadow(three-pass-box, rgba(63,127,194,0.28), 16, 0, 0, 4);">
+
+            <HBox alignment="CENTER_LEFT" spacing="14" prefHeight="74">
+                <padding>
+                    <Insets left="26" right="26"/>
+                </padding>
+
+                <StackPane prefWidth="46" prefHeight="46"
+                           style="-fx-background-color: rgba(255,255,255,0.20);
+                              -fx-background-radius: 23;
+                              -fx-border-color: rgba(255,255,255,0.25);
+                              -fx-border-radius: 23;
+                              -fx-border-width: 1;">
+                    <Label text="🎓" style="-fx-font-size: 22px;"/>
+                </StackPane>
+
+                <VBox spacing="2">
+                    <Label text="FoT Portal"
+                           style="-fx-text-fill: white;
+                              -fx-font-size: 20px;
+                              -fx-font-weight: bold;"/>
+                    <Label text="Lecturer Course Management"
+                           style="-fx-text-fill: rgba(255,255,255,0.82);
+                              -fx-font-size: 11px;"/>
+                </VBox>
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox alignment="CENTER" spacing="10">
+                <padding>
+                    <Insets right="24"/>
+                </padding>
+
+                <Label text="📚 My Assigned Courses"
+                       style="-fx-background-color: rgba(255,255,255,0.18);
+                          -fx-text-fill: white;
+                          -fx-font-size: 12px;
+                          -fx-font-weight: bold;
+                          -fx-background-radius: 20;
+                          -fx-padding: 8 16;"/>
+
+                <Button text="← Back"
+                        onAction="#goBack"
+                        style="-fx-background-color: white;
+                           -fx-text-fill: #3f7fc2;
+                           -fx-font-size: 12px;
+                           -fx-font-weight: bold;
+                           -fx-background-radius: 20;
+                           -fx-padding: 8 18;
+                           -fx-cursor: hand;
+                           -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.12), 8, 0, 0, 2);"/>
+            </HBox>
+
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="26">
+            <padding>
+                <Insets top="30" right="40" bottom="30" left="40"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT"
+                  spacing="18"
+                  style="-fx-background-color: linear-gradient(to right, #ffffff, #f3f8ff);
+                         -fx-background-radius: 18;
+                         -fx-border-color: #d7e7f8;
+                         -fx-border-radius: 18;
+                         -fx-border-width: 1;
+                         -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 16, 0, 0, 5);">
+
+                <padding>
+                    <Insets top="22" right="24" bottom="22" left="24"/>
+                </padding>
+
+                <StackPane prefWidth="58" prefHeight="58"
+                           style="-fx-background-color: linear-gradient(to bottom right, #5b9fd9, #7cb7ea);
+                                  -fx-background-radius: 29;">
+                    <Label text="📚" style="-fx-font-size: 22px;"/>
+                </StackPane>
+
+                <VBox spacing="5">
+                    <Label text="My Courses"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+                    <Label text="Double click a course to view materials and upload new materials."
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 13px;"/>
+                </VBox>
+            </HBox>
+
+            <VBox spacing="0"
+                  style="-fx-background-color: white;
+                         -fx-background-radius: 16;
+                         -fx-border-color: #d7e7f8;
+                         -fx-border-radius: 16;
+                         -fx-border-width: 1;
+                         -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 14, 0, 0, 5);">
+
+                <HBox alignment="CENTER_LEFT" spacing="10"
+                      style="-fx-background-color: #f5f9ff;
+                             -fx-background-radius: 16 16 0 0;
+                             -fx-border-color: transparent transparent #e8eef5 transparent;
+                             -fx-border-width: 0 0 1 0;">
+                    <padding>
+                        <Insets top="18" right="24" bottom="18" left="24"/>
+                    </padding>
+
+                    <Label text="📘" style="-fx-font-size: 18px;"/>
+
+                    <VBox spacing="1">
+                        <Label text="Assigned Course List"
+                               style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                        <Label text="Open a course to manage its materials."
+                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                    </VBox>
+                </HBox>
+
+                <ListView fx:id="courseListView"
+                          onMouseClicked="#openSelectedCourse"
+                          prefHeight="380"
+                          style="-fx-background-color: white;
+                                 -fx-border-color: transparent;
+                                 -fx-background-radius: 0 0 16 16;"/>
+            </VBox>
+
+            <Label fx:id="statusLabel"
+                   visible="false"
+                   managed="false"
+                   style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_LEFT"
+              spacing="10"
+              style="-fx-background-color: white; -fx-border-color: #e8eef5; -fx-border-width: 1 0 0 0;">
+            <padding>
+                <Insets top="8" bottom="8" left="24" right="24"/>
+            </padding>
+
+            <Circle radius="4" style="-fx-fill: #4cba52;"/>
+            <Label text="System Online  •  Faculty of Technology Management System  •  v1.0"
+                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Label text="Lecturer Course Panel"
+                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
