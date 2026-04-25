@@ -3,89 +3,198 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.frontend.controller.admin.RegistrationPeriodController"
-            prefWidth="900"
-            prefHeight="600"
+            prefWidth="1180"
+            prefHeight="650"
             style="-fx-background-color: #f8fbff;">
 
     <top>
         <HBox alignment="CENTER_LEFT"
-              style="-fx-background-color: #5b9fd9;">
-            <padding>
-                <Insets top="18" right="28" bottom="18" left="28"/>
-            </padding>
+              style="-fx-background-color: #ffffff; -fx-border-color: #e8eef5; -fx-border-width: 0 0 1 0;">
 
-            <VBox>
-                <Label text="Course Registration Period"
-                       style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;"/>
-                <Label text="Open or update student course registration time range"
-                       style="-fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 12px;"/>
-            </VBox>
+            <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="64">
+                <padding>
+                    <Insets left="28" right="28"/>
+                </padding>
+
+                <Label text="🎓" style="-fx-font-size: 28px;"/>
+
+                <VBox alignment="CENTER_LEFT" spacing="1">
+                    <Label text="FoT Portal"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Label text="Faculty of Technology"
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px;"/>
+                </VBox>
+            </HBox>
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <Button text="Back"
-                    onAction="#goBack"
-                    style="-fx-background-color: white; -fx-text-fill: #3f7fc2; -fx-font-weight: bold;"/>
+            <Label text="📘 Course Registration Period"
+                   style="-fx-text-fill: #5b9fd9; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox alignment="CENTER" spacing="10">
+                <padding>
+                    <Insets left="16" right="24"/>
+                </padding>
+
+                <StackPane>
+                    <Circle radius="18" style="-fx-fill: #5b9fd9;"/>
+                    <Label text="A" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+                </StackPane>
+
+                <VBox alignment="CENTER_LEFT" spacing="1">
+                    <Label text="Administrator"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <Label text="Admin"
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 9px;"/>
+                </VBox>
+
+                <Button text="← Back"
+                        onAction="#goBack"
+                        style="-fx-background-color: #e8eef5; -fx-text-fill: #1a3a52; -fx-font-size: 11px; -fx-background-radius: 6; -fx-font-weight: bold;"/>
+            </HBox>
         </HBox>
     </top>
 
     <center>
-        <VBox spacing="18">
+        <VBox spacing="22">
             <padding>
-                <Insets top="40" right="80" bottom="40" left="80"/>
+                <Insets top="26" right="32" bottom="26" left="32"/>
             </padding>
 
-            <Label text="Open Registration"
-                   style="-fx-text-fill: #1a3a52; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <VBox spacing="5">
+                <Label text="Course Registration Period"
+                       style="-fx-text-fill: #1a3a52; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+                <Label text="Open or update student course registration time range."
+                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 13px;"/>
+            </VBox>
 
-            <GridPane hgap="18" vgap="14">
-                <columnConstraints>
-                    <ColumnConstraints prefWidth="180"/>
-                    <ColumnConstraints hgrow="ALWAYS"/>
-                </columnConstraints>
+            <HBox alignment="CENTER">
+                <VBox spacing="0"
+                      prefWidth="760"
+                      style="-fx-background-color: #fafbff; -fx-background-radius: 14; -fx-border-color: #d4e4f7; -fx-border-radius: 14; -fx-border-width: 1.5;">
 
-                <Label text="Department ID" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <TextField fx:id="departmentIdField" promptText="D001"
-                           GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    <HBox alignment="CENTER_LEFT" spacing="10"
+                          style="-fx-background-color: #f5f9ff; -fx-background-radius: 14 14 0 0;">
+                        <padding>
+                            <Insets top="16" right="20" bottom="16" left="20"/>
+                        </padding>
 
-                <Label text="Academic Level" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <ComboBox fx:id="levelBox" promptText="Select level"
-                          GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                        <Label text="📝" style="-fx-font-size: 17px;"/>
 
-                <Label text="Semester" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <ComboBox fx:id="semesterBox" promptText="Select semester"
-                          GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                        <VBox spacing="1">
+                            <Label text="Open Registration"
+                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                            <Label text="Fill department, level, semester, year and date range"
+                                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                        </VBox>
+                    </HBox>
 
-                <Label text="Academic Year" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                <TextField fx:id="academicYearField" promptText="2026"
-                           GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    <VBox spacing="20">
+                        <padding>
+                            <Insets top="28" right="34" bottom="30" left="34"/>
+                        </padding>
 
-                <Label text="Start Date Time" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                <TextField fx:id="startAtField" promptText="2026-04-25 08:00:00"
-                           GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                        <GridPane hgap="18" vgap="16">
+                            <columnConstraints>
+                                <ColumnConstraints prefWidth="190"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
 
-                <Label text="End Date Time" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                <TextField fx:id="endAtField" promptText="2026-05-05 23:59:59"
-                           GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                            <Label text="Department ID"
+                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                                   GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                            <TextField fx:id="departmentIdField"
+                                       promptText="ICT"
+                                       prefHeight="38"
+                                       GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-                <Label text="Status" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-                <ComboBox fx:id="statusBox" promptText="Open/Closed"
-                          GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-            </GridPane>
+                            <Label text="Academic Level"
+                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                                   GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                            <ComboBox fx:id="levelBox"
+                                      promptText="Select level"
+                                      prefHeight="38"
+                                      maxWidth="Infinity"
+                                      GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-            <Button text="Save Registration Period"
-                    onAction="#saveRegistrationPeriod"
-                    prefHeight="42"
-                    style="-fx-background-color: #4cba52; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"/>
+                            <Label text="Semester"
+                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                                   GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                            <ComboBox fx:id="semesterBox"
+                                      promptText="Select semester"
+                                      prefHeight="38"
+                                      maxWidth="Infinity"
+                                      GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-            <Label fx:id="statusLabel"
-                   text=""
-                   style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
+                            <Label text="Academic Year"
+                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                                   GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                            <TextField fx:id="academicYearField"
+                                       promptText="2026"
+                                       prefHeight="38"
+                                       GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                            <Label text="Start Date Time"
+                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                                   GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                            <TextField fx:id="startAtField"
+                                       promptText="2026-04-25 08:00:00"
+                                       prefHeight="38"
+                                       GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                            <Label text="End Date Time"
+                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                                   GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                            <TextField fx:id="endAtField"
+                                       promptText="2026-04-30 23:59:59"
+                                       prefHeight="38"
+                                       GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                            <Label text="Status"
+                                   style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"
+                                   GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                            <ComboBox fx:id="statusBox"
+                                      promptText="Open/Closed"
+                                      prefHeight="38"
+                                      maxWidth="Infinity"
+                                      GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+                        </GridPane>
+
+                        <HBox alignment="CENTER_RIGHT" spacing="12">
+                            <Button text="Save Registration Period"
+                                    onAction="#saveRegistrationPeriod"
+                                    prefHeight="42"
+                                    prefWidth="230"
+                                    style="-fx-background-color: #4cba52; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </HBox>
         </VBox>
     </center>
+
+    <bottom>
+        <HBox alignment="CENTER_LEFT" spacing="16"
+              style="-fx-background-color: #ffffff; -fx-border-color: #e8eef5; -fx-border-width: 1 0 0 0;">
+            <padding>
+                <Insets top="10" bottom="10" left="28" right="28"/>
+            </padding>
+
+            <Label text="●" style="-fx-text-fill: #4cba52;"/>
+            <Label fx:id="statusLabel"
+                   text="Ready"
+                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Course Registration"
+                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+        </HBox>
+    </bottom>
 
 </BorderPane>

@@ -31,6 +31,10 @@ public class LecturerProfileController {
 
     @FXML private ImageView profileImage;
     @FXML private Label profileInitial;
+
+    @FXML private ImageView headerAvatarImage;
+    @FXML private Label headerAvatarInitial;
+
     @FXML private Label statusLabel;
     @FXML private Button saveBtn;
 
@@ -76,30 +80,50 @@ public class LecturerProfileController {
         String profilePicture = profilePictureField.getText();
         String username = usernameField.getText();
 
+        String initial = username != null && !username.isBlank()
+                ? username.substring(0, 1).toUpperCase()
+                : "L";
+
         if (profilePicture != null && !profilePicture.isBlank()) {
             try {
                 File file = new File(profilePicture);
+
                 if (file.exists()) {
-                    Image image = new Image(file.toURI().toString());
+                    Image image = new Image(file.toURI().toString(), false);
+
                     profileImage.setImage(image);
-                    profileImage.setClip(new Circle(34, 34, 34));
+                    profileImage.setFitWidth(84);
+                    profileImage.setFitHeight(84);
+                    profileImage.setPreserveRatio(false);
+                    profileImage.setClip(new Circle(42, 42, 42));
                     profileImage.setVisible(true);
                     profileInitial.setVisible(false);
+
+                    headerAvatarImage.setImage(image);
+                    headerAvatarImage.setFitWidth(36);
+                    headerAvatarImage.setFitHeight(36);
+                    headerAvatarImage.setPreserveRatio(false);
+                    headerAvatarImage.setClip(new Circle(18, 18, 18));
+                    headerAvatarImage.setVisible(true);
+                    headerAvatarInitial.setVisible(false);
+
                     return;
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        profileInitial.setText(
-                username != null && !username.isBlank()
-                        ? username.substring(0, 1).toUpperCase()
-                        : "L"
-        );
-
+        profileImage.setImage(null);
         profileImage.setVisible(false);
+        profileInitial.setText(initial);
         profileInitial.setVisible(true);
+
+        headerAvatarImage.setImage(null);
+        headerAvatarImage.setVisible(false);
+        headerAvatarInitial.setText(initial);
+        headerAvatarInitial.setVisible(true);
     }
 
     @FXML

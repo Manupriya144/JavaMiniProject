@@ -56,6 +56,8 @@ public class StudentDashboardController implements Initializable {
 
     @FXML private ImageView profileImage;
     @FXML private Label profileInitial;
+    @FXML private ImageView welcomeAvatarImage;
+    @FXML private Label welcomeAvatarInitial;
 
     private String studentName = LoginController.username;
     private String studentRegNo = LoginController.reNo;
@@ -215,34 +217,47 @@ public class StudentDashboardController implements Initializable {
         String profilePicture = student.getProfilePicture();
         String username = student.getUsername();
 
+        String initial = (username != null && !username.isBlank())
+                ? username.substring(0, 1).toUpperCase()
+                : LoginController.username.toUpperCase().substring(0,1);
+
         if (profilePicture != null && !profilePicture.isBlank()) {
             try {
                 File file = new File(profilePicture);
 
                 if (file.exists()) {
-                    Image image = new Image(file.toURI().toString());
+                    Image image = new Image(file.toURI().toString(), false);
+
                     profileImage.setImage(image);
-
-                    Circle clip = new Circle(18, 18, 18);
-                    profileImage.setClip(clip);
-
+                    profileImage.setFitWidth(36);
+                    profileImage.setFitHeight(36);
+                    profileImage.setClip(new Circle(18, 18, 18));
                     profileImage.setVisible(true);
                     profileInitial.setVisible(false);
+
+
+                    welcomeAvatarImage.setImage(image);
+                    welcomeAvatarImage.setFitWidth(58);
+                    welcomeAvatarImage.setFitHeight(58);
+                    welcomeAvatarImage.setClip(new Circle(29, 29, 29));
+                    welcomeAvatarImage.setVisible(true);
+                    welcomeAvatarInitial.setVisible(false);
+
                     return;
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        if (username != null && !username.isBlank()) {
-            profileInitial.setText(username.substring(0, 1).toUpperCase());
-        } else {
-            profileInitial.setText("U");
-        }
-
         profileImage.setVisible(false);
+        profileInitial.setText(initial);
         profileInitial.setVisible(true);
+
+        welcomeAvatarImage.setVisible(false);
+        welcomeAvatarInitial.setText(initial);
+        welcomeAvatarInitial.setVisible(true);
     }
 
     private void setupDefaultProfile() {

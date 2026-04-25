@@ -47,7 +47,8 @@ public class LecturerDashboardController implements Initializable {
 
     @FXML private ImageView avatarImage;
     @FXML private Label avatarInitial;
-    @FXML private Circle avatarCircle;
+    @FXML private ImageView welcomeAvatarImage;
+    @FXML private Label welcomeAvatarInitial;
 
     private String lecturerName = LoginController.username;
 
@@ -95,19 +96,36 @@ public class LecturerDashboardController implements Initializable {
     }
 
     private void setupAvatar(String imagePath, String username) {
+
+        String initial = username != null && !username.isBlank()
+                ? username.substring(0, 1).toUpperCase()
+                : LoginController.username.toUpperCase().substring(0,1);
+
         if (imagePath != null && !imagePath.isBlank()) {
             try {
                 File file = new File(imagePath);
 
                 if (file.exists()) {
-                    Image image = new Image(file.toURI().toString());
+                    Image image = new Image(file.toURI().toString(), false);
 
+                    // ================= TOP RIGHT SMALL AVATAR =================
                     avatarImage.setImage(image);
+                    avatarImage.setFitWidth(36);
+                    avatarImage.setFitHeight(36);
+                    avatarImage.setPreserveRatio(false);
                     avatarImage.setClip(new Circle(18, 18, 18));
-
                     avatarImage.setVisible(true);
                     avatarInitial.setVisible(false);
-                    avatarCircle.setVisible(false);
+
+
+                    welcomeAvatarImage.setImage(image);
+                    welcomeAvatarImage.setFitWidth(58);
+                    welcomeAvatarImage.setFitHeight(58);
+                    welcomeAvatarImage.setPreserveRatio(false);
+                    welcomeAvatarImage.setClip(new Circle(29, 29, 29));
+                    welcomeAvatarImage.setVisible(true);
+                    welcomeAvatarInitial.setVisible(false);
+
                     return;
                 }
 
@@ -116,16 +134,16 @@ public class LecturerDashboardController implements Initializable {
             }
         }
 
+
         avatarImage.setImage(null);
         avatarImage.setVisible(false);
-
-        avatarInitial.setText(
-                username != null && !username.isBlank()
-                        ? username.substring(0, 1).toUpperCase()
-                        : "L"
-        );
+        avatarInitial.setText(initial);
         avatarInitial.setVisible(true);
-        avatarCircle.setVisible(true);
+
+        welcomeAvatarImage.setImage(null);
+        welcomeAvatarImage.setVisible(false);
+        welcomeAvatarInitial.setText(initial);
+        welcomeAvatarInitial.setVisible(true);
     }
 
     private void loadStats() {

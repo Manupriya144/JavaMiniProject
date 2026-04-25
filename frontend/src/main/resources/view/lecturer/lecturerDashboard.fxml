@@ -85,18 +85,26 @@
                     <Insets left="10" right="20"/>
                 </padding>
 
-                <StackPane>
-                    <Circle fx:id="avatarCircle" radius="18" style="-fx-fill: white;"/>
+                <StackPane prefWidth="36" prefHeight="36">
 
                     <ImageView fx:id="avatarImage"
                                fitWidth="36"
                                fitHeight="36"
-                               preserveRatio="true"
+                               preserveRatio="false"
                                visible="false"/>
 
                     <Label fx:id="avatarInitial"
                            text="L"
-                           style="-fx-text-fill: #3f7fc2; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+                           style="-fx-background-color: white;
+                                  -fx-text-fill: #3f7fc2;
+                                  -fx-font-weight: bold;
+                                  -fx-font-size: 14px;
+                                  -fx-alignment: center;
+                                  -fx-background-radius: 18;
+                                  -fx-min-width: 36;
+                                  -fx-min-height: 36;
+                                  -fx-max-width: 36;
+                                  -fx-max-height: 36;"/>
                 </StackPane>
 
                 <VBox spacing="1">
@@ -147,10 +155,28 @@
                         <Insets top="22" right="24" bottom="22" left="24"/>
                     </padding>
 
-                    <StackPane prefHeight="58" prefWidth="58"
+                    <StackPane prefHeight="58" prefWidth="58">
+
+                        <!-- Profile Image -->
+                        <ImageView fx:id="welcomeAvatarImage"
+                                   fitWidth="58"
+                                   fitHeight="58"
+                                   preserveRatio="false"
+                                   visible="false"/>
+
+                        <!-- Fallback Initial -->
+                        <Label fx:id="welcomeAvatarInitial"
+                               text="L"
                                style="-fx-background-color: linear-gradient(to bottom right, #5b9fd9, #7cb7ea);
-                                      -fx-background-radius: 29;">
-                        <Label text="👨‍🏫" style="-fx-font-size: 22px;"/>
+                              -fx-text-fill: white;
+                              -fx-font-size: 20px;
+                              -fx-font-weight: bold;
+                              -fx-alignment: center;
+                              -fx-background-radius: 29;
+                              -fx-min-width: 58;
+                              -fx-min-height: 58;
+                              -fx-max-width: 58;
+                              -fx-max-height: 58;"/>
                     </StackPane>
 
                     <VBox spacing="5">

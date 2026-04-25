@@ -152,7 +152,6 @@ public class DisplayTimeTableController implements Initializable {
         infoRow.setPadding(new Insets(10, 0, 0, 0));
 
         infoRow.getChildren().addAll(
-                infoChip("ID", String.valueOf(tt.getTimetableId())),
                 infoChip("Department", safe(tt.getDepartmentId())),
                 infoChip("Level", "Level " + tt.getAcademicLevel()),
                 infoChip("Semester", safe(tt.getSemester())),
