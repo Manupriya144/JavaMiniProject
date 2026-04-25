@@ -69,14 +69,6 @@
                                -fx-padding: 8 18 8 18;
                                -fx-cursor: hand;"/>
 
-                <Button text="Medical Records" onAction="#openMedical"
-                        style="-fx-background-color: transparent;
-                               -fx-text-fill: white;
-                               -fx-font-size: 13px;
-                               -fx-background-radius: 10;
-                               -fx-padding: 8 18 8 18;
-                               -fx-cursor: hand;"/>
-
                 <Button text="Timetables" onAction="#openTimetables"
                         style="-fx-background-color: transparent;
                                -fx-text-fill: white;
@@ -224,24 +216,6 @@
                     </VBox>
 
                     <VBox spacing="8" prefWidth="220" prefHeight="122"
-                          style="-fx-background-color: linear-gradient(to bottom right, #effcf4, #f7fff9);
-                                 -fx-background-radius: 16;
-                                 -fx-border-color: #cfead7;
-                                 -fx-border-radius: 16;
-                                 -fx-border-width: 1;
-                                 -fx-effect: dropshadow(three-pass-box, rgba(109,186,130,0.14), 14, 0, 0, 5);">
-                        <padding>
-                            <Insets top="20" bottom="20" left="22" right="22"/>
-                        </padding>
-                        <Label text="🏥  Medical Records"
-                               style="-fx-text-fill: #35a053; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                        <Label fx:id="medicalRecordsLabel" text="—"
-                               style="-fx-text-fill: #1a3a52; -fx-font-size: 38px; -fx-font-weight: bold;"/>
-                        <Label text="Submitted medicals"
-                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
-                    </VBox>
-
-                    <VBox spacing="8" prefWidth="220" prefHeight="122"
                           style="-fx-background-color: linear-gradient(to bottom right, #fff8ef, #fffdf8);
                                  -fx-background-radius: 16;
                                  -fx-border-color: #ffe0aa;
@@ -255,7 +229,7 @@
                                style="-fx-text-fill: #d98928; -fx-font-size: 12px; -fx-font-weight: bold;"/>
                         <Label fx:id="pendingApprovalsLabel" text="—"
                                style="-fx-text-fill: #1a3a52; -fx-font-size: 38px; -fx-font-weight: bold;"/>
-                        <Label text="Medical approvals"
+                        <Label text="Pending requests"
                                style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
                     </VBox>
 
@@ -295,22 +269,6 @@
                                        -fx-cursor: hand;"/>
 
                         <Button text="📊  Advanced Attendance View" onAction="#openAdvancedAttendanceView" prefHeight="42" prefWidth="220"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
-
-                        <Button text="🏥  Add Medical" onAction="#openAddMedical" prefHeight="42" prefWidth="190"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
-
-                        <Button text="✔️  Approve Medical" onAction="#openMedical" prefHeight="42" prefWidth="190"
                                 style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
                                        -fx-text-fill: white;
                                        -fx-font-size: 13px;
@@ -397,10 +355,6 @@
                             <Label text="Below 80%" style="-fx-text-fill: #7f93a8; -fx-font-size: 12px;"/>
                         </HBox>
 
-                        <HBox spacing="6" alignment="CENTER_LEFT">
-                            <Label text="🏥" style="-fx-font-size: 12px;"/>
-                            <Label text="With Medical" style="-fx-text-fill: #7f93a8; -fx-font-size: 12px;"/>
-                        </HBox>
                     </HBox>
 
                     <VBox fx:id="attendanceSummaryContainer" spacing="8"/>

@@ -40,7 +40,6 @@
                 <Button text="GetBatchGPAReport" onAction="#onGetBatchGPAReport"/>
 
                 <Button text="GetMyAttendance" onAction="#onGetMyAttendance"/>
-                <Button text="GetMyMedicalRecords" onAction="#onGetMyMedicalRecords"/>
                 <Button text="GetMyCourses" onAction="#onGetMyCourses"/>
                 <Button text="GetMyMarks" onAction="#onGetMyMarks"/>
                 <Button text="GetMyGrades" onAction="#onGetMyGrades"/>

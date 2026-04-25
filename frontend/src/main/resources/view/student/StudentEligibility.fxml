@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.frontend.controller.student.StudentEligibilityController"
+            prefWidth="1200.0" prefHeight="750.0"
+            style="-fx-background-color: linear-gradient(to bottom right, #eef6ff, #fdfcff);">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="0"
+              style="-fx-background-color: linear-gradient(to right, #5b9fd9, #3f7fc2);
+                     -fx-effect: dropshadow(three-pass-box, rgba(63,127,194,0.25), 14, 0, 0, 3);">
+
+            <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="72">
+                <padding><Insets left="24" right="24"/></padding>
+
+                <StackPane prefWidth="44" prefHeight="44"
+                           style="-fx-background-color: rgba(255,255,255,0.18); -fx-background-radius: 22;">
+                    <Label text="✅" style="-fx-font-size: 20px;"/>
+                </StackPane>
+
+                <VBox alignment="CENTER_LEFT" spacing="2">
+                    <Label text="Exam eligibility"
+                           style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Label fx:id="subtitleLabel" text="CA ≥ 40% and attendance ≥ 80%"
+                           style="-fx-text-fill: rgba(255,255,255,0.80); -fx-font-size: 10px;"/>
+                </VBox>
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox alignment="CENTER" spacing="10">
+                <padding><Insets left="10" right="20"/></padding>
+
+                <StackPane>
+                    <Circle radius="18" style="-fx-fill: white;"/>
+                    <Label fx:id="profileInitial" text="S"
+                           style="-fx-text-fill: #3f7fc2; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+                </StackPane>
+
+                <VBox alignment="CENTER_LEFT" spacing="1">
+                    <Label fx:id="studentNameLabel" text="Student Name"
+                           style="-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <Label fx:id="studentIdLabel" text="Reg No: —"
+                           style="-fx-text-fill: rgba(255,255,255,0.78); -fx-font-size: 10px;"/>
+                </VBox>
+
+                <Button text="← Back" onAction="#goBack"
+                        style="-fx-background-color: rgba(255,255,255,0.18);
+                               -fx-text-fill: white;
+                               -fx-font-size: 12px;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 8;
+                               -fx-cursor: hand;
+                               -fx-border-color: rgba(255,255,255,0.22);
+                               -fx-border-radius: 8;
+                               -fx-border-width: 1;"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                    style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox spacing="18" style="-fx-background-color: transparent;">
+                <padding><Insets top="28" bottom="28" left="34" right="34"/></padding>
+
+                <VBox spacing="10"
+                      style="-fx-background-color: white; -fx-background-radius: 16;
+                             -fx-border-color: #d7e7f8; -fx-border-radius: 16; -fx-border-width: 1;
+                             -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 14, 0, 0, 5);">
+                    <padding><Insets top="22" bottom="22" left="24" right="24"/></padding>
+                    <Label fx:id="outcomeLabel" text="—"
+                           wrapText="true"/>
+                    <Label fx:id="attendanceLineLabel" text="—"
+                           style="-fx-text-fill: #5f748a; -fx-font-size: 13px;" wrapText="true"/>
+                    <Label text="Summary"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                    <Label fx:id="detailLabel" text=""
+                           style="-fx-text-fill: #5f748a; -fx-font-size: 12px;"/>
+                </VBox>
+
+                <VBox spacing="10"
+                      style="-fx-background-color: white; -fx-background-radius: 16;
+                             -fx-border-color: #d7e7f8; -fx-border-radius: 16; -fx-border-width: 1;
+                             -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 14, 0, 0, 5);">
+                    <padding><Insets top="22" bottom="22" left="24" right="24"/></padding>
+                    <Label text="Modules (CA)"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                    <VBox fx:id="courseRowsBox" spacing="8"/>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

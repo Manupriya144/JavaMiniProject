@@ -4,6 +4,7 @@ import com.example.frontend.dto.CourseAllResponseDTO;
 import com.example.frontend.dto.CourseRequestDTO;
 import com.example.frontend.dto.CourseResponseDTO;
 import com.example.frontend.dto.RequestDTO;
+import com.example.frontend.dto.StudentCoursesRequestDTO;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.session.SessionManager;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -97,6 +98,41 @@ public class CourseService {
             }
 
             // If backend returns array directly
+            if (root.isArray()) {
+                return mapper.readValue(responseJson, new TypeReference<List<CourseAllResponseDTO>>() {});
+            }
+
+            return Collections.emptyList();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public List<CourseAllResponseDTO> getStudentCourses(String userId) {
+        try {
+            RequestDTO requestDTO = new RequestDTO(
+                    "GET_STUDENT_COURSES",
+                    new StudentCoursesRequestDTO(userId),
+                    SessionManager.getToken()
+            );
+
+            String requestJson = mapper.writeValueAsString(requestDTO);
+            String responseJson = client.sendRequest(requestJson);
+
+            if (responseJson == null || responseJson.isEmpty()) {
+                return Collections.emptyList();
+            }
+
+            JsonNode root = mapper.readTree(responseJson);
+
+            if (root.isObject()) {
+                if (root.has("success") && !root.get("success").asBoolean()) {
+                    return Collections.emptyList();
+                }
+            }
+
             if (root.isArray()) {
                 return mapper.readValue(responseJson, new TypeReference<List<CourseAllResponseDTO>>() {});
             }

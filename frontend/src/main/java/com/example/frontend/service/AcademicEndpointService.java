@@ -31,7 +31,6 @@ public class AcademicEndpointService {
     }
 
     public JsonNode getMyAttendance() { return send("GetMyAttendance", "{}"); }
-    public JsonNode getMyMedicalRecords() { return send("GetMyMedicalRecords", "{}"); }
     public JsonNode getMyCourses() { return send("GetMyCourses", "{}"); }
     public JsonNode getMyMarks() { return send("GetMyMarks", "{}"); }
     public JsonNode getMyGrades() { return send("GetMyGrades", "{}"); }

@@ -19,7 +19,6 @@ module com.example.frontend {
     opens com.example.frontend.controller.lecturer to javafx.fxml;
     opens com.example.frontend.controller.student to javafx.fxml;
     opens com.example.frontend.controller.tech_officer to javafx.fxml;
-    opens com.example.frontend.controller.medical to javafx.fxml;
     opens com.example.frontend.controller.ca to javafx.fxml;
 
 

@@ -42,7 +42,6 @@ public class TechOfficerDashboardController implements Initializable {
     @FXML private Label techNameLabel;
     @FXML private Label totalStudentsLabel;
     @FXML private Label attendanceSessionsLabel;
-    @FXML private Label medicalRecordsLabel;
     @FXML private Label pendingApprovalsLabel;
     @FXML private Label statusBarTime;
     @FXML private VBox attendanceSummaryContainer;
@@ -148,14 +147,12 @@ public class TechOfficerDashboardController implements Initializable {
         if (stats == null) {
             totalStudentsLabel.setText("0");
             attendanceSessionsLabel.setText("0");
-            medicalRecordsLabel.setText("0");
             pendingApprovalsLabel.setText("0");
             return;
         }
 
         totalStudentsLabel.setText(String.valueOf(stats.getTotalStudents()));
         attendanceSessionsLabel.setText(String.valueOf(stats.getAttendanceSessions()));
-        medicalRecordsLabel.setText(String.valueOf(stats.getMedicalRecords()));
         pendingApprovalsLabel.setText(String.valueOf(stats.getPendingApprovals()));
     }
 
@@ -266,8 +263,6 @@ public class TechOfficerDashboardController implements Initializable {
     }
 
     @FXML private void openMarkAttendance() { loadView("techofficer/MarkAttendance.fxml"); }
-    @FXML private void openMedical() { loadView("techofficer/MedicalManagement.fxml"); }
-    @FXML private void openAddMedical() { loadView("techofficer/AddMedical.fxml"); }
     @FXML private void openTimetables() { loadView("admin/DisplayTimeTable.fxml"); }
     @FXML private void openNotices() { loadView("admin/NoticeDisplay.fxml"); }
     @FXML private void openProfile() { loadView("techofficer/TechOfficerProfile.fxml"); }
