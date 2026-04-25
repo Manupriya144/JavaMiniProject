@@ -226,6 +226,16 @@
 
                         <Button text="📅  Add Timetable" onAction="#openTimeAddTimeTables" prefHeight="44" prefWidth="180"
                                 style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce); -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        <Button text="📝  Open Registration"
+                                onAction="#openRegistrationPeriod"
+                                prefHeight="44"
+                                prefWidth="190"
+                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
+                               -fx-text-fill: white;
+                               -fx-font-size: 13px;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 10;
+                               -fx-cursor: hand;"/>
                     </FlowPane>
                 </VBox>
 

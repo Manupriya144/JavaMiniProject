@@ -71,17 +71,28 @@ public class CourseResultGeneratorDAO {
         if ("Suspend".equalsIgnoreCase(registrationType)) {
             grade = "WH";
             totalMarks = 0.0;
+
         } else if (hasApprovedExamMedical(con, studentId, courseId)) {
             grade = "WH";
             totalMarks = 0.0;
-        } else if (attendancePercentage < 80.0 || caPercentage < 50.0) {
-            grade = "EE";
-            totalMarks = 0.0;
-        } else {
-            grade = calculateGrade(totalMarks);
 
-            if ("Repeat".equalsIgnoreCase(registrationType)) {
+        } else if ("Repeat".equalsIgnoreCase(registrationType)) {
+
+            if (caPercentage < 50.0) {
+                grade = "EE";
+                totalMarks = 0.0;
+            } else {
+                grade = calculateGrade(totalMarks);
                 grade = capRepeatGradeToC(grade);
+            }
+
+        } else {
+
+            if (attendancePercentage < 80.0 || caPercentage < 50.0) {
+                grade = "EE";
+                totalMarks = 0.0;
+            } else {
+                grade = calculateGrade(totalMarks);
             }
         }
 

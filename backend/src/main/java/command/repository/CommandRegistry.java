@@ -12,10 +12,15 @@ import command.eligibility.GetStudentOwnEligibilityCommand;
 import command.finalMarks.UploadFinalMarksCommand;
 import command.lecturer.GetAllLecturersCommand;
 import command.lecturer.GetLecturerDashboardStatsCommand;
+import command.lecturer.GetLecturerProfileCommand;
+import command.lecturer.UpdateLecturerProfileCommand;
 import command.lecturerCourse.AssignLecturerCourseCommand;
 import command.lecturerCourse.GetLecturerCoursesCommand;
 import command.login.LoginCommand;
 import command.login.LogoutCommand;
+import command.registration.GetStudentRegistrationCoursesCommand;
+import command.registration.RegisterStudentCourseCommand;
+import command.registration.SaveRegistrationPeriodCommand;
 import command.result.GenerateCourseResultCommand;
 import command.result.GenerateGradeGPACommand;
 import command.result.GetStudentCourseMarksCommand;
@@ -27,7 +32,6 @@ import command.techofficer.GetTechOfficerProfileCommand;
 import command.techofficer.UpdateTechOfficerProfileCommand;
 import command.medical.AddMedicalCommand;
 import command.medical.ApproveMedicalCommand;
-import command.medical.GetBatchMedicalRecordsCommand;
 import command.medical.GetStudentMedicalRecordsCommand;
 import command.medical.RejectMedicalCommand;
 import command.medical.UpdateMedicalCommand;
@@ -45,8 +49,11 @@ import command.user.*;
 import dao.attendance.AttendanceDAO;
 import dao.finalMarks.FinalMarksDAO;
 import dao.lecture.LecturerDashboardDAO;
+import dao.lecture.LecturerProfileDAO;
 import dao.lectureCourse.LecturerCourseDAO;
 import dao.lecturerMeterial.CourseMaterialDAO;
+import dao.registration.RegistrationPeriodDAO;
+import dao.registration.StudentCourseRegistrationDAO;
 import dao.session.SessionDAO;
 import dao.techofficer.TechOfficerDAO;
 import dao.ca.CAMarkDAO;
@@ -70,11 +77,14 @@ import service.eligibility.FinalEligibilityService;
 import service.eligibility.StudentEligibilityService;
 import service.finalMarks.FinalMarksService;
 import service.lecture.LecturerDashboardService;
+import service.lecture.LecturerProfileService;
 import service.lecture.LecturerService;
 import service.lecturerCourse.LecturerCourseService;
 import service.login.AuthService;
 import service.medical.MedicalService;
 import service.notice.NoticeService;
+import service.resgistration.RegistrationPeriodService;
+import service.resgistration.StudentCourseRegistrationService;
 import service.result.CourseResultGeneratorService;
 import service.result.GradeGPAService;
 import service.result.StudentCourseMarksService;
@@ -298,6 +308,42 @@ public class CommandRegistry {
             FinalMarksService finalMarksService = new FinalMarksService(finalMarksDAO);
             commands.put("UPLOAD_FINAL_MARKS",new UploadFinalMarksCommand(finalMarksService,authService));
 
+
+            //course registration related
+            RegistrationPeriodDAO registrationPeriodDAO = new RegistrationPeriodDAO();
+            RegistrationPeriodService registrationPeriodService =
+                    new RegistrationPeriodService(registrationPeriodDAO);
+
+            commands.put("SAVE_REGISTRATION_PERIOD",
+                    new SaveRegistrationPeriodCommand(registrationPeriodService, authService)
+            );
+            StudentCourseRegistrationDAO studentCourseRegistrationDAO =
+                    new StudentCourseRegistrationDAO();
+
+            StudentCourseRegistrationService studentCourseRegistrationService =
+                    new StudentCourseRegistrationService(studentCourseRegistrationDAO);
+
+            commands.put("GET_STUDENT_REGISTRATION_COURSES",
+                    new GetStudentRegistrationCoursesCommand(studentCourseRegistrationService, authService)
+            );
+
+            commands.put("REGISTER_STUDENT_COURSE",
+                    new RegisterStudentCourseCommand(studentCourseRegistrationService, authService)
+            );
+
+            LecturerProfileDAO lecturerProfileDAO = new LecturerProfileDAO();
+            LecturerProfileService lecturerProfileService =
+                    new LecturerProfileService(lecturerProfileDAO);
+
+            commands.put(
+                    "GET_LECTURER_PROFILE",
+                    new GetLecturerProfileCommand(lecturerProfileService, authService)
+            );
+
+            commands.put(
+                    "UPDATE_LECTURER_PROFILE",
+                    new UpdateLecturerProfileCommand(lecturerProfileService, authService)
+            );
 
         } catch (Exception e) {
             e.printStackTrace();

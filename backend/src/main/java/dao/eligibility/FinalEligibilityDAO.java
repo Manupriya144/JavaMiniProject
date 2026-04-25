@@ -21,6 +21,7 @@ public class FinalEligibilityDAO {
                     c.course_id,
                     c.course_code,
                     c.name AS course_name,
+                    cr.registration_type,
                     COALESCE(total_sessions.total_hours, 0) AS total_hours,
                     COALESCE(attended.attended_hours, 0) AS attended_hours
                 FROM course_registration cr
@@ -51,6 +52,9 @@ public class FinalEligibilityDAO {
 
                 WHERE lc.lecturer_id = ?
                   AND c.course_id = ?
+                  AND cr.academic_year = YEAR(CURDATE())
+                  AND cr.semester = c.semester
+                  AND cr.registration_type IN ('Proper', 'Repeat')
                 ORDER BY s.reg_no
                 """;
 
@@ -60,81 +64,80 @@ public class FinalEligibilityDAO {
             ps.setString(1, lecturerId);
             ps.setString(2, courseId);
 
-            ResultSet rs = ps.executeQuery();
-
             double caMaxMarks = getCourseCAMaxMarks(con, courseId);
 
-            while (rs.next()) {
-                String studentId = rs.getString("student_id");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String studentId = rs.getString("student_id");
+                    String registrationType = rs.getString("registration_type");
 
-                double totalHours = rs.getDouble("total_hours");
-                double attendedHours = rs.getDouble("attended_hours");
+                    double totalHours = rs.getDouble("total_hours");
+                    double attendedHours = rs.getDouble("attended_hours");
 
-                double medicalHours = calculateApprovedMedicalHours(
-                        con,
-                        studentId,
-                        courseId
-                );
+                    double medicalHours = calculateApprovedMedicalHours(con, studentId, courseId);
 
-                double finalAttendanceHours = attendedHours + medicalHours;
+                    double finalAttendanceHours = attendedHours + medicalHours;
+                    if (finalAttendanceHours > totalHours) {
+                        finalAttendanceHours = totalHours;
+                    }
 
-                if (finalAttendanceHours > totalHours) {
-                    finalAttendanceHours = totalHours;
-                }
+                    double attendancePercentage = totalHours > 0
+                            ? (finalAttendanceHours / totalHours) * 100.0
+                            : 0.0;
 
-                double attendancePercentage = totalHours > 0
-                        ? (finalAttendanceHours / totalHours) * 100.0
-                        : 0.0;
+                    double caMarks = calculateStudentCAMarks(con, studentId, courseId, caMaxMarks);
 
-                double caMarks = calculateStudentCAMarks(
-                        con,
-                        studentId,
-                        courseId,
-                        caMaxMarks
-                );
+                    double caPercentage = caMaxMarks > 0
+                            ? (caMarks / caMaxMarks) * 100.0
+                            : 0.0;
 
-                double caPercentage = caMaxMarks > 0
-                        ? (caMarks / caMaxMarks) * 100.0
-                        : 0.0;
+                    String attendanceStatus = attendancePercentage >= 80.0
+                            ? "Eligible"
+                            : "Not Eligible";
 
-                String attendanceStatus = attendancePercentage >= 80.0
-                        ? "Eligible"
-                        : "Not Eligible";
+                    String caStatus = caPercentage >= 50.0
+                            ? "Eligible"
+                            : "Not Eligible";
 
-                String caStatus = caPercentage >= 50.0
-                        ? "Eligible"
-                        : "Not Eligible";
+                    String finalStatus;
 
-                String finalStatus =
-                        attendanceStatus.equals("Eligible")
-                                && caStatus.equals("Eligible")
+                    if ("Repeat".equalsIgnoreCase(registrationType)) {
+                        finalStatus = caStatus.equals("Eligible")
                                 ? "Eligible"
                                 : "Not Eligible";
+                    } else {
+                        finalStatus =
+                                attendanceStatus.equals("Eligible") &&
+                                        caStatus.equals("Eligible")
+                                        ? "Eligible"
+                                        : "Not Eligible";
+                    }
 
-                FinalEligibilityDTO dto = new FinalEligibilityDTO();
+                    FinalEligibilityDTO dto = new FinalEligibilityDTO();
 
-                dto.setStudentId(studentId);
-                dto.setRegNo(rs.getString("reg_no"));
-                dto.setStudentName(rs.getString("student_name"));
-                dto.setCourseId(rs.getString("course_id"));
-                dto.setCourseCode(rs.getString("course_code"));
-                dto.setCourseName(rs.getString("course_name"));
+                    dto.setStudentId(studentId);
+                    dto.setRegNo(rs.getString("reg_no"));
+                    dto.setStudentName(rs.getString("student_name"));
+                    dto.setCourseId(rs.getString("course_id"));
+                    dto.setCourseCode(rs.getString("course_code"));
+                    dto.setCourseName(rs.getString("course_name"));
 
-                dto.setTotalHours(round(totalHours));
-                dto.setAttendedHours(round(attendedHours));
-                dto.setMedicalHours(round(medicalHours));
-                dto.setFinalAttendanceHours(round(finalAttendanceHours));
-                dto.setAttendancePercentage(round(attendancePercentage));
-                dto.setAttendanceStatus(attendanceStatus);
+                    dto.setTotalHours(round(totalHours));
+                    dto.setAttendedHours(round(attendedHours));
+                    dto.setMedicalHours(round(medicalHours));
+                    dto.setFinalAttendanceHours(round(finalAttendanceHours));
+                    dto.setAttendancePercentage(round(attendancePercentage));
+                    dto.setAttendanceStatus(attendanceStatus);
 
-                dto.setCaMaxMarks(round(caMaxMarks));
-                dto.setCaMarks(round(caMarks));
-                dto.setCaPercentage(round(caPercentage));
-                dto.setCaStatus(caStatus);
+                    dto.setCaMaxMarks(round(caMaxMarks));
+                    dto.setCaMarks(round(caMarks));
+                    dto.setCaPercentage(round(caPercentage));
+                    dto.setCaStatus(caStatus);
 
-                dto.setFinalEligibilityStatus(finalStatus);
+                    dto.setFinalEligibilityStatus(finalStatus);
 
-                list.add(dto);
+                    list.add(dto);
+                }
             }
 
         } catch (Exception e) {
@@ -169,10 +172,10 @@ public class FinalEligibilityDAO {
             ps.setString(2, courseId);
             ps.setInt(3, approvedMedicalCount);
 
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                medicalHours += rs.getDouble("session_hours");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    medicalHours += rs.getDouble("session_hours");
+                }
             }
         }
 
@@ -193,10 +196,10 @@ public class FinalEligibilityDAO {
             ps.setString(1, studentId);
             ps.setString(2, courseId);
 
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt("medical_count");
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("medical_count");
+                }
             }
         }
 
@@ -214,11 +217,11 @@ public class FinalEligibilityDAO {
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, courseId);
 
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                int practicalCount = rs.getInt("practical_count");
-                return practicalCount > 0 ? 40.0 : 30.0;
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int practicalCount = rs.getInt("practical_count");
+                    return practicalCount > 0 ? 40.0 : 30.0;
+                }
             }
         }
 
@@ -248,27 +251,25 @@ public class FinalEligibilityDAO {
             ps.setString(1, studentId);
             ps.setString(2, courseId);
 
-            ResultSet rs = ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String assessmentName = rs.getString("name");
+                    double weight = rs.getDouble("weight");
 
-            while (rs.next()) {
-                String assessmentName = rs.getString("name");
-                double weight = rs.getDouble("weight");
+                    double marks = rs.getDouble("marks");
+                    if (rs.wasNull()) {
+                        marks = 0.0;
+                    }
 
-                double marks = rs.getDouble("marks");
-                if (rs.wasNull()) {
-                    marks = 0.0;
-                }
+                    double contribution = (marks / 100.0) * weight;
 
-                double contribution = (marks / 100.0) * weight;
-
-                if (assessmentName != null
-                        && assessmentName.toLowerCase().contains("quiz")) {
-
-                    quizMarks.add(new QuizMark(weight, contribution));
-
-                } else {
-                    totalContribution += contribution;
-                    selectedWeight += weight;
+                    if (assessmentName != null &&
+                            assessmentName.toLowerCase().contains("quiz")) {
+                        quizMarks.add(new QuizMark(weight, contribution));
+                    } else {
+                        totalContribution += contribution;
+                        selectedWeight += weight;
+                    }
                 }
             }
         }
@@ -286,7 +287,7 @@ public class FinalEligibilityDAO {
             return 0.0;
         }
 
-        return (totalContribution / selectedWeight) * caMax;
+        return round((totalContribution / selectedWeight) * caMax);
     }
 
     private double round(double value) {

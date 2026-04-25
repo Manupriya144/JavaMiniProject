@@ -65,18 +65,24 @@ public class GradeGPADAO {
         List<Course> courses = new ArrayList<>();
 
         String sql = """
-                SELECT course_id, course_code, course_credit
-                FROM course
-                WHERE academic_level = ?
-                  AND semester = ?
-                  AND department_id = ?
-                ORDER BY course_code
-                """;
+            SELECT DISTINCT 
+                c.course_id, 
+                c.course_code, 
+                c.course_credit
+            FROM course_result cr
+            INNER JOIN course c ON cr.course_id = c.course_id
+            WHERE cr.academic_year = ?
+              AND cr.academic_level = ?
+              AND cr.semester = ?
+              AND c.department_id = ?
+            ORDER BY c.course_code
+            """;
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, filter.getAcademicLevel());
-            ps.setString(2, filter.getSemester());
-            ps.setString(3, filter.getDepartmentId());
+            ps.setInt(1, filter.getAcademicYear());
+            ps.setInt(2, filter.getAcademicLevel());
+            ps.setString(3, filter.getSemester());
+            ps.setString(4, filter.getDepartmentId());
 
             ResultSet rs = ps.executeQuery();
 
