@@ -2,7 +2,11 @@ package service.student;
 
 import dao.student.StudentDAO;
 import dto.requestDto.student.UpdateStudentProfileReqDTO;
+import dto.responseDto.student.StudentDashboardDTO;
+import dto.responseDto.student.StudentRegisteredCourseDTO;
 import model.Student;
+
+import java.util.List;
 
 public class StudentService {
 
@@ -27,5 +31,13 @@ public class StudentService {
         if (dto.getContactNumber() == null || dto.getContactNumber().trim().isEmpty()) return false;
 
         return studentDAO.updateStudentProfile(dto);
+    }
+
+    public StudentDashboardDTO getStudentDashboard(String studentId) {
+        return studentDAO.getStudentDashboard(studentId);
+    }
+
+    public List<StudentRegisteredCourseDTO> getRegisteredCourses(String studentId) {
+        return studentDAO.getRegisteredCourses(studentId);
     }
 }

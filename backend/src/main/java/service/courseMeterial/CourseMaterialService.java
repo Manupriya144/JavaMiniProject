@@ -5,6 +5,7 @@ import dto.requestDto.courseMeterial.AddCourseMaterialReqDTO;
 import model.CourseMaterial;
 
 import java.util.List;
+import java.util.Map;
 
 public class CourseMaterialService {
 
@@ -31,6 +32,12 @@ public class CourseMaterialService {
     public boolean deleteMaterial(int materialId, String lecturerId) {
         return courseMaterialDAO.deleteMaterial(materialId, lecturerId);
     }
+
+    public List<CourseMaterial> getMaterialsByCourseForStudent(String courseId) {
+        return courseMaterialDAO.getMaterialsByCourseForStudent(courseId);
+    }
+
+
 
 
 }

@@ -1,4 +1,4 @@
-package com.example.frontend.controller.lecturer;
+package com.example.frontend.controller.student;
 
 import com.example.frontend.model.StudentCourseMarksRow;
 import com.example.frontend.network.ServerClient;

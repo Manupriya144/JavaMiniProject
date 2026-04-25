@@ -14,10 +14,12 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -37,138 +39,105 @@ public class DisplayNoticeController implements Initializable {
     @FXML private TextField searchField;
     @FXML private VBox noticeListContainer;
     @FXML private Label totalNoticesInfoLabel;
-
-    @FXML private Label detailTitleLabel;
-    @FXML private Label detailIdLabel;
-    @FXML private Label detailDescriptionLabel;
-    @FXML private Label detailCreatedByLabel;
-    @FXML private Label detailCreatedAtLabel;
-    @FXML private Hyperlink detailPdfLink;
-
     @FXML private Label statusLabel;
     @FXML private Label statusBarTime;
 
     private final NoticeService noticeService = new NoticeService(ServerClient.getInstance());
     private final List<NoticeResponseDTO> allNotices = new ArrayList<>();
-    private NoticeResponseDTO selectedNotice;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         adminNameLabel.setText(LoginController.username);
-        detailPdfLink.setDisable(true);
         startClock();
         loadNotices();
     }
 
     private void loadNotices() {
         allNotices.clear();
-        allNotices.addAll(noticeService.getAllNotices());
-        renderNoticeCards(allNotices);
 
-        if (!allNotices.isEmpty()) {
-            showNoticeDetails(allNotices.get(0));
-        } else {
-            clearDetails();
+        List<NoticeResponseDTO> notices = noticeService.getAllNotices();
+        if (notices != null) {
+            allNotices.addAll(notices);
         }
 
-        totalNoticesInfoLabel.setText(allNotices.size() + " notices loaded");
+        renderNoticeCards(allNotices);
         statusLabel.setText("Notices loaded successfully.");
     }
 
     private void renderNoticeCards(List<NoticeResponseDTO> notices) {
         noticeListContainer.getChildren().clear();
 
+        if (notices == null || notices.isEmpty()) {
+            Label empty = new Label("No notices available.");
+            empty.setStyle("-fx-text-fill: #8fa3b8; -fx-font-size: 13px;");
+            noticeListContainer.getChildren().add(empty);
+            totalNoticesInfoLabel.setText("0 notices loaded");
+            return;
+        }
+
         for (NoticeResponseDTO notice : notices) {
-            VBox card = createNoticeCard(notice);
-            noticeListContainer.getChildren().add(card);
+            noticeListContainer.getChildren().add(createNoticeRow(notice));
         }
 
         totalNoticesInfoLabel.setText(notices.size() + " notices loaded");
     }
 
-    private VBox createNoticeCard(NoticeResponseDTO notice) {
-        VBox card = new VBox(8);
-        card.setPadding(new Insets(14));
-        card.setStyle(
+    private HBox createNoticeRow(NoticeResponseDTO notice) {
+        HBox row = new HBox(14);
+        row.setPadding(new Insets(14, 16, 14, 16));
+        row.setStyle(
                 "-fx-background-color: #ffffff;" +
                         "-fx-border-color: #d4e4f7;" +
                         "-fx-border-radius: 10;" +
                         "-fx-background-radius: 10;" +
-                        "-fx-cursor: hand;" +
                         "-fx-effect: dropshadow(three-pass-box,rgba(91,159,217,0.08),8,0,0,2);"
         );
 
+        Circle dot = new Circle(5);
+        dot.setStyle("-fx-fill: #5b9fd9;");
+
+        VBox textBox = new VBox(5);
+
         Label title = new Label(safe(notice.getTitle()));
         title.setWrapText(true);
-        title.setStyle("-fx-text-fill: #1a3a52; -fx-font-size: 13px; -fx-font-weight: bold;");
+        title.setStyle("-fx-text-fill: #1a3a52; -fx-font-size: 14px; -fx-font-weight: bold;");
 
-        Label description = new Label(shortText(safe(notice.getDescription()), 110));
+        Label description = new Label(shortText(safe(notice.getDescription()), 140));
         description.setWrapText(true);
-        description.setStyle("-fx-text-fill: #8fa3b8; -fx-font-size: 12px;");
+        description.setStyle("-fx-text-fill: #5f748a; -fx-font-size: 12px;");
 
-        Label meta = new Label("By: " + safe(notice.getCreated_by()) + "   |   " + formatDateTime(safe(notice.getCreated_at())));
-        meta.setWrapText(true);
+        Label meta = new Label(
+                "By: " + safe(notice.getCreated_by()) +
+                        "  •  " + formatDateTime(safe(notice.getCreated_at()))
+        );
         meta.setStyle("-fx-text-fill: #a8b8ca; -fx-font-size: 11px;");
 
-        Hyperlink openLink = new Hyperlink("Open PDF");
-        openLink.setStyle("-fx-text-fill: #5b9fd9; -fx-font-size: 12px; -fx-font-weight: 600;");
-        openLink.setOnAction(e -> {
-            e.consume();
-            openFileOrLink(notice.getPdf_file_path());
-        });
+        textBox.getChildren().addAll(title, description, meta);
+        HBox.setHgrow(textBox, Priority.ALWAYS);
 
-        Button detailsBtn = new Button("View Details");
-        detailsBtn.setStyle(
+        Button openBtn = new Button("Open");
+        openBtn.setPrefWidth(100);
+        openBtn.setStyle(
                 "-fx-background-color: #5b9fd9;" +
                         "-fx-text-fill: white;" +
                         "-fx-font-size: 12px;" +
                         "-fx-font-weight: bold;" +
                         "-fx-background-radius: 8;" +
                         "-fx-cursor: hand;" +
-                        "-fx-padding: 6 12 6 12;"
+                        "-fx-padding: 8 14 8 14;"
         );
-        detailsBtn.setOnAction(e -> {
-            e.consume();
-            showNoticeDetails(notice);
-        });
 
-        card.getChildren().addAll(title, description, meta, openLink, detailsBtn);
-        card.setOnMouseClicked(e -> showNoticeDetails(notice));
+        openBtn.setOnAction(e -> openFileOrLink(notice.getPdf_file_path()));
 
-        return card;
-    }
-
-    private void showNoticeDetails(NoticeResponseDTO notice) {
-        selectedNotice = notice;
-
-        detailTitleLabel.setText(safe(notice.getTitle()));
-        detailIdLabel.setText(String.valueOf(notice.getNotice_id()));
-        detailDescriptionLabel.setText(safe(notice.getDescription()));
-        detailCreatedByLabel.setText(safe(notice.getCreated_by()));
-        detailCreatedAtLabel.setText(formatDateTime(safe(notice.getCreated_at())));
-
-        boolean hasPdf = notice.getPdf_file_path() != null && !notice.getPdf_file_path().isBlank();
-        detailPdfLink.setDisable(!hasPdf);
-        detailPdfLink.setText(hasPdf ? "Open attached PDF" : "No PDF available");
-
-        statusLabel.setText("Showing notice: " + safe(notice.getTitle()));
-    }
-
-    private void clearDetails() {
-        selectedNotice = null;
-        detailTitleLabel.setText("Select a notice");
-        detailIdLabel.setText("—");
-        detailDescriptionLabel.setText("—");
-        detailCreatedByLabel.setText("—");
-        detailCreatedAtLabel.setText("—");
-        detailPdfLink.setText("No PDF available");
-        detailPdfLink.setDisable(true);
-        statusLabel.setText("No notices found.");
+        row.getChildren().addAll(dot, textBox, openBtn);
+        return row;
     }
 
     @FXML
     private void filterNotices() {
-        String keyword = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
+        String keyword = searchField.getText() == null
+                ? ""
+                : searchField.getText().trim().toLowerCase();
 
         if (keyword.isEmpty()) {
             renderNoticeCards(allNotices);
@@ -176,6 +145,7 @@ public class DisplayNoticeController implements Initializable {
         }
 
         List<NoticeResponseDTO> filtered = new ArrayList<>();
+
         for (NoticeResponseDTO notice : allNotices) {
             String title = safe(notice.getTitle()).toLowerCase();
             String description = safe(notice.getDescription()).toLowerCase();
@@ -195,30 +165,23 @@ public class DisplayNoticeController implements Initializable {
         loadNotices();
     }
 
-    @FXML
-    private void openSelectedNoticePdf() {
-        if (selectedNotice == null) {
-            statusLabel.setText("Select a notice first.");
-            return;
-        }
-        openFileOrLink(selectedNotice.getPdf_file_path());
-    }
-
-    private void openFileOrLink(String path) {
+    private void openFileOrLink(String originalPath) {
         new Thread(() -> {
             try {
-                System.out.println("PDF PATH FROM DB: " + path);
+                System.out.println("PDF PATH FROM DB: " + originalPath);
 
-                if (path == null || path.trim().isEmpty()) {
+                if (originalPath == null || originalPath.trim().isEmpty()) {
                     Platform.runLater(() -> statusLabel.setText("No file available."));
                     return;
                 }
 
-                // URL case
+                String path = originalPath.trim();
+
                 if (path.startsWith("http://") || path.startsWith("https://")) {
-                    if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                    if (Desktop.isDesktopSupported()
+                            && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
                         Desktop.getDesktop().browse(new URI(path));
-                        Platform.runLater(() -> statusLabel.setText("Opened PDF link."));
+                        Platform.runLater(() -> statusLabel.setText("Opening PDF link..."));
                     } else {
                         Platform.runLater(() -> statusLabel.setText("Browse action is not supported."));
                     }
@@ -231,38 +194,42 @@ public class DisplayNoticeController implements Initializable {
                     file = new File(System.getProperty("user.dir"), path);
                 }
 
-                System.out.println("Resolved path: " + file.getAbsolutePath());
+                File finalFile = file;
+                System.out.println("Resolved path: " + finalFile.getAbsolutePath());
 
-                if (!file.exists()) {
-                    File finalFile1 = file;
-                    Platform.runLater(() -> statusLabel.setText("File not found: " + finalFile1.getAbsolutePath()));
+                if (!finalFile.exists()) {
+                    Platform.runLater(() ->
+                            statusLabel.setText("File not found: " + finalFile.getName())
+                    );
                     return;
                 }
 
                 String os = System.getProperty("os.name").toLowerCase();
 
-                // Linux
                 if (os.contains("linux")) {
-                    new ProcessBuilder("xdg-open", file.getAbsolutePath()).start();
+                    new ProcessBuilder("xdg-open", finalFile.getAbsolutePath()).start();
                     Platform.runLater(() -> statusLabel.setText("Opening PDF..."));
                     return;
                 }
 
-                // Windows / others
-                if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
-                    Desktop.getDesktop().open(file);
+                if (Desktop.isDesktopSupported()
+                        && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+                    Desktop.getDesktop().open(finalFile);
                     Platform.runLater(() -> statusLabel.setText("Opening PDF..."));
                     return;
                 }
 
-                Platform.runLater(() -> statusLabel.setText("Open action is not supported on this system."));
+                Platform.runLater(() -> statusLabel.setText("Open action is not supported."));
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Platform.runLater(() -> statusLabel.setText("Error opening PDF: " + e.getMessage()));
+                Platform.runLater(() ->
+                        statusLabel.setText("Error opening PDF: " + e.getMessage())
+                );
             }
         }).start();
     }
+
     @FXML
     private void goBack() {
         try {
@@ -303,10 +270,14 @@ public class DisplayNoticeController implements Initializable {
 
     private void startClock() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0), e -> statusBarTime.setText(LocalDateTime.now().format(formatter))),
+                new KeyFrame(Duration.seconds(0), e ->
+                        statusBarTime.setText(LocalDateTime.now().format(formatter))
+                ),
                 new KeyFrame(Duration.seconds(1))
         );
+
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
@@ -316,7 +287,10 @@ public class DisplayNoticeController implements Initializable {
     }
 
     private String formatDateTime(String value) {
-        return value == null ? "" : value.replace("T", " ");
+        if (value == null || value.isBlank()) {
+            return "—";
+        }
+        return value.replace("T", " ");
     }
 
     private String shortText(String text, int max) {

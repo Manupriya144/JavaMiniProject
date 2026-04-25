@@ -3,9 +3,12 @@ package com.example.frontend.controller.student;
 import com.example.frontend.controller.admin.LoginController;
 import com.example.frontend.dto.NoticeResponseDTO;
 import com.example.frontend.model.Student;
+import com.example.frontend.model.StudentCourseDashboard;
+import com.example.frontend.model.StudentDashboardData;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.service.AuthService;
 import com.example.frontend.service.NoticeService;
+import com.example.frontend.service.StudentDashboardService;
 import com.example.frontend.service.StudentService;
 import com.example.frontend.session.SessionManager;
 import javafx.application.Platform;
@@ -18,11 +21,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -58,16 +59,33 @@ public class StudentDashboardController implements Initializable {
 
     private String studentName = LoginController.username;
     private String studentRegNo = LoginController.reNo;
+
     public static final ServerClient client = ServerClient.getInstance();
-    private final NoticeService noticeService = new NoticeService(ServerClient.getInstance());
+
+    private final NoticeService noticeService =
+            new NoticeService(ServerClient.getInstance());
+
+    private final StudentDashboardService dashboardService =
+            new StudentDashboardService(ServerClient.getInstance());
+
+    private StudentDashboardData dashboardData;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         String today = LocalDate.now()
                 .format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy"));
+
         dateLabel.setText(today + "  •  Undergraduate Portal");
         statusBarTime.setText(LocalDate.now()
                 .format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
+
+        if (studentName == null || studentName.isBlank()) {
+            studentName = "Student";
+        }
+
+        if (studentRegNo == null || studentRegNo.isBlank()) {
+            studentRegNo = "—";
+        }
 
         welcomeLabel.setText("Welcome back, " + studentName + "! 👋");
         studentNameLabel.setText(studentName);
@@ -75,25 +93,129 @@ public class StudentDashboardController implements Initializable {
 
         StudentService studentService = new StudentService(client);
         Student student = studentService.getStudentByIdAll(LoginController.userId);
-        setupProfile(student);
+
+        if (student != null) {
+            setupProfile(student);
+        } else {
+            setupDefaultProfile();
+        }
+
         styleMedicalsMenuButton();
 
-        loadStats();
-        loadCourses();
+        loadDashboardData();
         loadNotices();
         checkEligibility();
     }
 
-    public void setStudentInfo(String name, String regNo) {
-        this.studentName = name;
-        this.studentRegNo = regNo;
+    private void loadDashboardData() {
+        coursesContainer.getChildren().clear();
+
+        dashboardData = dashboardService.getDashboardData();
+
+        if (dashboardData == null) {
+            overallAttendanceLabel.setText("0%");
+            sgpaLabel.setText("0.00");
+            cgpaLabel.setText("0.00");
+            enrolledCoursesLabel.setText("0");
+
+            Label error = new Label("Failed to load dashboard data.");
+            error.setStyle("-fx-text-fill: #e85d5d; -fx-font-size: 13px;");
+            coursesContainer.getChildren().add(error);
+            return;
+        }
+
+        overallAttendanceLabel.setText(String.format("%.1f%%", dashboardData.getOverallAttendance()));
+        sgpaLabel.setText(String.format("%.2f", dashboardData.getSgpa()));
+        cgpaLabel.setText(String.format("%.2f", dashboardData.getCgpa()));
+        enrolledCoursesLabel.setText(String.valueOf(dashboardData.getEnrolledCourses()));
+
+        loadCoursesFromData();
+    }
+
+    private void loadCoursesFromData() {
+        coursesContainer.getChildren().clear();
+
+        List<StudentCourseDashboard> courses = dashboardData.getCourses();
+
+        if (courses == null || courses.isEmpty()) {
+            Label empty = new Label("No registered courses found.");
+            empty.setStyle("-fx-text-fill: #8fa3b8; -fx-font-size: 13px;");
+            coursesContainer.getChildren().add(empty);
+            return;
+        }
+
+        for (StudentCourseDashboard c : courses) {
+            coursesContainer.getChildren().add(
+                    buildCourseRow(
+                            c.getCourseCode(),
+                            c.getCourseName(),
+                            String.valueOf(c.getCourseCredit())
+                    )
+            );
+        }
+    }
+
+    private HBox buildCourseRow(String code, String name, String credits) {
+        HBox row = new HBox(0);
+        row.setStyle(
+                "-fx-background-color: #ffffff; " +
+                        "-fx-background-radius: 6; " +
+                        "-fx-border-color: #e8eef5; " +
+                        "-fx-border-radius: 6; " +
+                        "-fx-border-width: 1;"
+        );
+        row.setPadding(new Insets(10, 12, 10, 12));
+
+        Label codeLbl = new Label(safe(code));
+        codeLbl.setPrefWidth(110);
+
+        Label nameLbl = new Label(safe(name));
+        nameLbl.setPrefWidth(250);
+
+        Label credLbl = new Label(safe(credits));
+        credLbl.setPrefWidth(80);
+
+        String base = "-fx-text-fill: #1a3a52; -fx-font-size: 12px;";
+        codeLbl.setStyle(base);
+        nameLbl.setStyle(base);
+        credLbl.setStyle(base);
+
+        row.getChildren().addAll(codeLbl, nameLbl, credLbl);
+        return row;
+    }
+
+    private void checkEligibility() {
+        double attendance = dashboardData == null ? 0 : dashboardData.getOverallAttendance();
+        boolean eligible = attendance >= 80;
+
+        if (eligible) {
+            eligibilityAlertBox.setStyle(
+                    "-fx-background-color: #f6fff7; -fx-background-radius: 10; " +
+                            "-fx-border-color: #4cba52; -fx-border-radius: 10; -fx-border-width: 1;"
+            );
+            eligibilityStatusLabel.setText(
+                    "✅  You are eligible based on attendance. Current attendance: " +
+                            String.format("%.1f%%", attendance)
+            );
+        } else {
+            eligibilityAlertBox.setStyle(
+                    "-fx-background-color: #fff8f8; -fx-background-radius: 10; " +
+                            "-fx-border-color: #e85d5d; -fx-border-radius: 10; -fx-border-width: 1;"
+            );
+            eligibilityStatusLabel.setText(
+                    "❌  Attendance is below 80%. Current attendance: " +
+                            String.format("%.1f%%", attendance)
+            );
+        }
+
+        eligibilityStatusLabel.setStyle("-fx-text-fill: #5f748a; -fx-font-size: 12px;");
     }
 
     private void setupProfile(Student student) {
         String profilePicture = student.getProfilePicture();
         String username = student.getUsername();
 
-        if (profilePicture != null && !profilePicture.isEmpty()) {
+        if (profilePicture != null && !profilePicture.isBlank()) {
             try {
                 File file = new File(profilePicture);
 
@@ -113,12 +235,18 @@ public class StudentDashboardController implements Initializable {
             }
         }
 
-        if (username != null && !username.isEmpty()) {
+        if (username != null && !username.isBlank()) {
             profileInitial.setText(username.substring(0, 1).toUpperCase());
         } else {
             profileInitial.setText("U");
         }
 
+        profileImage.setVisible(false);
+        profileInitial.setVisible(true);
+    }
+
+    private void setupDefaultProfile() {
+        profileInitial.setText("U");
         profileImage.setVisible(false);
         profileInitial.setVisible(true);
     }
@@ -141,85 +269,6 @@ public class StudentDashboardController implements Initializable {
         });
     }
 
-    private void loadStats() {
-        overallAttendanceLabel.setText("87%");
-        sgpaLabel.setText("3.45");
-        cgpaLabel.setText("3.28");
-        enrolledCoursesLabel.setText("4");
-    }
-
-    private void checkEligibility() {
-        boolean eligible = true;
-
-        if (eligible) {
-            eligibilityAlertBox.setStyle(
-                    "-fx-background-color: #f6fff7; -fx-background-radius: 10; " +
-                            "-fx-border-color: #4cba52; -fx-border-radius: 10; -fx-border-width: 1;"
-            );
-            eligibilityStatusLabel.setText(
-                    "✅  You are eligible for all final examinations. (CA ≥ 40% & Attendance ≥ 80%)"
-            );
-            eligibilityStatusLabel.setStyle("-fx-text-fill: #5f748a; -fx-font-size: 12px;");
-        } else {
-            eligibilityAlertBox.setStyle(
-                    "-fx-background-color: #fff8f8; -fx-background-radius: 10; " +
-                            "-fx-border-color: #e85d5d; -fx-border-radius: 10; -fx-border-width: 1;"
-            );
-            eligibilityStatusLabel.setText(
-                    "❌  You are NOT eligible for one or more exams. Check attendance or CA marks."
-            );
-            eligibilityStatusLabel.setStyle("-fx-text-fill: #5f748a; -fx-font-size: 12px;");
-        }
-    }
-
-    private void loadCourses() {
-        coursesContainer.getChildren().clear();
-
-        String[][] courses = {
-                {"ICT2112", "Object Oriented Programming", "3", "B+"},
-                {"ICT2132", "OOP Practicum", "2", "A"},
-                {"ICT2142", "Data Structures", "3", "B"},
-                {"ICT2152", "Web Technologies", "3", "A-"},
-        };
-
-        for (String[] c : courses) {
-            coursesContainer.getChildren().add(buildCourseRow(c[0], c[1], c[2], c[3]));
-        }
-    }
-
-    private HBox buildCourseRow(String code, String name, String credits, String grade) {
-        HBox row = new HBox(0);
-        row.setStyle(
-                "-fx-background-color: #ffffff; " +
-                        "-fx-background-radius: 6; " +
-                        "-fx-border-color: #e8eef5; " +
-                        "-fx-border-radius: 6; " +
-                        "-fx-border-width: 1;"
-        );
-        row.setPadding(new Insets(10, 12, 10, 12));
-
-        Label codeLbl = new Label(code);
-        codeLbl.setPrefWidth(110);
-
-        Label nameLbl = new Label(name);
-        nameLbl.setPrefWidth(200);
-
-        Label credLbl = new Label(credits);
-        credLbl.setPrefWidth(70);
-
-        Label gradeLbl = new Label(grade);
-        gradeLbl.setPrefWidth(70);
-
-        String base = "-fx-text-fill: #1a3a52; -fx-font-size: 12px;";
-        codeLbl.setStyle(base);
-        nameLbl.setStyle(base);
-        credLbl.setStyle(base);
-        gradeLbl.setStyle("-fx-text-fill: #4cba52; -fx-font-size: 12px; -fx-font-weight: bold;");
-
-        row.getChildren().addAll(codeLbl, nameLbl, credLbl, gradeLbl);
-        return row;
-    }
-
     private void loadNotices() {
         noticesContainer.getChildren().clear();
 
@@ -231,16 +280,17 @@ public class StudentDashboardController implements Initializable {
                 return;
             }
 
-            int limit = Math.min(notices.size(), 3); // show only top 3 in dashboard
+            int limit = Math.min(notices.size(), 3);
 
             for (int i = 0; i < limit; i++) {
                 NoticeResponseDTO notice = notices.get(i);
 
-                String title = safe(notice.getTitle());
-                String date = formatNoticeDate(safe(notice.getCreated_at()));
-
                 noticesContainer.getChildren().add(
-                        buildNoticeItem("📢", title, date)
+                        buildNoticeItem(
+                                "📢",
+                                safe(notice.getTitle()),
+                                formatNoticeDate(safe(notice.getCreated_at()))
+                        )
                 );
             }
 
@@ -292,17 +342,6 @@ public class StudentDashboardController implements Initializable {
         return item;
     }
 
-    private String safe(String value) {
-        return value == null ? "" : value;
-    }
-
-    private String formatNoticeDate(String value) {
-        if (value == null || value.isBlank()) {
-            return "—";
-        }
-        return value.replace("T", " ");
-    }
-
     private VBox buildNoticeItem(String icon, String title, String date) {
         VBox item = new VBox(4);
         item.setStyle(
@@ -325,14 +364,22 @@ public class StudentDashboardController implements Initializable {
         return item;
     }
 
-    @FXML private void openCourses() { loadView("StudentCourses.fxml"); }
-    @FXML private void openAttendance() { loadView("StudentAttendance.fxml"); }
-    @FXML private void openGrades() { loadView("StudentGrades.fxml"); }
+    private String safe(String value) {
+        return value == null ? "" : value;
+    }
+
+    private String formatNoticeDate(String value) {
+        if (value == null || value.isBlank()) {
+            return "—";
+        }
+        return value.replace("T", " ");
+    }
+
+    @FXML private void openCourses() { loadView("student/StudentCourses.fxml"); }
+    @FXML private void openAttendance() { loadView("student/StudentAttendance.fxml"); }
     @FXML private void openTimetable() { loadView("admin/DisplayTimeTable.fxml"); }
     @FXML private void openNotices() { loadView("admin/NoticeDisplay.fxml"); }
-    @FXML private void openEligibility() { loadView("StudentEligibility.fxml"); }
-    @FXML private void openStudentFinalMarks() { loadView("ViewStudentFinalMarks.fxml"); }
-    @FXML private void openStudentGrades() { loadView("StudentGrades.fxml"); }
+    @FXML private void openEligibility() { loadView("student/StudentEligibility.fxml"); }
     @FXML private void openAddMedical() { loadView("student/StudentAddMedical.fxml"); }
     @FXML private void openViewMedical() { loadView("student/StudentViewMedical.fxml"); }
 
@@ -379,8 +426,6 @@ public class StudentDashboardController implements Initializable {
                 loginStage.initStyle(StageStyle.UNDECORATED);
                 loginStage.setScene(new Scene(root));
                 loginStage.show();
-            } else {
-                System.out.println("Logout failed");
             }
 
         } catch (Exception e) {
@@ -392,9 +437,11 @@ public class StudentDashboardController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/" + fxmlFile));
             Parent root = loader.load();
+
             Stage stage = (Stage) welcomeLabel.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

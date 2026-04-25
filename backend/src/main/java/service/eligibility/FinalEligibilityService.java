@@ -16,4 +16,6 @@ public class FinalEligibilityService {
     public List<FinalEligibilityDTO> getFinalEligibility(String lecturerId, String courseId) {
         return finalEligibilityDAO.getFinalEligibility(lecturerId, courseId);
     }
+
+
 }

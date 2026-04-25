@@ -1,5 +1,6 @@
 package com.example.frontend.service;
 
+import com.example.frontend.dto.RequestDTO;
 import com.example.frontend.model.CourseMaterial;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.session.SessionManager;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class CourseMaterialService {
 
@@ -96,6 +98,48 @@ public class CourseMaterialService {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public List<CourseMaterial> getMaterialsByCourse(String courseId) {
+        try {
+            RequestDTO requestDTO = new RequestDTO(
+                    "GET_STUDENT_COURSE_MATERIALS",
+                    Map.of("courseId", courseId),
+                    SessionManager.getToken()
+            );
+
+            String requestJson = mapper.writeValueAsString(requestDTO);
+            String responseJson = client.sendRequest(requestJson);
+
+            System.out.println("COURSE MATERIAL RESPONSE: " + responseJson);
+
+            if (responseJson == null || responseJson.isBlank()) {
+                System.out.println("Empty response from server.");
+                return Collections.emptyList();
+            }
+
+            JsonNode root = mapper.readTree(responseJson);
+
+            if (!root.path("success").asBoolean(false)) {
+                System.out.println("Server message: " + root.path("message").asText());
+                return Collections.emptyList();
+            }
+
+            JsonNode materialsNode = root.path("materials");
+
+            if (materialsNode.isMissingNode() || !materialsNode.isArray()) {
+                return Collections.emptyList();
+            }
+
+            return mapper.readValue(
+                    materialsNode.toString(),
+                    new TypeReference<List<CourseMaterial>>() {}
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
         }
     }
 }

@@ -37,12 +37,12 @@ public class LecturerCourseDAO {
         List<LecturerCourseItemDTO> list = new ArrayList<>();
 
         String sql = """
-                SELECT c.course_id, c.course_code, c.name
-                FROM lecturer_course lc
-                JOIN course c ON lc.course_id = c.course_id
-                WHERE lc.lecturer_id = ?
-                ORDER BY c.course_code
-                """;
+            SELECT c.course_id, c.course_code, c.name, c.course_credit
+            FROM lecturer_course lc
+            JOIN course c ON lc.course_id = c.course_id
+            WHERE lc.lecturer_id = ?
+            ORDER BY c.course_code
+            """;
 
         try (Connection con = DataSource.getInstance().getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -54,7 +54,8 @@ public class LecturerCourseDAO {
                     list.add(new LecturerCourseItemDTO(
                             rs.getString("course_id"),
                             rs.getString("course_code"),
-                            rs.getString("name")
+                            rs.getString("name"),
+                            rs.getInt("course_credit")
                     ));
                 }
             }

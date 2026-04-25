@@ -1,6 +1,9 @@
 package dao.student;
 
 import dto.requestDto.student.UpdateStudentProfileReqDTO;
+import dto.responseDto.student.StudentCourseDashboardDTO;
+import dto.responseDto.student.StudentDashboardDTO;
+import dto.responseDto.student.StudentRegisteredCourseDTO;
 import model.Student;
 import model.User;
 import utility.DataSource;
@@ -8,6 +11,8 @@ import utility.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class StudentDAO {
@@ -135,5 +140,146 @@ public class StudentDAO {
         }
 
         return false;
+    }
+
+    public StudentDashboardDTO getStudentDashboard(String studentId) {
+        List<StudentCourseDashboardDTO> courses = new ArrayList<>();
+
+        String courseSql = """
+            SELECT 
+                c.course_id,
+                c.course_code,
+                c.name AS course_name,
+                c.course_credit,
+                COALESCE(crs.grade, '-') AS grade
+            FROM course_registration reg
+            JOIN course c ON reg.course_id = c.course_id
+            LEFT JOIN course_result crs 
+                ON crs.student_id = reg.student_id
+                AND crs.course_id = reg.course_id
+                AND crs.academic_year = reg.academic_year
+                AND crs.semester = reg.semester
+            WHERE reg.student_id = ?
+            ORDER BY c.course_code
+            """;
+
+        String gpaSql = """
+            SELECT 
+                COALESCE(sr.sgpa, 0) AS sgpa,
+                COALESCE(sr.cgpa, 0) AS cgpa
+            FROM semester_result sr
+            WHERE sr.student_id = ?
+            ORDER BY sr.academic_year DESC, sr.academic_level DESC, sr.semester DESC
+            LIMIT 1
+            """;
+
+        String attendanceSql = """
+            SELECT 
+                COALESCE(SUM(s.session_hours), 0) AS total_hours,
+                COALESCE(SUM(CASE 
+                    WHEN a.status = 'Present' THEN a.hours_attended 
+                    ELSE 0 
+                END), 0) AS attended_hours
+            FROM course_registration reg
+            JOIN session s ON reg.course_id = s.course_id
+            LEFT JOIN attendance a 
+                ON a.session_id = s.session_id 
+                AND a.student_id = reg.student_id
+            WHERE reg.student_id = ?
+            """;
+
+        double sgpa = 0;
+        double cgpa = 0;
+        double overallAttendance = 0;
+
+        try (Connection con = DataSource.getInstance().getConnection()) {
+
+            try (PreparedStatement ps = con.prepareStatement(courseSql)) {
+                ps.setString(1, studentId);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        courses.add(new StudentCourseDashboardDTO(
+                                rs.getString("course_id"),
+                                rs.getString("course_code"),
+                                rs.getString("course_name"),
+                                rs.getInt("course_credit"),
+                                rs.getString("grade")
+                        ));
+                    }
+                }
+            }
+
+            try (PreparedStatement ps = con.prepareStatement(gpaSql)) {
+                ps.setString(1, studentId);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        sgpa = rs.getDouble("sgpa");
+                        cgpa = rs.getDouble("cgpa");
+                    }
+                }
+            }
+
+            try (PreparedStatement ps = con.prepareStatement(attendanceSql)) {
+                ps.setString(1, studentId);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        double totalHours = rs.getDouble("total_hours");
+                        double attendedHours = rs.getDouble("attended_hours");
+
+                        overallAttendance = totalHours == 0
+                                ? 0
+                                : (attendedHours / totalHours) * 100.0;
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new StudentDashboardDTO(
+                overallAttendance,
+                sgpa,
+                cgpa,
+                courses.size(),
+                courses
+        );
+    }
+
+    public List<StudentRegisteredCourseDTO> getRegisteredCourses(String studentId) {
+        List<StudentRegisteredCourseDTO> list = new ArrayList<>();
+
+        String sql = """
+            SELECT c.course_id, c.course_code, c.name, c.course_credit
+            FROM course_registration cr
+            JOIN course c ON cr.course_id = c.course_id
+            WHERE cr.student_id = ?
+            ORDER BY c.course_code
+            """;
+
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, studentId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new StudentRegisteredCourseDTO(
+                            rs.getString("course_id"),
+                            rs.getString("course_code"),
+                            rs.getString("name"),
+                            rs.getInt("course_credit")
+                    ));
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 }

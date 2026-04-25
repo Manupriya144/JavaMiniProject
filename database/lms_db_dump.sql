@@ -201,3 +201,16 @@ CREATE TABLE attendance (
     FOREIGN KEY(student_id) REFERENCES students(user_id) ON DELETE CASCADE,
     FOREIGN KEY(session_id) REFERENCES session(session_id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS registration_period (
+    period_id INT AUTO_INCREMENT PRIMARY KEY,
+    department_id VARCHAR(10) NOT NULL,
+    academic_level INT NOT NULL,
+    semester ENUM('1','2') NOT NULL,
+    academic_year INT NOT NULL,
+    start_at DATETIME NOT NULL,
+    end_at DATETIME NOT NULL,
+    status ENUM('Open','Closed') DEFAULT 'Open',
+
+    FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE CASCADE
+    );

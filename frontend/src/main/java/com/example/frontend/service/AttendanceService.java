@@ -1,18 +1,14 @@
 package com.example.frontend.service;
 
-import com.example.frontend.model.Attendance;
-import com.example.frontend.model.AttendanceCourseOption;
-import com.example.frontend.model.AttendanceSessionOption;
-import com.example.frontend.model.AttendanceStudentOption;
+import com.example.frontend.dto.RequestDTO;
+import com.example.frontend.model.*;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.session.SessionManager;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AttendanceService {
     private final ServerClient client;
@@ -299,6 +295,34 @@ public class AttendanceService {
         } catch (Exception e) {
             lastMessage = "Failed to load batch eligibility report: " + (e.getMessage() == null ? "error" : e.getMessage());
             return null;
+        }
+    }
+
+    public List<StudentAttendanceSummary> getStudentAttendanceSummary() {
+        try {
+            RequestDTO requestDTO = new RequestDTO(
+                    "GetStudentAttendanceSummaryById",
+                    null,
+                    SessionManager.getToken()
+            );
+
+            String requestJson = mapper.writeValueAsString(requestDTO);
+            String responseJson = client.sendRequest(requestJson);
+
+            JsonNode root = mapper.readTree(responseJson);
+
+            if (!root.path("success").asBoolean(false)) {
+                return Collections.emptyList();
+            }
+
+            return mapper.readValue(
+                    root.path("attendance").toString(),
+                    new TypeReference<List<StudentAttendanceSummary>>() {}
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
         }
     }
 }

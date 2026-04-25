@@ -4,6 +4,7 @@ import com.example.frontend.dto.LecturerCourseRequestDTO;
 import com.example.frontend.dto.LecturerCourseResponseDTO;
 import com.example.frontend.dto.RequestDTO;
 import com.example.frontend.model.LecturerCourseItem;
+import com.example.frontend.model.LecturerDashboardStats;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.session.SessionManager;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -65,5 +66,37 @@ public class LecturerCourseService {
                 dataNode.toString(),
                 new TypeReference<List<LecturerCourseItem>>() {}
         );
+    }
+
+    public LecturerDashboardStats getLecturerDashboardStats() {
+        try {
+            RequestDTO requestDTO = new RequestDTO(
+                    "GET_LECTURER_DASHBOARD_STATS",
+                    null,
+                    SessionManager.getToken()
+            );
+
+            String requestJson = mapper.writeValueAsString(requestDTO);
+            String responseJson = client.sendRequest(requestJson);
+
+            if (responseJson == null || responseJson.isBlank()) {
+                return null;
+            }
+
+            JsonNode root = mapper.readTree(responseJson);
+
+            if (!root.path("success").asBoolean(false)) {
+                return null;
+            }
+
+            return mapper.treeToValue(
+                    root.path("stats"),
+                    LecturerDashboardStats.class
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

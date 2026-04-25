@@ -1,6 +1,7 @@
 package service.attendance;
 
 import dao.attendance.AttendanceDAO;
+import dto.responseDto.attendance.StudentAttendanceSummaryDTO;
 import model.Attendance;
 
 import java.util.ArrayList;
@@ -253,5 +254,9 @@ public class AttendanceService {
 
     private double round2(double value) {
         return Math.round(value * 100.0) / 100.0;
+    }
+
+    public List<StudentAttendanceSummaryDTO> GetStudentAttendanceSummaryById(String id){
+        return attendanceDAO.getStudentAttendanceSummaryById(id);
     }
 }

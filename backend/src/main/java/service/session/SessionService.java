@@ -1,7 +1,7 @@
 package service.session;
 
 import dao.session.SessionDAO;
-import dto.requestDto.AddLectureSessionReqDTO;
+import dto.requestDto.lecturer.AddLectureSessionReqDTO;
 import model.Session;
 
 import java.time.LocalDate;

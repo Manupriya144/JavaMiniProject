@@ -1,5 +1,7 @@
 package com.example.frontend.service;
 
+import com.example.frontend.dto.RequestDTO;
+import com.example.frontend.model.StudentEligibilityRes;
 import com.example.frontend.model.StudentEligibilityRow;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.session.SessionManager;
@@ -39,6 +41,41 @@ public class StudentEligibilityService {
             return mapper.readValue(
                     responseNode.path("data").toString(),
                     new TypeReference<List<StudentEligibilityRow>>() {}
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public List<StudentEligibilityRes> getStudentOwnEligibility() {
+        try {
+            RequestDTO requestDTO = new RequestDTO(
+                    "GET_STUDENT_OWN_ELIGIBILITY",
+                    null,
+                    SessionManager.getToken()
+            );
+
+            String requestJson = mapper.writeValueAsString(requestDTO);
+            String responseJson = client.sendRequest(requestJson);
+
+            System.out.println("STUDENT ELIGIBILITY RESPONSE: " + responseJson);
+
+            if (responseJson == null || responseJson.isBlank()) {
+                return Collections.emptyList();
+            }
+
+            JsonNode root = mapper.readTree(responseJson);
+
+            if (!root.path("success").asBoolean(false)) {
+                System.out.println(root.path("message").asText());
+                return Collections.emptyList();
+            }
+
+            return mapper.readValue(
+                    root.path("eligibility").toString(),
+                    new TypeReference<List<StudentEligibilityRes>>() {}
             );
 
         } catch (Exception e) {

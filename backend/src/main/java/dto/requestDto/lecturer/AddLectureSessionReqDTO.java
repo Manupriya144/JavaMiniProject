@@ -1,4 +1,4 @@
-package dto.requestDto;
+package dto.requestDto.lecturer;
 
 public class AddLectureSessionReqDTO {
     private String courseId;

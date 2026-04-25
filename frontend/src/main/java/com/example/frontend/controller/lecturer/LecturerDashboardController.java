@@ -1,7 +1,10 @@
 package com.example.frontend.controller.lecturer;
 
 import com.example.frontend.controller.admin.LoginController;
+import com.example.frontend.model.LecturerCourseItem;
+import com.example.frontend.model.LecturerDashboardStats;
 import com.example.frontend.service.AuthService;
+import com.example.frontend.service.LecturerCourseService;
 import com.example.frontend.session.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class LecturerDashboardController implements Initializable {
@@ -37,6 +41,9 @@ public class LecturerDashboardController implements Initializable {
 
     private String lecturerName = LoginController.username;
     private String lecturerId = LoginController.userId;
+
+    private final LecturerCourseService lecturerCourseService =
+            new LecturerCourseService(LoginController.client);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -58,37 +65,69 @@ public class LecturerDashboardController implements Initializable {
         loadCourses();
     }
 
-    public void setLecturerInfo(String name, String id) {
-        this.lecturerName = name;
-        this.lecturerId = id;
-    }
-
     private void loadStats() {
-        myCoursesLabel.setText("4");
-        myStudentsLabel.setText("20");
-        eligibleLabel.setText("16");
-        pendingMarksLabel.setText("2");
+        try {
+            LecturerDashboardStats stats =
+                    lecturerCourseService.getLecturerDashboardStats();
+
+            if (stats == null) {
+                myCoursesLabel.setText("0");
+                myStudentsLabel.setText("0");
+                eligibleLabel.setText("0");
+                pendingMarksLabel.setText("0");
+                return;
+            }
+
+            myCoursesLabel.setText(String.valueOf(stats.getMyCourses()));
+            myStudentsLabel.setText(String.valueOf(stats.getMyStudents()));
+            eligibleLabel.setText(String.valueOf(stats.getEligibleStudents()));
+            pendingMarksLabel.setText(String.valueOf(stats.getPendingMarks()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            myCoursesLabel.setText("0");
+            myStudentsLabel.setText("0");
+            eligibleLabel.setText("0");
+            pendingMarksLabel.setText("0");
+        }
     }
 
     private void loadCourses() {
         coursesContainer.getChildren().clear();
 
-        String[][] courses = {
-                {"ICT2112", "Object Oriented Programming", "3", "20"},
-                {"ICT2132", "OOP Practicum", "2", "20"},
-                {"ICT2142", "Data Structures", "3", "20"},
-                {"ICT2152", "Web Technologies", "3", "20"}
-        };
+        try {
+            List<LecturerCourseItem> courses = lecturerCourseService.getLecturerCourses();
 
-        for (String[] c : courses) {
-            coursesContainer.getChildren().add(buildCourseRow(c[0], c[1], c[2], c[3]));
+            if (courses == null || courses.isEmpty()) {
+                Label emptyLabel = new Label("No assigned courses found.");
+                emptyLabel.setStyle("-fx-text-fill: #8fa3b8; -fx-font-size: 13px;");
+                coursesContainer.getChildren().add(emptyLabel);
+                return;
+            }
+
+            for (LecturerCourseItem course : courses) {
+                coursesContainer.getChildren().add(
+                        buildCourseRow(
+                                course.getCourseCode(),
+                                course.getCourseName(),
+                                String.valueOf(course.getCourseCredit())
+                        )
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            Label errorLabel = new Label("Failed to load assigned courses.");
+            errorLabel.setStyle("-fx-text-fill: #e85d5d; -fx-font-size: 13px;");
+            coursesContainer.getChildren().add(errorLabel);
         }
     }
 
-    private HBox buildCourseRow(String code, String name, String credits, String students) {
+    private HBox buildCourseRow(String code, String name, String credits) {
         HBox row = new HBox(0);
         row.setPadding(new Insets(12, 16, 12, 16));
-        row.setSpacing(0);
         row.setStyle(
                 "-fx-background-color: white;" +
                         "-fx-background-radius: 10;" +
@@ -106,14 +145,10 @@ public class LecturerDashboardController implements Initializable {
         Label credLbl = new Label(credits);
         credLbl.setPrefWidth(100);
 
-        Label studLbl = new Label(students);
-        studLbl.setPrefWidth(100);
-
         String textStyle = "-fx-text-fill: #1a3a52; -fx-font-size: 12px;";
         codeLbl.setStyle(textStyle);
         nameLbl.setStyle(textStyle);
         credLbl.setStyle(textStyle);
-        studLbl.setStyle(textStyle);
 
         Button actionBtn = new Button("Upload Marks");
         actionBtn.setPrefWidth(120);
@@ -125,9 +160,10 @@ public class LecturerDashboardController implements Initializable {
                         "-fx-background-radius: 8;" +
                         "-fx-cursor: hand;"
         );
+
         actionBtn.setOnAction(e -> openFinalMarks());
 
-        row.getChildren().addAll(codeLbl, nameLbl, credLbl, studLbl, actionBtn);
+        row.getChildren().addAll(codeLbl, nameLbl, credLbl, actionBtn);
         return row;
     }
 
@@ -186,40 +222,12 @@ public class LecturerDashboardController implements Initializable {
         loadView("LecturerProfile.fxml");
     }
 
-    @FXML
-    private void openUploadFinalMarks() {
-        loadView("lecturer/UploadFinalMarks.fxml");
-    }
 
     @FXML
-    private void openUpdateFinalMarks() {
-        loadView("lecturer/UpdateFinalMarks.fxml");
-    }
-
-    @FXML
-    private void openBatchFinalMarks() {
-        loadView("BatchFinalMarks.fxml");
-    }
-
-    @FXML
-    private void openCaEligibility(){
+    private void openCaEligibility() {
         loadView("lecturer/CAEligibility.fxml");
     }
 
-    @FXML
-    private void openGenerateGrades() {
-        loadView("GenerateGrade.fxml");
-    }
-
-    @FXML
-    private void openBatchGrades() {
-        loadView("BatchGrades.fxml");
-    }
-
-    @FXML
-    private void openBatchEligibility() {
-        loadView("BatchFullEligibility.fxml");
-    }
 
     @FXML
     void logout(ActionEvent event) {

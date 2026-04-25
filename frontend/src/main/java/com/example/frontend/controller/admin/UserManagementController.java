@@ -11,16 +11,13 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
@@ -31,6 +28,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class UserManagementController implements Initializable {
@@ -61,8 +59,15 @@ public class UserManagementController implements Initializable {
     @FXML private ImageView avatarImage;
     @FXML private Circle avatarCircle;
 
+    @FXML private Button updateUserButton;
+    @FXML private Button deleteUserButton;
+
     private UserService userService;
-    private final ObservableList<UserResponseDTO> masterList = FXCollections.observableArrayList();
+    private UserResponseDTO selectedUser;
+
+    private final ObservableList<UserResponseDTO> masterList =
+            FXCollections.observableArrayList();
+
     private FilteredList<UserResponseDTO> filteredList;
 
     @Override
@@ -72,89 +77,79 @@ public class UserManagementController implements Initializable {
         statusBarTime.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
         adminNameLabel.setText(LoginController.username);
 
+        setupTableColumns();
+        setupRoleFilter();
+        setupActionButtonsVisibility();
+        setupSelectionListener();
+
+        loadUsers();
+    }
+
+    private boolean isAdminUser() {
+        return "Admin".equalsIgnoreCase(SessionManager.getRole());
+    }
+
+    private void setupActionButtonsVisibility() {
+        boolean admin = isAdminUser();
+
+        updateUserButton.setVisible(admin);
+        updateUserButton.setManaged(admin);
+        deleteUserButton.setVisible(admin);
+        deleteUserButton.setManaged(admin);
+
+        updateUserButton.setDisable(true);
+        deleteUserButton.setDisable(true);
+    }
+
+    private void setupTableColumns() {
         colUserId.setCellValueFactory(cellData ->
                 new SimpleStringProperty(valueOrDash(cellData.getValue().getUserId())));
+
         colUsername.setCellValueFactory(cellData ->
                 new SimpleStringProperty(valueOrDash(cellData.getValue().getUsername())));
+
         colEmail.setCellValueFactory(cellData ->
                 new SimpleStringProperty(valueOrDash(cellData.getValue().getEmail())));
+
         colRole.setCellValueFactory(cellData ->
                 new SimpleStringProperty(valueOrDash(cellData.getValue().getRole())));
+
         colContactNo.setCellValueFactory(cellData ->
                 new SimpleStringProperty(valueOrDash(cellData.getValue().getContactNo())));
+    }
 
-        tblUsers.setRowFactory(tv -> {
-            TableRow<UserResponseDTO> row = new TableRow<>() {
-                @Override
-                protected void updateItem(UserResponseDTO item, boolean empty) {
-                    super.updateItem(item, empty);
-
-                    if (empty || item == null) {
-                        setStyle("-fx-background-color: transparent;");
-                    } else if (isSelected()) {
-                        setStyle("-fx-background-color: #e8f0ff; -fx-background-insets: 2 0 2 0;");
-                    } else {
-                        setStyle("-fx-background-color: #ffffff; -fx-background-insets: 2 0 2 0;");
-                    }
-                }
-            };
-
-            row.hoverProperty().addListener((obs, oldVal, isHovering) -> {
-                if (!row.isEmpty() && !row.isSelected()) {
-                    if (isHovering) {
-                        row.setStyle("-fx-background-color: #f5f9ff; -fx-background-insets: 2 0 2 0;");
-                    } else {
-                        row.setStyle("-fx-background-color: #ffffff; -fx-background-insets: 2 0 2 0;");
-                    }
-                }
-            });
-
-            row.selectedProperty().addListener((obs, oldVal, selected) -> {
-                if (!row.isEmpty()) {
-                    if (selected) {
-                        row.setStyle("-fx-background-color: #e8f0ff; -fx-background-insets: 2 0 2 0;");
-                    } else if (row.isHover()) {
-                        row.setStyle("-fx-background-color: #f5f9ff; -fx-background-insets: 2 0 2 0;");
-                    } else {
-                        row.setStyle("-fx-background-color: #ffffff; -fx-background-insets: 2 0 2 0;");
-                    }
-                }
-            });
-
-            return row;
-        });
-
-        styleTableColumns();
-        if(Objects.equals(SessionManager.getRole(), "Lecturer")){
-            roleFilterBox.setItems(FXCollections.observableArrayList(
-                    "Student"
-            ));
+    private void setupRoleFilter() {
+        if (Objects.equals(SessionManager.getRole(), "Lecturer")) {
+            roleFilterBox.setItems(FXCollections.observableArrayList("Student"));
             roleFilterBox.setValue("Student");
-        }
-        else{
+        } else {
             roleFilterBox.setItems(FXCollections.observableArrayList(
                     "All", "Admin", "Dean", "Lecturer", "Student", "Tech_Officer"
             ));
             roleFilterBox.setValue("All");
         }
-
-
-
-        loadUsers();
-
-        tblUsers.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, selectedUser) -> {
-            if (selectedUser != null) {
-                showUserDetails(selectedUser);
-            }
-        });
     }
 
-    private void styleTableColumns() {
-        colUserId.setStyle("-fx-alignment: CENTER-LEFT; -fx-text-fill: #1a3a52; -fx-font-size: 12px;");
-        colUsername.setStyle("-fx-alignment: CENTER-LEFT; -fx-text-fill: #1a3a52; -fx-font-size: 12px;");
-        colEmail.setStyle("-fx-alignment: CENTER-LEFT; -fx-text-fill: #1a3a52; -fx-font-size: 12px;");
-        colRole.setStyle("-fx-alignment: CENTER; -fx-text-fill: #1a3a52; -fx-font-size: 12px;");
-        colContactNo.setStyle("-fx-alignment: CENTER-LEFT; -fx-text-fill: #1a3a52; -fx-font-size: 12px;");
+    private void setupSelectionListener() {
+        tblUsers.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, selected) -> {
+            selectedUser = selected;
+
+            if (selectedUser != null) {
+                showUserDetails(selectedUser);
+
+                if (isAdminUser()) {
+                    updateUserButton.setDisable(false);
+                    deleteUserButton.setDisable(false);
+                }
+            } else {
+                clearDetails();
+
+                if (isAdminUser()) {
+                    updateUserButton.setDisable(true);
+                    deleteUserButton.setDisable(true);
+                }
+            }
+        });
     }
 
     @FXML
@@ -164,6 +159,10 @@ public class UserManagementController implements Initializable {
 
     private void loadUsers() {
         List<UserResponseDTO> users = userService.getAllUsers();
+
+        if (users == null) {
+            users = List.of();
+        }
 
         if (Objects.equals(SessionManager.getRole(), "Lecturer")) {
             users = users.stream()
@@ -179,30 +178,48 @@ public class UserManagementController implements Initializable {
         totalUsersInfoLabel.setText(users.size() + " users loaded");
         statusLabel.setText("Users loaded successfully");
 
-        clearDetailsIfEmpty();
+        selectedUser = null;
+        clearDetails();
+
+        if (isAdminUser()) {
+            updateUserButton.setDisable(true);
+            deleteUserButton.setDisable(true);
+        }
     }
 
     @FXML
     public void filterUsers() {
-        String selectedRole = roleFilterBox.getValue();
-        String searchText = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
-
         if (filteredList == null) return;
 
-        filteredList.setPredicate(user -> {
-            boolean roleMatches = selectedRole == null
-                    || selectedRole.equals("All")
-                    || valueOrDash(user.getRole()).equalsIgnoreCase(selectedRole);
+        String selectedRole = roleFilterBox.getValue();
+        String searchText = searchField.getText() == null
+                ? ""
+                : searchField.getText().trim().toLowerCase();
 
-            boolean searchMatches = searchText.isEmpty()
-                    || valueOrDash(user.getUsername()).toLowerCase().contains(searchText)
-                    || valueOrDash(user.getEmail()).toLowerCase().contains(searchText);
+        filteredList.setPredicate(user -> {
+            boolean roleMatches =
+                    selectedRole == null
+                            || selectedRole.equals("All")
+                            || valueOrDash(user.getRole()).equalsIgnoreCase(selectedRole);
+
+            boolean searchMatches =
+                    searchText.isEmpty()
+                            || valueOrDash(user.getUsername()).toLowerCase().contains(searchText)
+                            || valueOrDash(user.getEmail()).toLowerCase().contains(searchText);
 
             return roleMatches && searchMatches;
         });
 
         totalUsersInfoLabel.setText(filteredList.size() + " users shown");
         statusLabel.setText("Filter applied");
+
+        selectedUser = null;
+        clearDetails();
+
+        if (isAdminUser()) {
+            updateUserButton.setDisable(true);
+            deleteUserButton.setDisable(true);
+        }
     }
 
     private void showUserDetails(UserResponseDTO user) {
@@ -215,12 +232,139 @@ public class UserManagementController implements Initializable {
 
         loadAvatar(user);
 
-        statusLabel.setText("Viewing details for " + valueOrDash(user.getUsername()));
+        statusLabel.setText("Selected user: " + valueOrDash(user.getUsername()));
+    }
+
+    private void clearDetails() {
+        detailUsernameLabel.setText("Select a user");
+        detailRoleBadge.setText("Role");
+        detailUserIdLabel.setText("—");
+        detailEmailLabel.setText("—");
+        detailContactLabel.setText("—");
+        detailProfilePictureLabel.setText("—");
+
+        avatarImage.setImage(null);
+        avatarImage.setVisible(false);
+        avatarLabel.setText("U");
+        avatarLabel.setVisible(true);
+        avatarCircle.setVisible(true);
+    }
+
+    @FXML
+    private void updateSelectedUser() {
+        if (!isAdminUser()) {
+            statusLabel.setText("Only admin can update users.");
+            return;
+        }
+
+        if (selectedUser == null) {
+            statusLabel.setText("Please select a user first.");
+            return;
+        }
+
+        Dialog<UserResponseDTO> dialog = new Dialog<>();
+        dialog.setTitle("Update User");
+        dialog.setHeaderText("Update user: " + selectedUser.getUsername());
+
+        ButtonType updateButtonType =
+                new ButtonType("Update", ButtonBar.ButtonData.OK_DONE);
+
+        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
+
+        TextField usernameField = new TextField(valueOrEmpty(selectedUser.getUsername()));
+        TextField emailField = new TextField(valueOrEmpty(selectedUser.getEmail()));
+        TextField contactField = new TextField(valueOrEmpty(selectedUser.getContactNo()));
+        TextField profileField = new TextField(valueOrEmpty(selectedUser.getProfilePicture()));
+
+        ComboBox<String> roleBox = new ComboBox<>();
+        roleBox.setItems(FXCollections.observableArrayList(
+                "Admin", "Dean", "Lecturer", "Student", "Tech_Officer"
+        ));
+        roleBox.setValue(valueOrEmpty(selectedUser.getRole()));
+
+        VBox form = new VBox(10);
+        form.setPadding(new Insets(12));
+        form.getChildren().addAll(
+                new Label("Username"), usernameField,
+                new Label("Email"), emailField,
+                new Label("Contact Number"), contactField,
+                new Label("Role"), roleBox,
+                new Label("Profile Picture Path"), profileField
+        );
+
+        dialog.getDialogPane().setContent(form);
+
+        dialog.setResultConverter(button -> {
+            if (button == updateButtonType) {
+                UserResponseDTO updatedUser = new UserResponseDTO();
+
+                updatedUser.setUserId(selectedUser.getUserId());
+                updatedUser.setUsername(usernameField.getText().trim());
+                updatedUser.setEmail(emailField.getText().trim());
+                updatedUser.setContactNo(contactField.getText().trim());
+                updatedUser.setRole(roleBox.getValue());
+                updatedUser.setProfilePicture(profileField.getText().trim());
+
+                return updatedUser;
+            }
+            return null;
+        });
+
+        Optional<UserResponseDTO> result = dialog.showAndWait();
+
+        result.ifPresent(updatedUser -> {
+            boolean updated = userService.updateUser(updatedUser);
+
+            if (updated) {
+                statusLabel.setText("User updated successfully.");
+                loadUsers();
+            } else {
+                statusLabel.setText("Failed to update user.");
+            }
+        });
+    }
+
+    @FXML
+    private void deleteSelectedUser() {
+        if (!isAdminUser()) {
+            statusLabel.setText("Only admin can delete users.");
+            return;
+        }
+
+        if (selectedUser == null) {
+            statusLabel.setText("Please select a user first.");
+            return;
+        }
+
+        if (Objects.equals(selectedUser.getUserId(), LoginController.userId)) {
+            statusLabel.setText("You cannot delete your own account.");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Delete User");
+        confirm.setHeaderText("Delete selected user?");
+        confirm.setContentText(
+                "Are you sure you want to delete:\n\n" +
+                        selectedUser.getUsername() + " (" + selectedUser.getUserId() + ")"
+        );
+
+        Optional<ButtonType> result = confirm.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            boolean deleted = userService.deleteUser(selectedUser.getUserId());
+
+            if (deleted) {
+                statusLabel.setText("User deleted successfully.");
+                loadUsers();
+            } else {
+                statusLabel.setText("Failed to delete user.");
+            }
+        }
     }
 
     private void loadAvatar(UserResponseDTO user) {
         String imagePath = user.getProfilePicture();
-        System.out.println("Profile path: " + imagePath);
 
         if (imagePath == null || imagePath.isBlank()) {
             showDefaultAvatar(user);
@@ -237,7 +381,6 @@ public class UserManagementController implements Initializable {
                 File file = new File(imagePath);
 
                 if (!file.exists()) {
-                    System.out.println("Profile image file not found: " + imagePath);
                     showDefaultAvatar(user);
                     return;
                 }
@@ -245,19 +388,15 @@ public class UserManagementController implements Initializable {
                 finalPath = file.toURI().toString();
             }
 
-            System.out.println("Converted URI: " + finalPath);
-
             Image image = new Image(finalPath, false);
 
             if (image.isError()) {
-                System.out.println("Error loading profile image.");
                 showDefaultAvatar(user);
                 return;
             }
 
             avatarImage.setImage(image);
             avatarImage.setVisible(true);
-
             avatarLabel.setVisible(false);
             avatarCircle.setVisible(false);
 
@@ -278,58 +417,41 @@ public class UserManagementController implements Initializable {
         avatarCircle.setVisible(true);
     }
 
-    private void clearDetailsIfEmpty() {
-        if (masterList.isEmpty()) {
-            detailUsernameLabel.setText("No users found");
-            detailRoleBadge.setText("Role");
-            detailUserIdLabel.setText("—");
-            detailEmailLabel.setText("—");
-            detailContactLabel.setText("—");
-            detailProfilePictureLabel.setText("—");
-            avatarLabel.setText("U");
-            avatarImage.setImage(null);
-            avatarImage.setVisible(false);
-            avatarLabel.setVisible(true);
-            avatarCircle.setVisible(true);
-            statusLabel.setText("No user records available");
-        }
-    }
-
     private String valueOrDash(String value) {
         return value == null || value.isBlank() ? "—" : value;
     }
 
+    private String valueOrEmpty(String value) {
+        return value == null || value.equals("—") ? "" : value;
+    }
+
     @FXML
     private void openAddUser() {
-       if(!Objects.equals(SessionManager.getRole(), "Lecturer")) loadView("admin/createUser.fxml");
+        if (isAdminUser()) {
+            loadView("admin/createUser.fxml");
+        } else {
+            statusLabel.setText("Only admin can add users.");
+        }
     }
 
     @FXML
     public void goBack() {
         try {
-            if(Objects.equals(SessionManager.getRole(), "Lecturer")){
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/lecturer/lecturerDashboard.fxml"));
-                Parent root = loader.load();
+            String fxml = Objects.equals(SessionManager.getRole(), "Lecturer")
+                    ? "/view/lecturer/lecturerDashboard.fxml"
+                    : "/view/admin/AdminDashboard.fxml";
 
-                Stage stage = (Stage) adminNameLabel.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.centerOnScreen();
-                stage.show();
-            }
-            else{
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin/AdminDashboard.fxml"));
-                Parent root = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
 
-                Stage stage = (Stage) adminNameLabel.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.centerOnScreen();
-                stage.show();
-            }
-
+            Stage stage = (Stage) adminNameLabel.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen();
+            stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
-
+            statusLabel.setText("Failed to go back.");
         }
     }
 
@@ -337,10 +459,12 @@ public class UserManagementController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/" + fxmlFile));
             Parent root = loader.load();
+
             Stage stage = (Stage) tblUsers.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.centerOnScreen();
             stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
             statusLabel.setText("Failed to load view: " + fxmlFile);

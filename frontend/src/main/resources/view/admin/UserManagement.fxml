@@ -9,77 +9,79 @@
 <BorderPane xmlns="http://javafx.com/javafx/17.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.frontend.controller.admin.UserManagementController"
-            prefWidth="1180" prefHeight="600"
+            prefWidth="1180"
+            prefHeight="650"
             style="-fx-background-color: #f8fbff;">
 
-    <!-- TOP BAR -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="0"
+        <HBox alignment="CENTER_LEFT"
               style="-fx-background-color: #ffffff; -fx-border-color: #e8eef5; -fx-border-width: 0 0 1 0;">
 
-            <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="64"
-                  style="-fx-background-color: #ffffff;">
-                <padding><Insets left="28" right="28"/></padding>
+            <HBox alignment="CENTER_LEFT" spacing="12" prefHeight="64">
+                <padding>
+                    <Insets left="28" right="28"/>
+                </padding>
                 <Label text="🎓" style="-fx-font-size: 28px;"/>
                 <VBox alignment="CENTER_LEFT" spacing="1">
-                    <Label text="FoT Portal" style="-fx-text-fill: #1a3a52; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-                    <Label text="Faculty of Technology" style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px;"/>
+                    <Label text="FoT Portal"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Label text="Faculty of Technology"
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 10px;"/>
                 </VBox>
             </HBox>
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <HBox alignment="CENTER" spacing="8">
-                <padding><Insets left="16" right="16"/></padding>
-                <Label text="👥" style="-fx-font-size: 16px;"/>
-                <Label text="User Management"
-                       style="-fx-text-fill: #5b9fd9; -fx-font-size: 13px; -fx-font-weight: bold;"/>
-            </HBox>
+            <Label text="👥 User Management"
+                   style="-fx-text-fill: #5b9fd9; -fx-font-size: 13px; -fx-font-weight: bold;"/>
 
-            <Separator orientation="VERTICAL" style="-fx-background-color: #e8eef5;"/>
+            <Region HBox.hgrow="ALWAYS"/>
 
             <HBox alignment="CENTER" spacing="10">
-                <padding><Insets left="16" right="24"/></padding>
+                <padding>
+                    <Insets left="16" right="24"/>
+                </padding>
+
                 <StackPane>
                     <Circle radius="18" style="-fx-fill: #5b9fd9;"/>
-                    <Label text="A" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Label text="A" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
                 </StackPane>
+
                 <VBox alignment="CENTER_LEFT" spacing="1">
-                    <Label fx:id="adminNameLabel" text="Administrator"
+                    <Label fx:id="adminNameLabel"
+                           text="Administrator"
                            style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                    <Label text="Admin" style="-fx-text-fill: #8fa3b8; -fx-font-size: 9px;"/>
+                    <Label text="Admin"
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 9px;"/>
                 </VBox>
-                <Button text="← Back" onAction="#goBack"
-                        style="-fx-background-color: #e8eef5; -fx-text-fill: #1a3a52; -fx-font-size: 11px; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-weight: 600; -fx-padding: 6 16 6 16;"/>
+
+                <Button text="← Back"
+                        onAction="#goBack"
+                        style="-fx-background-color: #e8eef5; -fx-text-fill: #1a3a52; -fx-font-size: 11px; -fx-background-radius: 6; -fx-font-weight: bold;"/>
             </HBox>
         </HBox>
     </top>
 
-    <!-- CENTER -->
     <center>
-        <VBox spacing="24">
+        <VBox spacing="22">
             <padding>
-                <Insets top="28" right="32" bottom="28" left="32"/>
+                <Insets top="26" right="32" bottom="26" left="32"/>
             </padding>
 
-            <!-- Header -->
             <VBox spacing="5">
                 <Label text="User Management"
                        style="-fx-text-fill: #1a3a52; -fx-font-size: 26px; -fx-font-weight: bold;"/>
-                <Label text="View all users, filter by role, and inspect selected user details."
+                <Label text="Search, select, update, and delete users."
                        style="-fx-text-fill: #8fa3b8; -fx-font-size: 13px;"/>
             </VBox>
 
-            <!-- Filters -->
             <HBox spacing="14" alignment="CENTER_LEFT">
                 <VBox spacing="6">
                     <Label text="Filter by Role"
                            style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-                    <ComboBox fx:id="roleFilterBox" prefWidth="220"
-                              onAction="#filterUsers"
-                              style="-fx-background-color: #ffffff; -fx-text-fill: #1a3a52;
-                                     -fx-border-color: #d4e4f7; -fx-border-radius: 8;
-                                     -fx-background-radius: 8; -fx-font-size: 13px;"/>
+                    <ComboBox fx:id="roleFilterBox"
+                              prefWidth="220"
+                              onAction="#filterUsers"/>
                 </VBox>
 
                 <VBox spacing="6" HBox.hgrow="ALWAYS">
@@ -87,58 +89,51 @@
                            style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"/>
                     <TextField fx:id="searchField"
                                promptText="Type username or email..."
-                               onKeyReleased="#filterUsers"
-                               style="-fx-background-color: #ffffff; -fx-text-fill: #1a3a52;
-                                      -fx-prompt-text-fill: #a8b8ca; -fx-font-size: 13px;
-                                      -fx-border-color: #d4e4f7; -fx-border-radius: 8;
-                                      -fx-background-radius: 8;"/>
+                               onKeyReleased="#filterUsers"/>
                 </VBox>
 
                 <VBox spacing="6">
                     <Label text="Actions"
                            style="-fx-text-fill: #1a3a52; -fx-font-size: 12px; -fx-font-weight: bold;"/>
                     <HBox spacing="10">
-                        <Button text="⟳ Refresh" onAction="#refreshUsers"
-                                style="-fx-background-color: #5b9fd9; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 6 12 6 12;"/>
-                        <Button text="+ Add User" onAction="#openAddUser"
-                                style="-fx-background-color: #4cba52; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 6 12 6 12;"/>
+                        <Button text="⟳ Refresh"
+                                onAction="#refreshUsers"
+                                style="-fx-background-color: #5b9fd9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"/>
+                        <Button text="+ Add User"
+                                onAction="#openAddUser"
+                                style="-fx-background-color: #4cba52; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"/>
                     </HBox>
                 </VBox>
             </HBox>
 
-            <!-- Main split -->
             <HBox spacing="22" VBox.vgrow="ALWAYS">
 
-                <!-- TABLE CARD -->
-                <VBox spacing="0" HBox.hgrow="ALWAYS"
-                      style="-fx-background-color: #fafbff; -fx-background-radius: 14;
-                             -fx-border-color: #d4e4f7; -fx-border-radius: 14; -fx-border-width: 1.5;
-                             -fx-effect: dropshadow(three-pass-box,rgba(91,159,217,0.1),12,0,0,4);">
+                <VBox spacing="0"
+                      HBox.hgrow="ALWAYS"
+                      style="-fx-background-color: #fafbff; -fx-background-radius: 14; -fx-border-color: #d4e4f7; -fx-border-radius: 14; -fx-border-width: 1.5;">
 
                     <HBox alignment="CENTER_LEFT" spacing="10"
-                          style="-fx-background-color: #f5f9ff;
-                                 -fx-background-radius: 14 14 0 0;
-                                 -fx-border-color: transparent transparent #e8eef5 transparent;
-                                 -fx-border-width: 0 0 1 0;">
-                        <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+                          style="-fx-background-color: #f5f9ff; -fx-background-radius: 14 14 0 0;">
+                        <padding>
+                            <Insets top="16" right="20" bottom="16" left="20"/>
+                        </padding>
+
                         <Label text="📋" style="-fx-font-size: 17px;"/>
                         <VBox spacing="1">
                             <Label text="Users List"
                                    style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
-                            <Label fx:id="totalUsersInfoLabel" text="0 users loaded"
+                            <Label fx:id="totalUsersInfoLabel"
+                                   text="0 users loaded"
                                    style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
                         </VBox>
                     </HBox>
 
-                    <VBox spacing="0" VBox.vgrow="ALWAYS">
-                        <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                    <VBox VBox.vgrow="ALWAYS">
+                        <padding>
+                            <Insets top="14" right="14" bottom="14" left="14"/>
+                        </padding>
 
-                        <TableView fx:id="tblUsers" VBox.vgrow="ALWAYS"
-                                   style="-fx-background-color: #ffffff; -fx-control-inner-background: #ffffff;
-                                          -fx-table-cell-border-color: #e8eef5; -fx-border-color: #d4e4f7;
-                                          -fx-border-radius: 10; -fx-background-radius: 10;
-                                          -fx-font-size: 12px; -fx-text-fill: #1a3a52;">
-
+                        <TableView fx:id="tblUsers" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="colUserId" text="User ID" prefWidth="95"/>
                                 <TableColumn fx:id="colUsername" text="Username" prefWidth="150"/>
@@ -150,96 +145,99 @@
                     </VBox>
                 </VBox>
 
-                <!-- DETAILS CARD -->
-                <VBox spacing="0" prefWidth="320"
-                      style="-fx-background-color: #fafbff; -fx-background-radius: 14;
-                             -fx-border-color: #d4e4f7; -fx-border-radius: 14; -fx-border-width: 1.5;
-                             -fx-effect: dropshadow(three-pass-box,rgba(91,159,217,0.1),12,0,0,4);">
+                <VBox spacing="0"
+                      prefWidth="330"
+                      style="-fx-background-color: #fafbff; -fx-background-radius: 14; -fx-border-color: #d4e4f7; -fx-border-radius: 14; -fx-border-width: 1.5;">
 
                     <HBox alignment="CENTER_LEFT" spacing="10"
-                          style="-fx-background-color: #f5f9ff;
-                                 -fx-background-radius: 14 14 0 0;
-                                 -fx-border-color: transparent transparent #e8eef5 transparent;
-                                 -fx-border-width: 0 0 1 0;">
-                        <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+                          style="-fx-background-color: #f5f9ff; -fx-background-radius: 14 14 0 0;">
+                        <padding>
+                            <Insets top="16" right="20" bottom="16" left="20"/>
+                        </padding>
+
                         <Label text="🧾" style="-fx-font-size: 17px;"/>
                         <VBox spacing="1">
                             <Label text="User Details"
                                    style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
-                            <Label text="Click a row to view details"
+                            <Label text="Select a row first"
                                    style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
                         </VBox>
                     </HBox>
 
-                    <VBox spacing="18">
-                        <padding><Insets top="24" right="22" bottom="24" left="22"/></padding>
+                    <VBox spacing="16">
+                        <padding>
+                            <Insets top="24" right="22" bottom="24" left="22"/>
+                        </padding>
 
                         <StackPane>
-                            <Circle fx:id="avatarCircle" radius="36"
-                                    style="-fx-fill: #5b9fd9;"/>
-
+                            <Circle fx:id="avatarCircle" radius="36" style="-fx-fill: #5b9fd9;"/>
                             <ImageView fx:id="avatarImage"
                                        fitWidth="72"
                                        fitHeight="72"
                                        preserveRatio="true"
-                                       smooth="true"
                                        visible="false"/>
-
-                            <Label fx:id="avatarLabel" text="U"
+                            <Label fx:id="avatarLabel"
+                                   text="U"
                                    style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;"/>
                         </StackPane>
 
                         <VBox spacing="4" alignment="CENTER">
-                            <Label fx:id="detailUsernameLabel" text="Select a user"
+                            <Label fx:id="detailUsernameLabel"
+                                   text="Select a user"
                                    style="-fx-text-fill: #1a3a52; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-                            <Label fx:id="detailRoleBadge" text="Role"
-                                   style="-fx-background-color: #f5f9ff; -fx-text-fill: #5b9fd9;
-                                          -fx-padding: 4 10 4 10; -fx-background-radius: 20;
-                                          -fx-border-color: #d4e4f7; -fx-border-radius: 20; -fx-border-width: 1;
-                                          -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                            <Label fx:id="detailRoleBadge"
+                                   text="Role"
+                                   style="-fx-background-color: #f5f9ff; -fx-text-fill: #5b9fd9; -fx-padding: 4 10 4 10; -fx-background-radius: 20;"/>
                         </VBox>
 
-                        <Separator style="-fx-background-color: #e8eef5;"/>
+                        <Separator/>
 
-                        <VBox spacing="14">
-                            <VBox spacing="4">
-                                <Label text="User ID" style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                                <Label fx:id="detailUserIdLabel" text="—" style="-fx-text-fill: #1a3a52; -fx-font-size: 13px;"/>
-                            </VBox>
+                        <VBox spacing="12">
+                            <Label text="User ID"/>
+                            <Label fx:id="detailUserIdLabel" text="—"/>
 
-                            <VBox spacing="4">
-                                <Label text="Email" style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                                <Label fx:id="detailEmailLabel" text="—" style="-fx-text-fill: #1a3a52; -fx-font-size: 13px; -fx-wrap-text: true;"/>
-                            </VBox>
+                            <Label text="Email"/>
+                            <Label fx:id="detailEmailLabel" text="—" wrapText="true"/>
 
-                            <VBox spacing="4">
-                                <Label text="Contact Number" style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                                <Label fx:id="detailContactLabel" text="—" style="-fx-text-fill: #1a3a52; -fx-font-size: 13px;"/>
-                            </VBox>
+                            <Label text="Contact Number"/>
+                            <Label fx:id="detailContactLabel" text="—"/>
 
-                            <VBox spacing="4">
-                                <Label text="Profile Picture" style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                                <Label fx:id="detailProfilePictureLabel" text="—" style="-fx-text-fill: #1a3a52; -fx-font-size: 13px; -fx-wrap-text: true;"/>
-                            </VBox>
+                            <Label text="Profile Picture"/>
+                            <Label fx:id="detailProfilePictureLabel" text="—" wrapText="true"/>
                         </VBox>
+
+                        <HBox spacing="10">
+                            <Button fx:id="updateUserButton"
+                                    text="Update"
+                                    onAction="#updateSelectedUser"
+                                    disable="true"
+                                    prefWidth="130"
+                                    style="-fx-background-color: #5b9fd9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"/>
+
+                            <Button fx:id="deleteUserButton"
+                                    text="Delete"
+                                    onAction="#deleteSelectedUser"
+                                    disable="true"
+                                    prefWidth="130"
+                                    style="-fx-background-color: #e85d5d; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"/>
+                        </HBox>
                     </VBox>
                 </VBox>
             </HBox>
         </VBox>
     </center>
 
-    <!-- STATUS BAR -->
     <bottom>
         <HBox alignment="CENTER_LEFT" spacing="16"
               style="-fx-background-color: #ffffff; -fx-border-color: #e8eef5; -fx-border-width: 1 0 0 0;">
-            <padding><Insets top="10" bottom="10" left="28" right="28"/></padding>
-            <Label text="●" style="-fx-text-fill: #4cba52; -fx-font-size: 10px;"/>
-            <Label fx:id="statusLabel"
-                   text="Ready"
-                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+            <padding>
+                <Insets top="10" bottom="10" left="28" right="28"/>
+            </padding>
+
+            <Label text="●" style="-fx-text-fill: #4cba52;"/>
+            <Label fx:id="statusLabel" text="Ready" style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Label fx:id="statusBarTime" text="Time"
-                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+            <Label fx:id="statusBarTime" text="Time" style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
         </HBox>
     </bottom>
 

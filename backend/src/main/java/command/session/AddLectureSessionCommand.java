@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import command.repository.ClientContext;
 import command.repository.Command;
-import dao.session.SessionDAO;
 
-import dao.user.UserDAO;
-import dto.requestDto.AddLectureSessionReqDTO;
+import dto.requestDto.lecturer.AddLectureSessionReqDTO;
 import model.Session;
 import service.login.AuthService;
 import service.session.SessionService;

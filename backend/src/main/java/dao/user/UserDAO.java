@@ -1,5 +1,6 @@
 package dao.user;
 
+import dto.requestDto.user.UpdateUserReqDTO;
 import model.Lecturer;
 import model.Student;
 import model.TechOfficer;
@@ -184,5 +185,49 @@ public class UserDAO {
         }
 
         return null;
+    }
+
+    public boolean updateUser(UpdateUserReqDTO dto) {
+        String sql = """
+            UPDATE users
+            SET username = ?,
+                email = ?,
+                contact_number = ?,
+                role = ?,
+                profile_picture = ?
+            WHERE user_id = ?
+            """;
+
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, dto.getUsername());
+            ps.setString(2, dto.getEmail());
+            ps.setString(3, dto.getContactNo());
+            ps.setString(4, dto.getRole());
+            ps.setString(5, dto.getProfilePicture());
+            ps.setString(6, dto.getUserId());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteUser(String userId) {
+        String sql = "DELETE FROM users WHERE user_id = ?";
+
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, userId);
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

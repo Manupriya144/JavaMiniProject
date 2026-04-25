@@ -5,7 +5,9 @@ import utility.DataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CourseMaterialDAO {
 
@@ -101,4 +103,46 @@ public class CourseMaterialDAO {
             return false;
         }
     }
+
+    public List<CourseMaterial> getMaterialsByCourseForStudent(String courseId) {
+        List<CourseMaterial> list = new ArrayList<>();
+
+        String sql = """
+            SELECT material_id, course_id, lecturer_id, title, file_path, uploaded_at
+            FROM course_material
+            WHERE course_id = ?
+            ORDER BY uploaded_at DESC
+            """;
+
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, courseId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    CourseMaterial material = new CourseMaterial();
+
+                    material.setMaterialId(rs.getInt("material_id"));
+                    material.setCourseId(rs.getString("course_id"));
+                    material.setLecturerId(rs.getString("lecturer_id"));
+                    material.setTitle(rs.getString("title"));
+                    material.setFilePath(rs.getString("file_path"));
+
+                    Timestamp ts = rs.getTimestamp("uploaded_at");
+                    if (ts != null) {
+                        material.setUploadedAt(ts.toString());
+                    }
+
+                    list.add(material);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 }

@@ -9,6 +9,7 @@ import com.example.frontend.session.SessionManager;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -106,6 +107,66 @@ public class CourseService {
         } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
+        }
+    }
+
+    public boolean updateCourse(CourseAllResponseDTO course) {
+        try {
+            ObjectNode root = mapper.createObjectNode();
+            root.put("command", "UPDATE_COURSE");
+            root.put("token", SessionManager.getToken());
+
+            ObjectNode data = root.putObject("data");
+            data.put("courseId", course.getCourseId());
+            data.put("courseCode", course.getCourseCode());
+            data.put("name", course.getName());
+            data.put("courseCredit", course.getCourseCredit());
+            data.put("academicLevel", course.getAcademicLevel());
+            data.put("semester", course.getSemester());
+            data.put("departmentId", course.getDepartmentId());
+
+            String requestJson = mapper.writeValueAsString(root);
+            String responseJson = client.sendRequest(requestJson);
+
+            System.out.println("UPDATE COURSE RESPONSE: " + responseJson);
+
+            if (responseJson == null || responseJson.isBlank()) {
+                return false;
+            }
+
+            JsonNode response = mapper.readTree(responseJson);
+            return response.path("success").asBoolean(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteCourse(String courseId) {
+        try {
+            ObjectNode root = mapper.createObjectNode();
+            root.put("command", "DELETE_COURSE");
+            root.put("token", SessionManager.getToken());
+
+            ObjectNode data = root.putObject("data");
+            data.put("courseId", courseId);
+
+            String requestJson = mapper.writeValueAsString(root);
+            String responseJson = client.sendRequest(requestJson);
+
+            System.out.println("DELETE COURSE RESPONSE: " + responseJson);
+
+            if (responseJson == null || responseJson.isBlank()) {
+                return false;
+            }
+
+            JsonNode response = mapper.readTree(responseJson);
+            return response.path("success").asBoolean(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

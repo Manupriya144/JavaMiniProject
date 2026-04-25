@@ -1,5 +1,6 @@
 package dao.course;
 
+import dto.requestDto.course.UpdateCourseReqDTO;
 import dto.responseDto.course.CourseAllResponseDTO;
 import dto.responseDto.course.CourseResponseDTO;
 import model.Course;
@@ -11,48 +12,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class CourseDAO {
 
-
-//    public boolean existsByCourseId(String courseId) {
-//        String sql = "SELECT 1 FROM course WHERE course_id = ?";
-//        try (Connection connection = DataSource.getInstance().getConnection();
-//        PreparedStatement ps = connection.prepareStatement(sql)) {
-//            ps.setString(1, courseId);
-//            ResultSet rs = ps.executeQuery();
-//            return rs.next();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
-
-//    public boolean existsByCourseCode(String courseCode) {
-//        String sql = "SELECT 1 FROM course WHERE course_code = ?";
-//        try (Connection connection = DataSource.getInstance().getConnection();
-//             PreparedStatement ps = connection.prepareStatement(sql)) {
-//            ps.setString(1, courseCode);
-//            ResultSet rs = ps.executeQuery();
-//            return rs.next();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
-
-//    public boolean existsDepartmentById(String departmentId) {
-//        String sql = "SELECT 1 FROM department WHERE department_id = ?";
-//
-//        try (Connection connection = DataSource.getInstance().getConnection();
-//             PreparedStatement ps = connection.prepareStatement(sql)) {
-//            ps.setString(1, departmentId);
-//            ResultSet rs = ps.executeQuery();
-//            return rs.next();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
 
     public Course createCourse(Course course) {
         String sql = "INSERT INTO course " +
@@ -141,4 +103,52 @@ public class CourseDAO {
 
         return courseList;
     }
+
+    public boolean updateCourse(UpdateCourseReqDTO dto) {
+        String sql = """
+            UPDATE course
+            SET course_code = ?,
+                name = ?,
+                course_credit = ?,
+                academic_level = ?,
+                semester = ?,
+                department_id = ?
+            WHERE course_id = ?
+            """;
+
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, dto.getCourseCode());
+            ps.setString(2, dto.getName());
+            ps.setInt(3, dto.getCourseCredit());
+            ps.setInt(4, dto.getAcademicLevel());
+            ps.setString(5, dto.getSemester());
+            ps.setString(6, dto.getDepartmentId());
+            ps.setString(7, dto.getCourseId());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteCourse(String courseId) {
+        String sql = "DELETE FROM course WHERE course_id = ?";
+
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, courseId);
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 }

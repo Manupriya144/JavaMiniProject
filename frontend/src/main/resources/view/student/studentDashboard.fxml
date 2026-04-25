@@ -89,14 +89,6 @@
                     </items>
                 </MenuButton>
 
-                <Button text="Grades &amp; GPA" onAction="#openGrades"
-                        style="-fx-background-color: transparent;
-                               -fx-text-fill: white;
-                               -fx-font-size: 13px;
-                               -fx-background-radius: 10;
-                               -fx-padding: 8 18 8 18;
-                               -fx-cursor: hand;"/>
-
                 <Button text="Timetable" onAction="#openTimetable"
                         style="-fx-background-color: transparent;
                                -fx-text-fill: white;
@@ -318,24 +310,9 @@
                     <Separator style="-fx-background-color: #e7eef7;"/>
 
                     <FlowPane hgap="12" vgap="12">
-                        <Button text="📝  My Final Marks" onAction="#openStudentFinalMarks"
-                                prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
-                        <Button text="📊  My Grades" onAction="#openStudentGrades"
-                                prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+
                         <Button text="✅  My Eligibility" onAction="#openEligibility"
-                                prefHeight="42" prefWidth="180"
+                                prefHeight="42" prefWidth="200"
                                 style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
                                        -fx-text-fill: white;
                                        -fx-font-size: 13px;
@@ -379,11 +356,9 @@
                             </padding>
                             <Label text="Code" prefWidth="110"
                                    style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                            <Label text="Course Name" prefWidth="200"
+                            <Label text="Course Name" prefWidth="250"
                                    style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                            <Label text="Credits" prefWidth="70"
-                                   style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                            <Label text="Grade" prefWidth="70"
+                            <Label text="Credits" prefWidth="80"
                                    style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                         </HBox>
 

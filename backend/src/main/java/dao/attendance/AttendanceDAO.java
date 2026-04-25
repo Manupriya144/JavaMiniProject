@@ -1,5 +1,6 @@
 package dao.attendance;
 
+import dto.responseDto.attendance.StudentAttendanceSummaryDTO;
 import model.Attendance;
 
 import java.sql.Connection;
@@ -401,5 +402,61 @@ public class AttendanceDAO {
             e.printStackTrace();
         }
         return rows;
+    }
+
+    public List<StudentAttendanceSummaryDTO> getStudentAttendanceSummaryById(String studentId) {
+        List<StudentAttendanceSummaryDTO> list = new ArrayList<>();
+
+        String sql = """
+            SELECT 
+                c.course_id,
+                c.course_code,
+                c.name AS course_name,
+                COUNT(s.session_id) AS total_sessions,
+                COALESCE(SUM(s.session_hours), 0) AS total_hours,
+                COALESCE(SUM(CASE 
+                    WHEN a.status = 'Present' THEN a.hours_attended 
+                    ELSE 0 
+                END), 0) AS attended_hours
+            FROM course_registration cr
+            JOIN course c ON cr.course_id = c.course_id
+            LEFT JOIN session s ON c.course_id = s.course_id
+            LEFT JOIN attendance a 
+                ON s.session_id = a.session_id 
+                AND a.student_id = cr.student_id
+            WHERE cr.student_id = ?
+            GROUP BY c.course_id, c.course_code, c.name
+            ORDER BY c.course_code
+            """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, studentId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    double totalHours = rs.getDouble("total_hours");
+                    double attendedHours = rs.getDouble("attended_hours");
+
+                    double percentage = totalHours == 0
+                            ? 0
+                            : (attendedHours / totalHours) * 100.0;
+
+                    list.add(new StudentAttendanceSummaryDTO(
+                            rs.getString("course_id"),
+                            rs.getString("course_code"),
+                            rs.getString("course_name"),
+                            rs.getInt("total_sessions"),
+                            totalHours,
+                            attendedHours,
+                            percentage
+                    ));
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 }

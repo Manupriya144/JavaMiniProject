@@ -1,40 +1,30 @@
 package command.repository;
 
-import command.course.GetAllCoursesCommand;
-import command.course.GetAllCoursesCommandFull;
+import command.attendance.*;
+import command.course.*;
 import command.courseMeterial.AddCourseMaterialCommand;
 import command.courseMeterial.DeleteCourseMaterialCommand;
 import command.courseMeterial.GetCourseMaterialsCommand;
 import command.eligibility.GetCAEligibilityCommand;
 import command.eligibility.GetFinalEligibilityCommand;
 import command.eligibility.GetStudentEligibilityCommand;
+import command.eligibility.GetStudentOwnEligibilityCommand;
 import command.finalMarks.UploadFinalMarksCommand;
 import command.lecturer.GetAllLecturersCommand;
+import command.lecturer.GetLecturerDashboardStatsCommand;
 import command.lecturerCourse.AssignLecturerCourseCommand;
 import command.lecturerCourse.GetLecturerCoursesCommand;
 import command.login.LoginCommand;
 import command.login.LogoutCommand;
-import command.attendance.AddAttendanceCommand;
-import command.attendance.DeleteAttendanceCommand;
-import command.attendance.GetAttendanceByIdCommand;
-import command.attendance.GetAttendanceSessionsCommand;
-import command.attendance.GetMedicalEligibleCoursesCommand;
-import command.attendance.GetMedicalEligibleStudentsCommand;
 import command.result.GenerateCourseResultCommand;
 import command.result.GenerateGradeGPACommand;
 import command.result.GetStudentCourseMarksCommand;
 import command.result.SaveSemesterResultsCommand;
 import command.session.AddLectureSessionCommand;
+import command.student.*;
 import command.techofficer.GetTechOfficerDashboardStatsCommand;
 import command.techofficer.GetTechOfficerProfileCommand;
 import command.techofficer.UpdateTechOfficerProfileCommand;
-import command.attendance.GetAttendanceStudentsCommand;
-import command.attendance.CheckAttendanceEligibilityCommand;
-import command.attendance.GetBatchAttendanceCommand;
-import command.attendance.GetBatchAttendanceEligibilityReportCommand;
-import command.attendance.GetBatchAttendanceSummaryCommand;
-import command.attendance.GetStudentAttendanceCommand;
-import command.attendance.GetStudentAttendanceSummaryCommand;
 import command.medical.AddMedicalCommand;
 import command.medical.ApproveMedicalCommand;
 import command.medical.GetBatchMedicalRecordsCommand;
@@ -42,7 +32,6 @@ import command.medical.GetStudentMedicalRecordsCommand;
 import command.medical.RejectMedicalCommand;
 import command.medical.UpdateMedicalCommand;
 import command.notice.AddNoticeCommand;
-import command.course.AddCourseCommand;
 import command.ca.CheckCAEligibilityCommand;
 import command.ca.GetBatchCAEligibilityReportCommand;
 import command.ca.GetBatchCAMarksCommand;
@@ -50,18 +39,12 @@ import command.ca.GetStudentCAMarksCommand;
 import command.ca.UpdateCAMarksCommand;
 import command.ca.UploadCAMarksCommand;
 import command.notice.GetAllNoticeCommand;
-import command.student.GetStudentByUserIdCommand;
-import command.attendance.UpdateAttendanceCommand;
-import command.student.UpdateStudentProfileCommand;
 import command.timetable.AddTimeTableCommand;
 import command.timetable.GetAllTimeTablesCommand;
-import command.user.CreateUserCommand;
-import command.user.GetAdminStatsCommand;
-import command.user.GetAllUsersCommand;
-import command.student.GetStudentByIdCommand;
-import command.user.GetUserByIdCommand;
+import command.user.*;
 import dao.attendance.AttendanceDAO;
 import dao.finalMarks.FinalMarksDAO;
+import dao.lecture.LecturerDashboardDAO;
 import dao.lectureCourse.LecturerCourseDAO;
 import dao.lecturerMeterial.CourseMaterialDAO;
 import dao.session.SessionDAO;
@@ -86,6 +69,7 @@ import service.eligibility.CAEligibilityService;
 import service.eligibility.FinalEligibilityService;
 import service.eligibility.StudentEligibilityService;
 import service.finalMarks.FinalMarksService;
+import service.lecture.LecturerDashboardService;
 import service.lecture.LecturerService;
 import service.lecturerCourse.LecturerCourseService;
 import service.login.AuthService;
@@ -256,6 +240,9 @@ public class CommandRegistry {
             LecturerService lecturerService = new LecturerService(lecturerDAO);
             commands.put("GetAllLecturers", new GetAllLecturersCommand(lecturerService, authService));
             commands.put("GetAllCourses", new GetAllCoursesCommand(courseService, authService));
+            commands.put("UPDATE_COURSE", new UpdateCourseCommand(courseService, authService));
+            commands.put("DELETE_COURSE", new DeleteCourseCommand(courseService, authService));
+
 
             LecturerCourseDAO lecturerCourseDAO = new LecturerCourseDAO();
             LecturerCourseService lecturerCourseService = new LecturerCourseService(lecturerCourseDAO);
@@ -270,6 +257,9 @@ public class CommandRegistry {
             CourseMaterialService courseMaterialService = new CourseMaterialService(courseMaterialDAO);
             commands.put("ADD_COURSE_MATERIAL", new AddCourseMaterialCommand(courseMaterialService,authService));
             commands.put("GET_COURSE_MATERIALS", new GetCourseMaterialsCommand(courseMaterialService,authService));
+            commands.put("GET_STUDENT_COURSE_MATERIALS",
+                    new GetStudentCourseMaterialsCommand(courseMaterialService, authService));
+
 
             //timetable related
             TimeTableDAO timeTableDAO = new TimeTableDAO();
@@ -278,6 +268,29 @@ public class CommandRegistry {
             commands.put("GET_ALL_TIMETABLES", new GetAllTimeTablesCommand(timeTableService, authService));
             commands.put("DELETE_COURSE_MATERIAL",
                     new DeleteCourseMaterialCommand(courseMaterialService, authService));
+
+
+            // general END POINTS
+            commands.put("GetStudentAttendanceSummaryById",
+                    new GetStudentAttendanceSummaryByIdCommand(attendanceService, authService));
+
+            commands.put(
+                    "GET_STUDENT_DASHBOARD",
+                    new GetStudentDashboardCommand(studentService, authService));
+
+            commands.put("GET_STUDENT_REGISTERED_COURSES",
+                    new GetStudentRegisteredCoursesCommand(studentService, authService));
+
+            commands.put("GET_STUDENT_OWN_ELIGIBILITY",
+                    new GetStudentOwnEligibilityCommand(studentEligibilityService, authService)
+            );
+            LecturerDashboardDAO lecturerDashboardDAO = new LecturerDashboardDAO();
+            LecturerDashboardService lecturerDashboardService = new LecturerDashboardService(lecturerDashboardDAO);
+            commands.put("UPDATE_USER", new UpdateUserCommand(userService, authService));
+            commands.put("DELETE_USER", new DeleteUserCommand(userService, authService));
+            commands.put("GET_LECTURER_DASHBOARD_STATS",
+                    new GetLecturerDashboardStatsCommand(lecturerDashboardService, authService)
+            );
 
 
             //final marks related

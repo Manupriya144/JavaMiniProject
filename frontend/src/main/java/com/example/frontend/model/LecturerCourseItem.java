@@ -4,6 +4,7 @@ public class LecturerCourseItem {
     private String courseId;
     private String courseCode;
     private String courseName;
+    private int courseCredit;
 
     public LecturerCourseItem() {
     }
@@ -36,6 +37,14 @@ public class LecturerCourseItem {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
+    }
+
+    public int getCourseCredit() {
+        return courseCredit;
+    }
+
+    public void setCourseCredit(int courseCredit) {
+        this.courseCredit = courseCredit;
     }
 
     @Override

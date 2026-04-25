@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.frontend.controller.student.StudentCoursesController"
+            prefWidth="1200" prefHeight="750"
+            style="-fx-background-color: linear-gradient(to bottom right, #eef6ff, #fdfcff);">
+
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              style="-fx-background-color: linear-gradient(to right, #5b9fd9, #3f7fc2);">
+            <padding>
+                <Insets top="18" bottom="18" left="28" right="28"/>
+            </padding>
+
+            <VBox>
+                <Label text="📚 My Registered Courses"
+                       style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                <Label text="Click a course to view uploaded materials"
+                       style="-fx-text-fill: rgba(255,255,255,0.82); -fx-font-size: 12px;"/>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="Back"
+                    onAction="#goBack"
+                    style="-fx-background-color: white; -fx-text-fill: #3f7fc2; -fx-font-weight: bold; -fx-background-radius: 8;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                    style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox spacing="14">
+                <padding>
+                    <Insets top="30" right="38" bottom="30" left="38"/>
+                </padding>
+
+                <VBox spacing="14"
+                      style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #d7e7f8; -fx-border-radius: 16;">
+                    <padding>
+                        <Insets top="22" right="24" bottom="22" left="24"/>
+                    </padding>
+
+                    <Label text="Registered Courses"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 17px; -fx-font-weight: bold;"/>
+
+                    <Separator/>
+
+                    <HBox spacing="0" style="-fx-background-color: #f5f9ff; -fx-background-radius: 10;">
+                        <padding>
+                            <Insets top="10" right="16" bottom="10" left="16"/>
+                        </padding>
+
+                        <Label text="Course Code" prefWidth="150"
+                               style="-fx-text-fill: #4c8fce; -fx-font-weight: bold;"/>
+                        <Label text="Course Name" prefWidth="420"
+                               style="-fx-text-fill: #4c8fce; -fx-font-weight: bold;"/>
+                        <Label text="Credits" prefWidth="100"
+                               style="-fx-text-fill: #4c8fce; -fx-font-weight: bold;"/>
+                        <Label text="Action" prefWidth="150"
+                               style="-fx-text-fill: #4c8fce; -fx-font-weight: bold;"/>
+                    </HBox>
+
+                    <VBox fx:id="coursesContainer" spacing="8"/>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

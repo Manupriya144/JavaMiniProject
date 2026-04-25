@@ -47,9 +47,9 @@ public class GradesGPAController {
         semesterBox.setValue("1");
 
         departmentBox.setItems(FXCollections.observableArrayList(
-                "BST", "D001", "ET", "ICT"
+                "BST","ET", "ICT"
         ));
-        departmentBox.setValue("D001");
+        departmentBox.setValue("ICT");
 
         hideStatus();
     }

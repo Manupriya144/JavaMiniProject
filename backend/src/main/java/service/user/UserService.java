@@ -1,6 +1,7 @@
 package service.user;
 
 import dao.user.UserDAO;
+import dto.requestDto.user.UpdateUserReqDTO;
 import dto.requestDto.user.UserRequestDTO;
 import model.Lecturer;
 import model.Student;
@@ -100,5 +101,13 @@ public class UserService {
     // Get user by ID
     public User getUserById(String userId) {
         return userDAO.getUserById(userId);
+    }
+
+    public boolean updateUser(UpdateUserReqDTO dto) {
+        return userDAO.updateUser(dto);
+    }
+
+    public boolean deleteUser(String userId) {
+        return userDAO.deleteUser(userId);
     }
 }

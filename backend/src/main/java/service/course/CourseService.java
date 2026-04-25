@@ -2,11 +2,13 @@ package service.course;
 
 import dao.course.CourseDAO;
 import dto.requestDto.course.AddCourseRequestDTO;
+import dto.requestDto.course.UpdateCourseReqDTO;
 import dto.responseDto.course.CourseAllResponseDTO;
 import dto.responseDto.course.CourseResponseDTO;
 import model.Course;
 
 import java.util.List;
+import java.util.Map;
 
 public class CourseService {
 
@@ -37,6 +39,16 @@ public class CourseService {
     public List<CourseAllResponseDTO> getAllCoursesFull(){
         return courseDAO.getAllCoursesFull();
     }
+
+    public boolean updateCourse(UpdateCourseReqDTO dto) {
+        return courseDAO.updateCourse(dto);
+    }
+
+    public boolean deleteCourse(String courseId) {
+        return courseDAO.deleteCourse(courseId);
+    }
+
+
 
 
 }
