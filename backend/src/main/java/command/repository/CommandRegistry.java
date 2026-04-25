@@ -10,28 +10,22 @@ import command.eligibility.GetFinalEligibilityCommand;
 import command.eligibility.GetStudentEligibilityCommand;
 import command.finalMarks.UploadFinalMarksCommand;
 import command.lecturer.GetAllLecturersCommand;
-<<<<<<< Updated upstream
 import command.lecturer.GetLecturerDashboardStatsCommand;
 import command.lecturer.GetLecturerProfileCommand;
 import command.lecturer.UpdateLecturerProfileCommand;
-=======
->>>>>>> Stashed changes
 import command.lecturerCourse.AssignLecturerCourseCommand;
 import command.lecturerCourse.GetLecturerCoursesCommand;
 import command.login.LoginCommand;
 import command.login.LogoutCommand;
-<<<<<<< Updated upstream
 import command.registration.GetStudentRegistrationCoursesCommand;
 import command.registration.RegisterStudentCourseCommand;
 import command.registration.SaveRegistrationPeriodCommand;
-=======
 import command.attendance.AddAttendanceCommand;
 import command.attendance.DeleteAttendanceCommand;
 import command.attendance.GetAttendanceByIdCommand;
 import command.attendance.GetAttendanceSessionsCommand;
 import command.attendance.GetMedicalEligibleCoursesCommand;
 import command.attendance.GetMedicalEligibleStudentsCommand;
->>>>>>> Stashed changes
 import command.result.GenerateCourseResultCommand;
 import command.result.GenerateGradeGPACommand;
 import command.result.GetStudentCourseMarksCommand;
@@ -73,11 +67,8 @@ import command.student.GetStudentByIdCommand;
 import command.user.GetUserByIdCommand;
 import dao.attendance.AttendanceDAO;
 import dao.finalMarks.FinalMarksDAO;
-<<<<<<< Updated upstream
 import dao.lecture.LecturerDashboardDAO;
 import dao.lecture.LecturerProfileDAO;
-=======
->>>>>>> Stashed changes
 import dao.lectureCourse.LecturerCourseDAO;
 import dao.lecturerMeterial.CourseMaterialDAO;
 import dao.registration.RegistrationPeriodDAO;
@@ -104,11 +95,8 @@ import service.eligibility.CAEligibilityService;
 import service.eligibility.FinalEligibilityService;
 import service.eligibility.StudentEligibilityService;
 import service.finalMarks.FinalMarksService;
-<<<<<<< Updated upstream
 import service.lecture.LecturerDashboardService;
 import service.lecture.LecturerProfileService;
-=======
->>>>>>> Stashed changes
 import service.lecture.LecturerService;
 import service.lecturerCourse.LecturerCourseService;
 import service.login.AuthService;
