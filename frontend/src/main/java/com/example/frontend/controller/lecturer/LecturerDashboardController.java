@@ -3,8 +3,10 @@ package com.example.frontend.controller.lecturer;
 import com.example.frontend.controller.admin.LoginController;
 import com.example.frontend.model.LecturerCourseItem;
 import com.example.frontend.model.LecturerDashboardStats;
+import com.example.frontend.model.LecturerProfile;
 import com.example.frontend.service.AuthService;
 import com.example.frontend.service.LecturerCourseService;
+import com.example.frontend.service.LecturerService;
 import com.example.frontend.session.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,11 +17,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -39,11 +45,17 @@ public class LecturerDashboardController implements Initializable {
     @FXML private Label statusBarTime;
     @FXML private VBox coursesContainer;
 
+    @FXML private ImageView avatarImage;
+    @FXML private Label avatarInitial;
+    @FXML private Circle avatarCircle;
+
     private String lecturerName = LoginController.username;
-    private String lecturerId = LoginController.userId;
 
     private final LecturerCourseService lecturerCourseService =
             new LecturerCourseService(LoginController.client);
+
+    private final LecturerService lecturerService =
+            new LecturerService(LoginController.client);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -61,8 +73,59 @@ public class LecturerDashboardController implements Initializable {
         welcomeLabel.setText("Welcome, " + lecturerName + " 👋");
         lecturerNameLabel.setText(lecturerName);
 
+        loadLecturerAvatar();
         loadStats();
         loadCourses();
+    }
+
+    private void loadLecturerAvatar() {
+        try {
+            LecturerProfile profile = lecturerService.getLecturerProfile();
+
+            if (profile != null) {
+                setupAvatar(profile.getProfilePicture(), profile.getUsername());
+            } else {
+                setupAvatar(null, lecturerName);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            setupAvatar(null, lecturerName);
+        }
+    }
+
+    private void setupAvatar(String imagePath, String username) {
+        if (imagePath != null && !imagePath.isBlank()) {
+            try {
+                File file = new File(imagePath);
+
+                if (file.exists()) {
+                    Image image = new Image(file.toURI().toString());
+
+                    avatarImage.setImage(image);
+                    avatarImage.setClip(new Circle(18, 18, 18));
+
+                    avatarImage.setVisible(true);
+                    avatarInitial.setVisible(false);
+                    avatarCircle.setVisible(false);
+                    return;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        avatarImage.setImage(null);
+        avatarImage.setVisible(false);
+
+        avatarInitial.setText(
+                username != null && !username.isBlank()
+                        ? username.substring(0, 1).toUpperCase()
+                        : "L"
+        );
+        avatarInitial.setVisible(true);
+        avatarCircle.setVisible(true);
     }
 
     private void loadStats() {
@@ -167,67 +230,18 @@ public class LecturerDashboardController implements Initializable {
         return row;
     }
 
-    @FXML
-    private void openCourses() {
-        loadView("lecturer/LecturerCourses.fxml");
-    }
-
-    @FXML
-    private void openCA() {
-        loadView("techofficer/CAManagement.fxml");
-    }
-
-    @FXML
-    private void openMarks() {
-        loadView("lecturer/StudentCourseMarks.fxml");
-    }
-
-    @FXML
-    private void openStudents() {
-        loadView("admin/UserManagement.fxml");
-    }
-
-    @FXML
-    private void openFinalMarks() {
-        loadView("lecturer/UploadFinalMarks.fxml");
-    }
-
-    @FXML
-    private void openEligibility() {
-        loadView("lecturer/FinalEligibility.fxml");
-    }
-
-    @FXML
-    private void openAttendance() {
-        loadView("lecturer/StudentEligibility.fxml");
-    }
-
-    @FXML
-    private void openAddSession() {
-        loadView("lecturer/AddLectureSession.fxml");
-    }
-
-    @FXML
-    private void openGrades() {
-        loadView("lecturer/GradesGPA.fxml");
-    }
-
-    @FXML
-    private void openNotices() {
-        loadView("admin/NoticeDisplay.fxml");
-    }
-
-    @FXML
-    private void openProfile() {
-        loadView("LecturerProfile.fxml");
-    }
-
-
-    @FXML
-    private void openCaEligibility() {
-        loadView("lecturer/CAEligibility.fxml");
-    }
-
+    @FXML private void openCourses() { loadView("lecturer/LecturerCourses.fxml"); }
+    @FXML private void openCA() { loadView("techofficer/CAManagement.fxml"); }
+    @FXML private void openMarks() { loadView("lecturer/StudentCourseMarks.fxml"); }
+    @FXML private void openStudents() { loadView("admin/UserManagement.fxml"); }
+    @FXML private void openFinalMarks() { loadView("lecturer/UploadFinalMarks.fxml"); }
+    @FXML private void openEligibility() { loadView("lecturer/FinalEligibility.fxml"); }
+    @FXML private void openAttendance() { loadView("lecturer/StudentEligibility.fxml"); }
+    @FXML private void openAddSession() { loadView("lecturer/AddLectureSession.fxml"); }
+    @FXML private void openGrades() { loadView("lecturer/GradesGPA.fxml"); }
+    @FXML private void openNotices() { loadView("admin/NoticeDisplay.fxml"); }
+    @FXML private void openProfile() { loadView("lecturer/LecturerProfile.fxml"); }
+    @FXML private void openCaEligibility() { loadView("lecturer/CAEligibility.fxml"); }
 
     @FXML
     void logout(ActionEvent event) {

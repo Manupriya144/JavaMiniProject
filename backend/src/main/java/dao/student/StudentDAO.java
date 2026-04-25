@@ -5,7 +5,6 @@ import dto.responseDto.student.StudentCourseDashboardDTO;
 import dto.responseDto.student.StudentDashboardDTO;
 import dto.responseDto.student.StudentRegisteredCourseDTO;
 import model.Student;
-import model.User;
 import utility.DataSource;
 
 import java.sql.Connection;
@@ -152,14 +151,32 @@ public class StudentDAO {
                 c.name AS course_name,
                 c.course_credit,
                 COALESCE(crs.grade, '-') AS grade
-            FROM course_registration reg
-            JOIN course c ON reg.course_id = c.course_id
+            FROM students st
+            JOIN (
+                SELECT rp.*
+                FROM registration_period rp
+                JOIN students s
+                    ON s.department_id = rp.department_id
+                   AND s.academic_level = rp.academic_level
+                WHERE s.user_id = ?
+                ORDER BY rp.academic_year DESC, rp.semester DESC
+                LIMIT 1
+            ) current_period
+                ON current_period.department_id = st.department_id
+               AND current_period.academic_level = st.academic_level
+            JOIN course_registration reg
+                ON reg.student_id = st.user_id
+               AND reg.academic_year = current_period.academic_year
+               AND reg.semester = current_period.semester
+               AND reg.registration_type IN ('Proper', 'Repeat')
+            JOIN course c 
+                ON reg.course_id = c.course_id
             LEFT JOIN course_result crs 
                 ON crs.student_id = reg.student_id
-                AND crs.course_id = reg.course_id
-                AND crs.academic_year = reg.academic_year
-                AND crs.semester = reg.semester
-            WHERE reg.student_id = ?
+               AND crs.course_id = reg.course_id
+               AND crs.academic_year = reg.academic_year
+               AND crs.semester = reg.semester
+            WHERE st.user_id = ?
             ORDER BY c.course_code
             """;
 
@@ -175,17 +192,35 @@ public class StudentDAO {
 
         String attendanceSql = """
             SELECT 
-                COALESCE(SUM(s.session_hours), 0) AS total_hours,
+                COALESCE(SUM(ses.session_hours), 0) AS total_hours,
                 COALESCE(SUM(CASE 
-                    WHEN a.status = 'Present' THEN a.hours_attended 
-                    ELSE 0 
+                    WHEN a.status = 'Present' THEN a.hours_attended
+                    ELSE 0
                 END), 0) AS attended_hours
-            FROM course_registration reg
-            JOIN session s ON reg.course_id = s.course_id
-            LEFT JOIN attendance a 
-                ON a.session_id = s.session_id 
-                AND a.student_id = reg.student_id
-            WHERE reg.student_id = ?
+            FROM students st
+            JOIN (
+                SELECT rp.*
+                FROM registration_period rp
+                JOIN students s
+                    ON s.department_id = rp.department_id
+                   AND s.academic_level = rp.academic_level
+                WHERE s.user_id = ?
+                ORDER BY rp.academic_year DESC, rp.semester DESC
+                LIMIT 1
+            ) current_period
+                ON current_period.department_id = st.department_id
+               AND current_period.academic_level = st.academic_level
+            JOIN course_registration reg
+                ON reg.student_id = st.user_id
+               AND reg.academic_year = current_period.academic_year
+               AND reg.semester = current_period.semester
+               AND reg.registration_type IN ('Proper', 'Repeat')
+            JOIN session ses
+                ON ses.course_id = reg.course_id
+            LEFT JOIN attendance a
+                ON a.session_id = ses.session_id
+               AND a.student_id = st.user_id
+            WHERE st.user_id = ?
             """;
 
         double sgpa = 0;
@@ -196,6 +231,7 @@ public class StudentDAO {
 
             try (PreparedStatement ps = con.prepareStatement(courseSql)) {
                 ps.setString(1, studentId);
+                ps.setString(2, studentId);
 
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -223,6 +259,7 @@ public class StudentDAO {
 
             try (PreparedStatement ps = con.prepareStatement(attendanceSql)) {
                 ps.setString(1, studentId);
+                ps.setString(2, studentId);
 
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {

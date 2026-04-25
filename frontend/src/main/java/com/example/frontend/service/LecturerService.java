@@ -4,6 +4,7 @@ import com.example.frontend.dto.AddLectureSessionRequestDTO;
 import com.example.frontend.dto.AddLectureSessionResponseDTO;
 import com.example.frontend.dto.LecturerResponseDTO;
 import com.example.frontend.dto.RequestDTO;
+import com.example.frontend.model.LecturerProfile;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.session.SessionManager;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class LecturerService {
 
@@ -62,5 +64,50 @@ public class LecturerService {
         String responseJson = client.sendRequest(requestJson);
 
         return mapper.readValue(responseJson, AddLectureSessionResponseDTO.class);
+    }
+
+    public LecturerProfile getLecturerProfile() {
+        try {
+            RequestDTO requestDTO = new RequestDTO(
+                    "GET_LECTURER_PROFILE",
+                    null,
+                    SessionManager.getToken()
+            );
+
+            String responseJson = client.sendRequest(mapper.writeValueAsString(requestDTO));
+            JsonNode root = mapper.readTree(responseJson);
+
+            if (!root.path("success").asBoolean(false)) {
+                return null;
+            }
+
+            return mapper.treeToValue(root.path("profile"), LecturerProfile.class);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean updateLecturerProfile(String designation, String profilePicture) {
+        try {
+            RequestDTO requestDTO = new RequestDTO(
+                    "UPDATE_LECTURER_PROFILE",
+                    Map.of(
+                            "designation", designation,
+                            "profilePicture", profilePicture == null ? "" : profilePicture
+                    ),
+                    SessionManager.getToken()
+            );
+
+            String responseJson = client.sendRequest(mapper.writeValueAsString(requestDTO));
+            JsonNode root = mapper.readTree(responseJson);
+
+            return root.path("success").asBoolean(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

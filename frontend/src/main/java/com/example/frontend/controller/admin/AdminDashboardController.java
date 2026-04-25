@@ -95,6 +95,11 @@ public class AdminDashboardController implements Initializable {
         timeline.play();
     }
 
+    @FXML
+    private void openRegistrationPeriod() {
+        loadView("admin/RegistrationPeriod.fxml");
+    }
+
     private void loadStats() {
         try {
             AdminStatsResponseDTO stats = adminDashboardService.getAdminStats();

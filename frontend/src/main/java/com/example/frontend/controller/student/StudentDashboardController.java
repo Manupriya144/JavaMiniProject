@@ -446,4 +446,9 @@ public class StudentDashboardController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void openCourseRegistration() {
+        loadView("student/StudentCourseRegistration.fxml");
+    }
 }

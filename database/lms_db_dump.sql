@@ -212,5 +212,7 @@ CREATE TABLE IF NOT EXISTS registration_period (
     end_at DATETIME NOT NULL,
     status ENUM('Open','Closed') DEFAULT 'Open',
 
+    UNIQUE(department_id, academic_level, semester, academic_year),
+
     FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE CASCADE
     );

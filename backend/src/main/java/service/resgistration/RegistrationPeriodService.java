@@ -1,6 +1,6 @@
 package service.resgistration;
 
-import dao.regoistration.RegistrationPeriodDAO;
+import dao.registration.RegistrationPeriodDAO;
 import dto.requestDto.registration.RegistrationPeriodReqDTO;
 
 public class RegistrationPeriodService {

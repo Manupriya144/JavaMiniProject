@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.frontend.controller.student.StudentCourseRegistrationController"
+            prefWidth="1100"
+            prefHeight="720"
+            style="-fx-background-color: #f8fbff;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              style="-fx-background-color: linear-gradient(to right, #5b9fd9, #3f7fc2);">
+            <padding>
+                <Insets top="18" right="28" bottom="18" left="28"/>
+            </padding>
+
+            <VBox>
+                <Label text="📝 Course Registration"
+                       style="-fx-text-fill: white; -fx-font-size: 23px; -fx-font-weight: bold;"/>
+                <Label fx:id="periodStatusLabel"
+                       text="Checking registration period..."
+                       style="-fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 12px;"/>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="Back"
+                    onAction="#goBack"
+                    style="-fx-background-color: white; -fx-text-fill: #3f7fc2; -fx-font-weight: bold; -fx-background-radius: 8;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                    style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox spacing="22">
+                <padding>
+                    <Insets top="30" right="38" bottom="30" left="38"/>
+                </padding>
+
+                <VBox spacing="10"
+                      style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #d7e7f8; -fx-border-radius: 16;">
+                    <padding>
+                        <Insets top="20" right="24" bottom="20" left="24"/>
+                    </padding>
+
+                    <Label text="Proper Courses"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 17px; -fx-font-weight: bold;"/>
+
+                    <Label text="Courses for your current department, level, and semester."
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 12px;"/>
+
+                    <Separator/>
+
+                    <VBox fx:id="properCoursesContainer" spacing="10"/>
+                </VBox>
+
+                <VBox spacing="10"
+                      style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-color: #d7e7f8; -fx-border-radius: 16;">
+                    <padding>
+                        <Insets top="20" right="24" bottom="20" left="24"/>
+                    </padding>
+
+                    <Label text="Repeat Courses"
+                           style="-fx-text-fill: #1a3a52; -fx-font-size: 17px; -fx-font-weight: bold;"/>
+
+                    <Label text="Courses you previously failed and can register as repeat."
+                           style="-fx-text-fill: #8fa3b8; -fx-font-size: 12px;"/>
+
+                    <Separator/>
+
+                    <VBox fx:id="repeatCoursesContainer" spacing="10"/>
+                </VBox>
+
+                <Label fx:id="statusLabel"
+                       text=""
+                       style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

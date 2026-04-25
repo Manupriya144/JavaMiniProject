@@ -19,6 +19,7 @@ public class StudentCourseMarksDAO {
                     d.name AS department_name,
                     s.academic_level,
                     cr.semester,
+                    cr.registration_type,
                     c.course_id,
                     c.course_code,
                     c.name AS course_name,
@@ -57,80 +58,94 @@ public class StudentCourseMarksDAO {
                 ) final_marks ON final_marks.student_id = s.user_id
                               AND final_marks.course_id = c.course_id
 
+                WHERE cr.academic_year = YEAR(CURDATE())
+                  AND cr.semester = c.semester
+                  AND cr.registration_type IN ('Proper', 'Repeat')
+
                 ORDER BY s.reg_no, c.course_code
                 """;
 
         try (Connection con = DataSource.getInstance().getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ResultSet rs = ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String studentId = rs.getString("student_id");
+                    String courseId = rs.getString("course_id");
+                    String registrationType = rs.getString("registration_type");
 
-            while (rs.next()) {
-                String studentId = rs.getString("student_id");
-                String courseId = rs.getString("course_id");
+                    double totalHours = rs.getDouble("total_hours");
+                    double attendedHours = rs.getDouble("attended_hours");
 
-                double totalHours = rs.getDouble("total_hours");
-                double attendedHours = rs.getDouble("attended_hours");
+                    double medicalAttendanceHours =
+                            calculateApprovedAttendanceMedicalHours(con, studentId, courseId);
 
-                double medicalAttendanceHours =
-                        calculateApprovedAttendanceMedicalHours(con, studentId, courseId);
+                    double finalAttendanceHours = attendedHours + medicalAttendanceHours;
 
-                double finalAttendanceHours = attendedHours + medicalAttendanceHours;
+                    if (finalAttendanceHours > totalHours) {
+                        finalAttendanceHours = totalHours;
+                    }
 
-                if (finalAttendanceHours > totalHours) {
-                    finalAttendanceHours = totalHours;
+                    double attendancePercentage = totalHours > 0
+                            ? (finalAttendanceHours / totalHours) * 100.0
+                            : 0.0;
+
+                    double caPercentage = calculateCAPercentage(con, studentId, courseId);
+
+                    boolean hasPractical = hasPracticalSession(con, courseId);
+
+                    double finalExamRawMarks = rs.getDouble("final_exam_marks");
+
+                    double finalExamContribution = hasPractical
+                            ? (finalExamRawMarks / 100.0) * 60.0
+                            : (finalExamRawMarks / 100.0) * 70.0;
+
+                    String medicalStatus = getMedicalStatus(con, studentId, courseId);
+
+                    String resultStatus;
+
+                    if ("WH".equalsIgnoreCase(medicalStatus)) {
+                        resultStatus = "WH";
+
+                    } else if ("Repeat".equalsIgnoreCase(registrationType)) {
+
+                        if (caPercentage < 50.0) {
+                            resultStatus = "EE";
+                        } else {
+                            resultStatus = "Allowed";
+                        }
+
+                    } else {
+
+                        if (attendancePercentage < 80.0 || caPercentage < 50.0) {
+                            resultStatus = "EE";
+                        } else {
+                            resultStatus = "Allowed";
+                        }
+                    }
+
+                    StudentCourseMarksDTO dto = new StudentCourseMarksDTO();
+
+                    dto.setStudentId(studentId);
+                    dto.setRegNo(rs.getString("reg_no"));
+                    dto.setStudentName(rs.getString("student_name"));
+                    dto.setDepartmentName(rs.getString("department_name"));
+                    dto.setAcademicLevel(rs.getInt("academic_level"));
+                    dto.setSemester(rs.getString("semester"));
+
+                    dto.setCourseId(courseId);
+                    dto.setCourseCode(rs.getString("course_code"));
+                    dto.setCourseName(rs.getString("course_name"));
+
+                    dto.setAttendancePercentage(round(attendancePercentage));
+                    dto.setCaPercentage(round(caPercentage));
+                    dto.setFinalExamMarks(round(finalExamContribution));
+
+                    dto.setMedicalStatus(medicalStatus);
+                    dto.setResultStatus(resultStatus);
+
+                    list.add(dto);
                 }
-
-                double attendancePercentage = totalHours > 0
-                        ? (finalAttendanceHours / totalHours) * 100.0
-                        : 0.0;
-
-                double caPercentage = calculateCAPercentage(con, studentId, courseId);
-
-                boolean hasPractical = hasPracticalSession(con, courseId);
-
-                double finalExamRawMarks = rs.getDouble("final_exam_marks");
-
-                double finalExamContribution = hasPractical
-                        ? (finalExamRawMarks / 100.0) * 60.0
-                        : (finalExamRawMarks / 100.0) * 70.0;
-
-                String medicalStatus = getMedicalStatus(con, studentId, courseId);
-
-                String resultStatus;
-
-                if ("WH".equalsIgnoreCase(medicalStatus)) {
-                    resultStatus = "WH";
-                } else if (attendancePercentage < 80.0 || caPercentage < 50.0) {
-                    resultStatus = "EE";
-                } else {
-                    resultStatus = "Allowed";
-                }
-
-                StudentCourseMarksDTO dto = new StudentCourseMarksDTO();
-
-                dto.setStudentId(studentId);
-                dto.setRegNo(rs.getString("reg_no"));
-                dto.setStudentName(rs.getString("student_name"));
-                dto.setDepartmentName(rs.getString("department_name"));
-                dto.setAcademicLevel(rs.getInt("academic_level"));
-                dto.setSemester(rs.getString("semester"));
-
-                dto.setCourseId(courseId);
-                dto.setCourseCode(rs.getString("course_code"));
-                dto.setCourseName(rs.getString("course_name"));
-
-                dto.setAttendancePercentage(round(attendancePercentage));
-                dto.setCaPercentage(round(caPercentage));
-
-                // This is the scaled final exam contribution:
-                // theory-only = out of 70, practical/mixed = out of 60
-                dto.setFinalExamMarks(round(finalExamContribution));
-
-                dto.setMedicalStatus(medicalStatus);
-                dto.setResultStatus(resultStatus);
-
-                list.add(dto);
             }
 
         } catch (Exception e) {
@@ -155,10 +170,10 @@ public class StudentCourseMarksDAO {
             ps.setString(1, studentId);
             ps.setString(2, courseId);
 
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return "WH";
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return "WH";
+                }
             }
         }
 
@@ -176,10 +191,10 @@ public class StudentCourseMarksDAO {
             ps.setString(1, studentId);
             ps.setString(2, courseId);
 
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return "Approved Attendance Medical";
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return "Approved Attendance Medical";
+                }
             }
         }
 
@@ -196,10 +211,10 @@ public class StudentCourseMarksDAO {
             ps.setString(1, studentId);
             ps.setString(2, courseId);
 
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return "Pending Medical";
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return "Pending Medical";
+                }
             }
         }
 
@@ -231,10 +246,10 @@ public class StudentCourseMarksDAO {
             ps.setString(2, courseId);
             ps.setInt(3, approvedMedicalCount);
 
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                medicalHours += rs.getDouble("session_hours");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    medicalHours += rs.getDouble("session_hours");
+                }
             }
         }
 
@@ -255,10 +270,10 @@ public class StudentCourseMarksDAO {
             ps.setString(1, studentId);
             ps.setString(2, courseId);
 
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt("medical_count");
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("medical_count");
+                }
             }
         }
 
@@ -277,9 +292,9 @@ public class StudentCourseMarksDAO {
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, courseId);
 
-            ResultSet rs = ps.executeQuery();
-
-            return rs.next();
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
         }
     }
 
@@ -303,24 +318,24 @@ public class StudentCourseMarksDAO {
             ps.setString(1, studentId);
             ps.setString(2, courseId);
 
-            ResultSet rs = ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String name = rs.getString("name");
+                    double weight = rs.getDouble("weight");
 
-            while (rs.next()) {
-                String name = rs.getString("name");
-                double weight = rs.getDouble("weight");
+                    double marks = rs.getDouble("marks");
+                    if (rs.wasNull()) {
+                        marks = 0.0;
+                    }
 
-                double marks = rs.getDouble("marks");
-                if (rs.wasNull()) {
-                    marks = 0.0;
-                }
+                    double value = (marks / 100.0) * weight;
 
-                double value = (marks / 100.0) * weight;
-
-                if (name != null && name.toLowerCase().contains("quiz")) {
-                    quizList.add(new CAItem(weight, value));
-                } else {
-                    contribution += value;
-                    selectedWeight += weight;
+                    if (name != null && name.toLowerCase().contains("quiz")) {
+                        quizList.add(new CAItem(weight, value));
+                    } else {
+                        contribution += value;
+                        selectedWeight += weight;
+                    }
                 }
             }
         }
@@ -338,7 +353,7 @@ public class StudentCourseMarksDAO {
             return 0.0;
         }
 
-        return (contribution / selectedWeight) * 100.0;
+        return round((contribution / selectedWeight) * 100.0);
     }
 
     private double round(double value) {

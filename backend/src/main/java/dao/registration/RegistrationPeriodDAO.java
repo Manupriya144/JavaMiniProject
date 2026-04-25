@@ -1,4 +1,4 @@
-package dao.regoistration;
+package dao.registration;
 
 import dto.requestDto.registration.RegistrationPeriodReqDTO;
 import utility.DataSource;
