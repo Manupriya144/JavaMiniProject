@@ -6,6 +6,7 @@ import com.example.frontend.model.Student;
 import com.example.frontend.network.ServerClient;
 import com.example.frontend.service.AuthService;
 import com.example.frontend.service.NoticeService;
+import com.example.frontend.service.StudentExamEligibilityService;
 import com.example.frontend.service.StudentService;
 import com.example.frontend.session.SessionManager;
 import javafx.event.ActionEvent;
@@ -31,6 +32,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class StudentDashboardController implements Initializable {
@@ -56,6 +58,8 @@ public class StudentDashboardController implements Initializable {
     private String studentRegNo = LoginController.reNo;
     public static final ServerClient client = ServerClient.getInstance();
     private final NoticeService noticeService = new NoticeService(ServerClient.getInstance());
+    private final StudentExamEligibilityService examEligibilityService =
+            new StudentExamEligibilityService(ServerClient.getInstance());
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -73,10 +77,9 @@ public class StudentDashboardController implements Initializable {
         Student student = studentService.getStudentByIdAll(LoginController.userId);
         setupProfile(student);
 
-        loadStats();
+        loadStatsAndEligibility();
         loadCourses();
         loadNotices();
-        checkEligibility();
     }
 
     public void setStudentInfo(String name, String regNo) {
@@ -118,34 +121,51 @@ public class StudentDashboardController implements Initializable {
         profileInitial.setVisible(true);
     }
 
-    private void loadStats() {
-        overallAttendanceLabel.setText("87%");
-        sgpaLabel.setText("3.45");
-        cgpaLabel.setText("3.28");
-        enrolledCoursesLabel.setText("4");
+    private void loadStatsAndEligibility() {
+        StudentExamEligibilityService.ExamEligibilityResult ev =
+                examEligibilityService.evaluate(LoginController.userId);
+
+        if (ev.attendancePercentage() != null) {
+            overallAttendanceLabel.setText(formatAttendancePercent(ev.attendancePercentage()));
+        } else {
+            overallAttendanceLabel.setText("—");
+        }
+
+        enrolledCoursesLabel.setText(String.valueOf(ev.courseRows().size()));
+        sgpaLabel.setText("—");
+        cgpaLabel.setText("—");
+
+        applyEligibilityBanner(ev);
     }
 
-    private void checkEligibility() {
-        boolean eligible = true;
+    private static String formatAttendancePercent(double p) {
+        return String.format(Locale.ROOT, "%.0f%%", p);
+    }
 
-        if (eligible) {
+    private void applyEligibilityBanner(StudentExamEligibilityService.ExamEligibilityResult ev) {
+        eligibilityStatusLabel.setStyle("-fx-text-fill: #5f748a; -fx-font-size: 12px;");
+
+        if (!ev.attendanceDataLoaded()) {
             eligibilityAlertBox.setStyle(
-                    "-fx-background-color: #f6fff7; -fx-background-radius: 10; " +
-                            "-fx-border-color: #4cba52; -fx-border-radius: 10; -fx-border-width: 1;"
+                    "-fx-background-color: #fffdf4; -fx-background-radius: 10; "
+                            + "-fx-border-color: #f2c94c; -fx-border-radius: 10; -fx-border-width: 1;"
             );
-            eligibilityStatusLabel.setText(
-                    "✅  You are eligible for all final examinations. (CA ≥ 40% & Attendance ≥ 80%)"
+            eligibilityStatusLabel.setText("⚠️  " + ev.dashboardSummary());
+            return;
+        }
+
+        if (ev.fullyEligible()) {
+            eligibilityAlertBox.setStyle(
+                    "-fx-background-color: #f6fff7; -fx-background-radius: 10; "
+                            + "-fx-border-color: #4cba52; -fx-border-radius: 10; -fx-border-width: 1;"
             );
-            eligibilityStatusLabel.setStyle("-fx-text-fill: #5f748a; -fx-font-size: 12px;");
+            eligibilityStatusLabel.setText("✅  " + ev.dashboardSummary());
         } else {
             eligibilityAlertBox.setStyle(
-                    "-fx-background-color: #fff8f8; -fx-background-radius: 10; " +
-                            "-fx-border-color: #e85d5d; -fx-border-radius: 10; -fx-border-width: 1;"
+                    "-fx-background-color: #fff8f8; -fx-background-radius: 10; "
+                            + "-fx-border-color: #e85d5d; -fx-border-radius: 10; -fx-border-width: 1;"
             );
-            eligibilityStatusLabel.setText(
-                    "❌  You are NOT eligible for one or more exams. Check attendance or CA marks."
-            );
-            eligibilityStatusLabel.setStyle("-fx-text-fill: #5f748a; -fx-font-size: 12px;");
+            eligibilityStatusLabel.setText("❌  " + ev.dashboardSummary());
         }
     }
 
@@ -153,18 +173,18 @@ public class StudentDashboardController implements Initializable {
         coursesContainer.getChildren().clear();
 
         String[][] courses = {
-                {"ICT2112", "Object Oriented Programming", "3", "B+"},
-                {"ICT2132", "OOP Practicum", "2", "A"},
-                {"ICT2142", "Data Structures", "3", "B"},
-                {"ICT2152", "Web Technologies", "3", "A-"},
+                {"ICT2112", "Object Oriented Programming", "3"},
+                {"ICT2132", "OOP Practicum", "2"},
+                {"ICT2142", "Data Structures", "3"},
+                {"ICT2152", "Web Technologies", "3"},
         };
 
         for (String[] c : courses) {
-            coursesContainer.getChildren().add(buildCourseRow(c[0], c[1], c[2], c[3]));
+            coursesContainer.getChildren().add(buildCourseRow(c[0], c[1], c[2]));
         }
     }
 
-    private HBox buildCourseRow(String code, String name, String credits, String grade) {
+    private HBox buildCourseRow(String code, String name, String credits) {
         HBox row = new HBox(0);
         row.setStyle(
                 "-fx-background-color: #ffffff; " +
@@ -184,16 +204,12 @@ public class StudentDashboardController implements Initializable {
         Label credLbl = new Label(credits);
         credLbl.setPrefWidth(70);
 
-        Label gradeLbl = new Label(grade);
-        gradeLbl.setPrefWidth(70);
-
         String base = "-fx-text-fill: #1a3a52; -fx-font-size: 12px;";
         codeLbl.setStyle(base);
         nameLbl.setStyle(base);
         credLbl.setStyle(base);
-        gradeLbl.setStyle("-fx-text-fill: #4cba52; -fx-font-size: 12px; -fx-font-weight: bold;");
 
-        row.getChildren().addAll(codeLbl, nameLbl, credLbl, gradeLbl);
+        row.getChildren().addAll(codeLbl, nameLbl, credLbl);
         return row;
     }
 
@@ -302,14 +318,12 @@ public class StudentDashboardController implements Initializable {
         return item;
     }
 
-    @FXML private void openCourses() { loadView("StudentCourses.fxml"); }
-    @FXML private void openAttendance() { loadView("StudentAttendance.fxml"); }
-    @FXML private void openMedical() { loadView("StudentMedical.fxml"); }
+    @FXML private void openCourses() { loadView("student/StudentCourses.fxml"); }
+    @FXML private void openAttendance() { loadView("student/StudentAttendance.fxml"); }
     @FXML private void openGrades() { loadView("StudentGrades.fxml"); }
     @FXML private void openTimetable() { loadView("admin/DisplayTimeTable.fxml"); }
     @FXML private void openNotices() { loadView("admin/NoticeDisplay.fxml"); }
-    @FXML private void openEligibility() { loadView("StudentEligibility.fxml"); }
-    @FXML private void openStudentFinalMarks() { loadView("ViewStudentFinalMarks.fxml"); }
+    @FXML private void openEligibility() { loadView("student/StudentEligibility.fxml"); }
     @FXML private void openStudentGrades() { loadView("StudentGrades.fxml"); }
 
     @FXML

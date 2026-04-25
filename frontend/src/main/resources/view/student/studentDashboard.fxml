@@ -75,14 +75,6 @@
                                -fx-padding: 8 18 8 18;
                                -fx-cursor: hand;"/>
 
-                <Button text="Medicals" onAction="#openMedical"
-                        style="-fx-background-color: transparent;
-                               -fx-text-fill: white;
-                               -fx-font-size: 13px;
-                               -fx-background-radius: 10;
-                               -fx-padding: 8 18 8 18;
-                               -fx-cursor: hand;"/>
-
                 <Button text="Grades &amp; GPA" onAction="#openGrades"
                         style="-fx-background-color: transparent;
                                -fx-text-fill: white;
@@ -281,6 +273,7 @@
                         <Label text="Exam Eligibility Status"
                                style="-fx-text-fill: #d39b00; -fx-font-size: 13px; -fx-font-weight: bold;"/>
                         <Label fx:id="eligibilityStatusLabel" text="Checking eligibility..."
+                               wrapText="true" maxWidth="620"
                                style="-fx-text-fill: #7f93a8; -fx-font-size: 12px;"/>
                     </VBox>
 
@@ -312,14 +305,6 @@
                     <Separator style="-fx-background-color: #e7eef7;"/>
 
                     <FlowPane hgap="12" vgap="12">
-                        <Button text="📝  My Final Marks" onAction="#openStudentFinalMarks"
-                                prefHeight="42" prefWidth="180"
-                                style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                       -fx-text-fill: white;
-                                       -fx-font-size: 13px;
-                                       -fx-font-weight: bold;
-                                       -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
                         <Button text="📊  My Grades" onAction="#openStudentGrades"
                                 prefHeight="42" prefWidth="180"
                                 style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
@@ -376,8 +361,6 @@
                             <Label text="Course Name" prefWidth="200"
                                    style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                             <Label text="Credits" prefWidth="70"
-                                   style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                            <Label text="Grade" prefWidth="70"
                                    style="-fx-text-fill: #4c8fce; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                         </HBox>
 

@@ -2,6 +2,7 @@ package command.repository;
 
 import command.course.GetAllCoursesCommand;
 import command.course.GetAllCoursesCommandFull;
+import command.course.GetStudentCoursesCommand;
 import command.courseMeterial.AddCourseMaterialCommand;
 import command.courseMeterial.DeleteCourseMaterialCommand;
 import command.courseMeterial.GetCourseMaterialsCommand;
@@ -15,8 +16,6 @@ import command.attendance.AddAttendanceCommand;
 import command.attendance.DeleteAttendanceCommand;
 import command.attendance.GetAttendanceByIdCommand;
 import command.attendance.GetAttendanceSessionsCommand;
-import command.attendance.GetMedicalEligibleCoursesCommand;
-import command.attendance.GetMedicalEligibleStudentsCommand;
 import command.session.AddLectureSessionCommand;
 import command.techofficer.GetTechOfficerDashboardStatsCommand;
 import command.techofficer.GetTechOfficerProfileCommand;
@@ -28,12 +27,6 @@ import command.attendance.GetBatchAttendanceEligibilityReportCommand;
 import command.attendance.GetBatchAttendanceSummaryCommand;
 import command.attendance.GetStudentAttendanceCommand;
 import command.attendance.GetStudentAttendanceSummaryCommand;
-import command.medical.AddMedicalCommand;
-import command.medical.ApproveMedicalCommand;
-import command.medical.GetBatchMedicalRecordsCommand;
-import command.medical.GetStudentMedicalRecordsCommand;
-import command.medical.RejectMedicalCommand;
-import command.medical.UpdateMedicalCommand;
 import command.notice.AddNoticeCommand;
 import command.course.AddCourseCommand;
 import command.ca.CheckCAEligibilityCommand;
@@ -64,8 +57,6 @@ import command.techofficer.GetMyTechOfficerProfileCommand;
 
 
 import dao.lecture.LecturerDAO;
-
-import dao.medical.MedicalDAO;
 import dao.notice.NoticeDAO;
 import dao.student.StudentDAO;
 import dao.timetable.TimeTableDAO;
@@ -79,7 +70,6 @@ import service.finalMarks.FinalMarksService;
 import service.lecture.LecturerService;
 import service.lecturerCourse.LecturerCourseService;
 import service.login.AuthService;
-import service.medical.MedicalService;
 import service.notice.NoticeService;
 import service.session.SessionService;
 import service.student.StudentService;
@@ -96,6 +86,7 @@ import dao.report.AcademicReportDAO;
 
 
 import service.course.CourseService;
+import service.course.StudentCourseService;
 import service.report.AcademicReportService;
 
 import java.sql.Connection;
@@ -154,8 +145,6 @@ public class CommandRegistry {
             commands.put("GetBatchAttendanceSummary", new GetBatchAttendanceSummaryCommand(attendanceService));
             commands.put("CheckAttendanceEligibility", new CheckAttendanceEligibilityCommand(attendanceService));
             commands.put("GetBatchAttendanceEligibilityReport", new GetBatchAttendanceEligibilityReportCommand(attendanceService));
-            commands.put("GetMedicalEligibleStudents", new GetMedicalEligibleStudentsCommand(attendanceService));
-            commands.put("GetMedicalEligibleCourses", new GetMedicalEligibleCoursesCommand(attendanceService));
 
             // CA marks related
             CAMarkDAO caMarkDAO = new CAMarkDAO(connection);
@@ -166,19 +155,6 @@ public class CommandRegistry {
             commands.put("GetBatchCAMarks", new GetBatchCAMarksCommand(caMarkService));
             commands.put("CheckCAEligibility", new CheckCAEligibilityCommand(caMarkService));
             commands.put("GetBatchCAEligibilityReport", new GetBatchCAEligibilityReportCommand(caMarkService));
-
-            // medical related
-            MedicalDAO medicalDAO = new MedicalDAO(connection);
-            MedicalService medicalService = new MedicalService(medicalDAO);
-            commands.put("AddMedical", new AddMedicalCommand(medicalService));
-            commands.put("UpdateMedical", new UpdateMedicalCommand(medicalService));
-            commands.put("ApproveMedical", new ApproveMedicalCommand(medicalService));
-            commands.put("RejectMedical", new RejectMedicalCommand(medicalService));
-            commands.put("GetStudentMedicalRecords", new GetStudentMedicalRecordsCommand(medicalService));
-            commands.put("GetBatchMedicalRecords", new GetBatchMedicalRecordsCommand(medicalService));
-
-
-
 
             // ---------------- Full Academic Reports ----------------
             AcademicReportDAO academicReportDAO = new AcademicReportDAO();
@@ -207,6 +183,8 @@ public class CommandRegistry {
             CourseDAO courseDAO = new CourseDAO();
             CourseService courseService = new CourseService(courseDAO);
             commands.put("ADD_COURSE", new AddCourseCommand(courseService, authService));
+            StudentCourseService studentCourseService = new StudentCourseService(studentDAO, courseDAO);
+            commands.put("GET_STUDENT_COURSES", new GetStudentCoursesCommand(studentCourseService, authService));
             LecturerDAO lecturerDAO = new LecturerDAO();
             LecturerService lecturerService = new LecturerService(lecturerDAO);
             commands.put("GetAllLecturers", new GetAllLecturersCommand(lecturerService, authService));

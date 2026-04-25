@@ -141,4 +141,42 @@ public class CourseDAO {
 
         return courseList;
     }
+
+    public List<CourseAllResponseDTO> getCoursesByDepartmentAndLevel(String departmentId, int academicLevel) {
+        List<CourseAllResponseDTO> courseList = new ArrayList<>();
+
+        String sql = """
+                SELECT course_id, course_code, name, course_credit,
+                       academic_level, semester, department_id
+                FROM course
+                WHERE department_id = ? AND academic_level = ?
+                ORDER BY semester ASC, course_code ASC
+                """;
+
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, departmentId);
+            ps.setInt(2, academicLevel);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    courseList.add(new CourseAllResponseDTO(
+                            rs.getString("course_id"),
+                            rs.getString("course_code"),
+                            rs.getString("name"),
+                            rs.getInt("course_credit"),
+                            rs.getInt("academic_level"),
+                            rs.getString("semester"),
+                            rs.getString("department_id")
+                    ));
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return courseList;
+    }
 }

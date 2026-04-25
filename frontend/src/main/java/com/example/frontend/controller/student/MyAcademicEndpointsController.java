@@ -63,9 +63,6 @@ public class MyAcademicEndpointsController {
     private void onGetMyAttendance() { print(service.getMyAttendance()); }
 
     @FXML
-    private void onGetMyMedicalRecords() { print(service.getMyMedicalRecords()); }
-
-    @FXML
     private void onGetMyCourses() { print(service.getMyCourses()); }
 
     @FXML

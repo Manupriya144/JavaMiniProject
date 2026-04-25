@@ -24,10 +24,15 @@ public class GetStudentAttendanceCommand implements Command {
             }
 
             GetStudentAttendanceRequestDTO request = mapper.convertValue(data, GetStudentAttendanceRequestDTO.class);
+            String studentId = request.getStudentId();
+            if ("Student".equalsIgnoreCase(context.getRole())) {
+                // Students can only access their own attendance.
+                studentId = context.getUserId();
+            }
             AttendanceResponseDTO response = new AttendanceResponseDTO(
                     true,
                     "Student attendance loaded",
-                    attendanceService.getStudentAttendance(request.getStudentId(), request.getViewType())
+                    attendanceService.getStudentAttendance(studentId, request.getViewType())
             );
             context.getOutput().println(mapper.writeValueAsString(response));
         } catch (Exception e) {
@@ -40,6 +45,7 @@ public class GetStudentAttendanceCommand implements Command {
         return "Tech_Officer".equalsIgnoreCase(role)
                 || "Admin".equalsIgnoreCase(role)
                 || "Dean".equalsIgnoreCase(role)
-                || "Lecturer".equalsIgnoreCase(role);
+                || "Lecturer".equalsIgnoreCase(role)
+                || "Student".equalsIgnoreCase(role);
     }
 }
