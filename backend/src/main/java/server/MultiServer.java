@@ -1,5 +1,7 @@
 package server;
 
+import utility.Config;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,17 +12,17 @@ public class MultiServer {
 
     private ExecutorService executorService;
     private static final int threadPool = 20;
-    private static final int port = 5000;
+
 
     public MultiServer(){
         executorService = Executors.newFixedThreadPool(threadPool);
     }
 
-
     /**
         using this function csn simply start the server
      **/
    public void start (){
+       int port = Config.getInt("server.port");
         try (ServerSocket serverSocket = new ServerSocket(port)){
             System.out.println("server started on " + port);
 

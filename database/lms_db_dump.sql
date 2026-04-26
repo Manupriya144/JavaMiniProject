@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS student_marks (
     UNIQUE (student_id, assessment_type_id),
     FOREIGN KEY (student_id) REFERENCES students(user_id) ON DELETE CASCADE,
     FOREIGN KEY (assessment_type_id) REFERENCES assessment_type(assessment_type_id) ON DELETE CASCADE
-    );
+);
 
 -- Session
 CREATE TABLE IF NOT EXISTS session (

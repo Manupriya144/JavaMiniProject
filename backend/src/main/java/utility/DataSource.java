@@ -8,22 +8,23 @@ import java.sql.SQLException;
 
 public class DataSource {
 
+    private final HikariDataSource dataSource;
+
     private DataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/lms_db");
-        config.setUsername("root");
-        config.setPassword("");
-        config.setMaximumPoolSize(20);
-        config.setMinimumIdle(2);
-        config.setIdleTimeout(30000);
-        config.setMaxLifetime(1800000);
+
+        config.setJdbcUrl(Config.get("db.url"));
+        config.setUsername(Config.get("db.username"));
+        config.setPassword(Config.get("db.password"));
+
+        config.setMaximumPoolSize(Config.getInt("db.pool.max"));
+        config.setMinimumIdle(Config.getInt("db.pool.min"));
+        config.setIdleTimeout(Config.getLong("db.pool.idleTimeout"));
+        config.setMaxLifetime(Config.getLong("db.pool.maxLifetime"));
 
         dataSource = new HikariDataSource(config);
     }
 
-    private final HikariDataSource dataSource;
-
-    // Bill Pugh Singleton Holder
     private static class Holder {
         private static final DataSource INSTANCE = new DataSource();
     }
