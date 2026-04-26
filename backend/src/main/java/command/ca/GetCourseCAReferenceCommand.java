@@ -3,16 +3,17 @@ package command.ca;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import command.repository.ClientContext;
 import command.repository.Command;
-import dto.requestDto.ca.UploadCAMarksRequestDTO;
+import dto.requestDto.ca.GetCourseCAReferenceRequestDTO;
 import dto.responseDto.ca.CAResponseDTO;
-import model.ca.CAMark;
 import service.ca.CAMarkService;
 
-public class UploadCAMarksCommand implements Command {
+import java.util.Map;
+
+public class GetCourseCAReferenceCommand implements Command {
     private final CAMarkService caMarkService;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public UploadCAMarksCommand(CAMarkService caMarkService) {
+    public GetCourseCAReferenceCommand(CAMarkService caMarkService) {
         this.caMarkService = caMarkService;
     }
 
@@ -23,18 +24,32 @@ public class UploadCAMarksCommand implements Command {
                 context.getOutput().println("{\"success\":false,\"message\":\"Forbidden: insufficient role\"}");
                 return;
             }
-            UploadCAMarksRequestDTO request = mapper.convertValue(data, UploadCAMarksRequestDTO.class);
-            if ("Lecturer".equalsIgnoreCase(context.getRole())
-                    && !caMarkService.canLecturerManageAssessmentType(context.getUserId(), request.getAssessmentTypeId())) {
+
+            GetCourseCAReferenceRequestDTO request =
+                    mapper.convertValue(data, GetCourseCAReferenceRequestDTO.class);
+
+            String courseId = request.getCourseId() == null ? null : request.getCourseId().trim();
+            if (courseId == null || courseId.isBlank()) {
                 context.getOutput().println(mapper.writeValueAsString(
-                        new CAResponseDTO(false, "You can only upload CA marks for your assigned courses", null)
+                        new CAResponseDTO(false, "Course ID is required", null)
                 ));
                 return;
             }
-            CAMark saved = caMarkService.uploadCAMarks(request.getStudentId(), request.getAssessmentTypeId(), request.getMarks());
-            CAResponseDTO response = saved != null
-                    ? new CAResponseDTO(true, "CA mark uploaded", saved)
-                    : new CAResponseDTO(false, "Validation failed for CA upload", null);
+
+            if ("Lecturer".equalsIgnoreCase(context.getRole())
+                    && !caMarkService.canLecturerManageCourse(context.getUserId(), courseId)) {
+                context.getOutput().println(mapper.writeValueAsString(
+                        new CAResponseDTO(false, "You can only load CA details for your assigned courses", null)
+                ));
+                return;
+            }
+
+            Map<String, Object> referenceData = caMarkService.getCourseCAReference(courseId);
+            CAResponseDTO response = new CAResponseDTO(
+                    true,
+                    "Course CA reference data loaded",
+                    referenceData
+            );
             context.getOutput().println(mapper.writeValueAsString(response));
         } catch (Exception e) {
             e.printStackTrace();

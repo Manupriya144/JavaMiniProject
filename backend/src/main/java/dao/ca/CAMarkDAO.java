@@ -40,6 +40,21 @@ public class CAMarkDAO {
         }
     }
 
+    public String findStudentIdByRegNo(String regNo) {
+        String sql = "SELECT user_id FROM students WHERE reg_no = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, regNo);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("user_id");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean updateCAMark(Integer markId, Double marks) {
         String sql = "UPDATE student_marks SET marks = ? WHERE mark_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -157,6 +172,104 @@ public class CAMarkDAO {
         return rows;
     }
 
+    public boolean isCourseAssignedToLecturer(String lecturerId, String courseId) {
+        String sql = "SELECT 1 FROM lecturer_course WHERE lecturer_id = ? AND course_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, lecturerId);
+            stmt.setString(2, courseId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean isAssessmentTypeAssignedToLecturer(String lecturerId, Integer assessmentTypeId) {
+        String sql = "SELECT 1 " +
+                "FROM assessment_type at " +
+                "INNER JOIN lecturer_course lc ON lc.course_id = at.course_id " +
+                "WHERE lc.lecturer_id = ? AND at.assessment_type_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, lecturerId);
+            stmt.setInt(2, assessmentTypeId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean isMarkAssignedToLecturer(String lecturerId, Integer markId) {
+        String sql = "SELECT 1 " +
+                "FROM student_marks sm " +
+                "INNER JOIN assessment_type at ON at.assessment_type_id = sm.assessment_type_id " +
+                "INNER JOIN lecturer_course lc ON lc.course_id = at.course_id " +
+                "WHERE lc.lecturer_id = ? AND sm.mark_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, lecturerId);
+            stmt.setInt(2, markId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Map<String, Object>> getCourseCAAssessmentTypes(String courseId) {
+        List<Map<String, Object>> rows = loadAssessmentTypes(
+                "SELECT assessment_type_id, name, weight " +
+                        "FROM assessment_type " +
+                        "WHERE course_id = ? AND component = 'CA' " +
+                        "ORDER BY assessment_type_id",
+                courseId
+        );
+
+        if (!rows.isEmpty()) {
+            return rows;
+        }
+
+        // Fallback for older data where CA assignments were saved without the component flag.
+        return loadAssessmentTypes(
+                "SELECT assessment_type_id, name, weight " +
+                        "FROM assessment_type " +
+                        "WHERE course_id = ? AND UPPER(name) <> 'FINAL' " +
+                        "ORDER BY assessment_type_id",
+                courseId
+        );
+    }
+
+    public List<Map<String, Object>> getCourseCAMarkEntries(String courseId) {
+        String sql = "SELECT sm.mark_id, sm.student_id, sm.assessment_type_id, at.name, sm.marks " +
+                "FROM student_marks sm " +
+                "INNER JOIN assessment_type at ON at.assessment_type_id = sm.assessment_type_id " +
+                "WHERE at.course_id = ? AND at.component = 'CA' " +
+                "ORDER BY sm.mark_id";
+        List<Map<String, Object>> rows = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, courseId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("markId", rs.getInt("mark_id"));
+                    row.put("studentId", rs.getString("student_id"));
+                    row.put("assessmentTypeId", rs.getInt("assessment_type_id"));
+                    row.put("assessmentName", rs.getString("name"));
+                    row.put("marks", rs.getDouble("marks"));
+                    rows.add(row);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows;
+    }
+
     private CAMark getMarkById(Integer markId) {
         if (markId == null) {
             return null;
@@ -175,6 +288,25 @@ public class CAMarkDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private List<Map<String, Object>> loadAssessmentTypes(String sql, String courseId) {
+        List<Map<String, Object>> rows = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, courseId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("assessmentTypeId", rs.getInt("assessment_type_id"));
+                    row.put("assessmentName", rs.getString("name"));
+                    row.put("weight", rs.getDouble("weight"));
+                    rows.add(row);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows;
     }
 
     private CAMark mapRow(ResultSet rs) throws Exception {

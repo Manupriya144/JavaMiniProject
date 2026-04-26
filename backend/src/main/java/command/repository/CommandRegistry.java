@@ -1,6 +1,7 @@
 package command.repository;
 
 import command.attendance.*;
+import command.ca.*;
 import command.course.*;
 import command.courseMeterial.AddCourseMaterialCommand;
 import command.courseMeterial.DeleteCourseMaterialCommand;
@@ -32,11 +33,6 @@ import command.techofficer.GetTechOfficerDashboardStatsCommand;
 import command.techofficer.GetTechOfficerProfileCommand;
 import command.techofficer.UpdateTechOfficerProfileCommand;
 import command.notice.AddNoticeCommand;
-import command.ca.CheckCAEligibilityCommand;
-import command.ca.GetBatchCAEligibilityReportCommand;
-import command.ca.GetBatchCAMarksCommand;
-import command.ca.GetStudentCAMarksCommand;
-import command.ca.UpdateCAMarksCommand;
 import command.ca.UploadCAMarksCommand;
 import command.notice.GetAllNoticeCommand;
 import command.timetable.AddTimeTableCommand;
@@ -181,6 +177,7 @@ public class CommandRegistry {
             commands.put("GetBatchCAMarks", new GetBatchCAMarksCommand(caMarkService));
             commands.put("CheckCAEligibility", new CheckCAEligibilityCommand(caMarkService));
             commands.put("GetBatchCAEligibilityReport", new GetBatchCAEligibilityReportCommand(caMarkService));
+            commands.put("GetCourseCAReference", new GetCourseCAReferenceCommand(caMarkService));
             commands.put("GET_CA_ELIGIBILITY",
                     new GetCAEligibilityCommand(caEligibilityService, authService));
 

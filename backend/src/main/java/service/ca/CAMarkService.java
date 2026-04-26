@@ -15,11 +15,19 @@ public class CAMarkService {
         this.caMarkDAO = caMarkDAO;
     }
 
-    public CAMark uploadCAMarks(String studentId, Integer assessmentTypeId, Double marks) {
-        if (isBlank(studentId) || assessmentTypeId == null || !isValidMarks(marks)) {
+    public CAMark uploadCAMarks(String studentRegNo, Integer assessmentTypeId, Double marks) {
+        if (isBlank(studentRegNo) || assessmentTypeId == null || !isValidMarks(marks)) {
             return null;
         }
-        return caMarkDAO.uploadCAMark(studentId.trim(), assessmentTypeId, marks);
+
+        String normalizedRegNo = studentRegNo.trim();
+        String studentId = caMarkDAO.findStudentIdByRegNo(normalizedRegNo);
+
+        if (isBlank(studentId)) {
+            return null;
+        }
+
+        return caMarkDAO.uploadCAMark(studentId, assessmentTypeId, marks);
     }
 
     public boolean updateCAMarks(Integer markId, Double marks) {
@@ -69,6 +77,44 @@ public class CAMarkService {
             enrichEligibility(row);
         }
         return rows;
+    }
+
+    public boolean canLecturerManageCourse(String lecturerId, String courseId) {
+        if (isBlank(lecturerId) || isBlank(courseId)) {
+            return false;
+        }
+        return caMarkDAO.isCourseAssignedToLecturer(lecturerId.trim(), courseId.trim());
+    }
+
+    public boolean canLecturerManageAssessmentType(String lecturerId, Integer assessmentTypeId) {
+        if (isBlank(lecturerId) || assessmentTypeId == null) {
+            return false;
+        }
+        return caMarkDAO.isAssessmentTypeAssignedToLecturer(lecturerId.trim(), assessmentTypeId);
+    }
+
+    public boolean canLecturerManageMark(String lecturerId, Integer markId) {
+        if (isBlank(lecturerId) || markId == null) {
+            return false;
+        }
+        return caMarkDAO.isMarkAssignedToLecturer(lecturerId.trim(), markId);
+    }
+
+    public Map<String, Object> getCourseCAReference(String courseId) {
+        if (isBlank(courseId)) {
+            return Map.of(
+                    "courseId", "",
+                    "assessmentTypes", List.of(),
+                    "markEntries", List.of()
+            );
+        }
+
+        String normalizedCourseId = courseId.trim();
+        Map<String, Object> data = new HashMap<>();
+        data.put("courseId", normalizedCourseId);
+        data.put("assessmentTypes", caMarkDAO.getCourseCAAssessmentTypes(normalizedCourseId));
+        data.put("markEntries", caMarkDAO.getCourseCAMarkEntries(normalizedCourseId));
+        return data;
     }
 
     private Map<String, Object> enrichEligibility(Map<String, Object> row) {

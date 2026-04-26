@@ -1,339 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.frontend.controller.ca.CAManagementController"
-            prefWidth="1150"
-            prefHeight="760"
-            style="-fx-background-color: #f8fbff;">
+<BorderPane prefHeight="760" prefWidth="1150" style="-fx-background-color: #f8fbff;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.frontend.controller.ca.CAManagementController">
 
     <top>
-        <HBox alignment="CENTER_LEFT"
-              style="-fx-background-color: linear-gradient(to right, #5b9fd9, #3f7fc2);
-                     -fx-effect: dropshadow(three-pass-box, rgba(63,127,194,0.28), 16, 0, 0, 4);">
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #3f7fc2);                      -fx-effect: dropshadow(three-pass-box, rgba(63,127,194,0.28), 16, 0, 0, 4);">
 
-            <HBox alignment="CENTER_LEFT" spacing="14" prefHeight="74">
+            <HBox alignment="CENTER_LEFT" prefHeight="74" spacing="14">
                 <padding>
-                    <Insets left="26" right="26"/>
+                    <Insets left="26" right="26" />
                 </padding>
 
-                <StackPane prefWidth="46" prefHeight="46"
-                           style="-fx-background-color: white;
-                  -fx-background-radius: 23;
-                  -fx-border-color: rgba(255,255,255,0.3);
-                  -fx-border-radius: 23;
-                  -fx-border-width: 1;
-                  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 8, 0, 0, 2);">
-
-                    <Label text="🎓"
-                           style="-fx-font-size: 18px;"/>
-                </StackPane>
-
                 <VBox spacing="2">
-                    <Label text="FoT Portal"
-                           style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
-                    <Label text="Continuous Assessment Management"
-                           style="-fx-text-fill: rgba(255,255,255,0.82); -fx-font-size: 11px;"/>
+                    <Label style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="FoT Portal" />
+                    <Label prefHeight="16.0" prefWidth="245.0" style="-fx-text-fill: rgba(255,255,255,0.82); -fx-font-size: 11px;" text="Continuous Assessment Management" />
                 </VBox>
             </HBox>
 
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
 
             <HBox alignment="CENTER" spacing="10">
                 <padding>
-                    <Insets right="24"/>
+                    <Insets right="24" />
                 </padding>
 
-                <Label text="📊 Lecturer CA Panel"
-                       style="-fx-background-color: rgba(255,255,255,0.18);
-                              -fx-text-fill: white;
-                              -fx-font-size: 12px;
-                              -fx-font-weight: bold;
-                              -fx-background-radius: 20;
-                              -fx-padding: 8 16;"/>
+                <Label style="-fx-background-color: rgba(255,255,255,0.18);                               -fx-text-fill: white;                               -fx-font-size: 12px;                               -fx-font-weight: bold;                               -fx-background-radius: 20;                               -fx-padding: 8 16;" text="Lecturer CA Panel" />
 
-                <Button text="← Dashboard"
-                        onAction="#backToDashboard"
-                        style="-fx-background-color: white;
-                               -fx-text-fill: #3f7fc2;
-                               -fx-font-size: 12px;
-                               -fx-font-weight: bold;
-                               -fx-background-radius: 20;
-                               -fx-padding: 8 18;
-                               -fx-cursor: hand;"/>
+                <Button onAction="#backToDashboard" style="-fx-background-color: white;                                -fx-text-fill: #3f7fc2;                                -fx-font-size: 12px;                                -fx-font-weight: bold;                                -fx-background-radius: 20;                                -fx-padding: 8 18;                                -fx-cursor: hand;" text="Back to Dashboard" />
             </HBox>
         </HBox>
     </top>
 
     <center>
-        <ScrollPane fitToWidth="true"
-                    hbarPolicy="NEVER"
-                    style="-fx-background-color: transparent; -fx-background: transparent;">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;">
             <VBox spacing="24" style="-fx-background-color: #f8fbff;">
                 <padding>
-                    <Insets top="28" right="34" bottom="28" left="34"/>
+                    <Insets bottom="28" left="34" right="34" top="28" />
                 </padding>
 
-                <HBox alignment="CENTER_LEFT"
-                      spacing="18"
-                      style="-fx-background-color: linear-gradient(to right, #ffffff, #f3f8ff);
-                             -fx-background-radius: 18;
-                             -fx-border-color: #d7e7f8;
-                             -fx-border-radius: 18;
-                             -fx-border-width: 1;
-                             -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 16, 0, 0, 5);">
+                <HBox alignment="CENTER_LEFT" spacing="18" style="-fx-background-color: linear-gradient(to right, #ffffff, #f3f8ff);                              -fx-background-radius: 18;                              -fx-border-color: #d7e7f8;                              -fx-border-radius: 18;                              -fx-border-width: 1;                              -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.14), 16, 0, 0, 5);">
                     <padding>
-                        <Insets top="22" right="24" bottom="22" left="24"/>
+                        <Insets bottom="22" left="24" right="24" top="22" />
                     </padding>
 
-                    <StackPane prefWidth="58" prefHeight="58"
-                               style="-fx-background-color: linear-gradient(to bottom right, #5b9fd9, #7cb7ea);
-                                      -fx-background-radius: 29;">
-                        <Label text="📘" style="-fx-font-size: 22px;"/>
+                    <StackPane prefHeight="58" prefWidth="58" style="-fx-background-color: linear-gradient(to bottom right, #5b9fd9, #7cb7ea);                                       -fx-background-radius: 29;">
+                        <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="CA" />
                     </StackPane>
 
                     <VBox spacing="5">
-                        <Label text="Continuous Assessment Management"
-                               style="-fx-text-fill: #1a3a52; -fx-font-size: 26px; -fx-font-weight: bold;"/>
-                        <Label text="Upload, update, view, and check CA eligibility records."
-                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 13px;"/>
+                        <Label style="-fx-text-fill: #1a3a52; -fx-font-size: 26px; -fx-font-weight: bold;" text="Continuous Assessment Management" />
+                        <Label style="-fx-text-fill: #8fa3b8; -fx-font-size: 13px;" text="Upload, update, and review CA records safely for lecturer courses." />
                     </VBox>
                 </HBox>
 
                 <HBox spacing="20">
 
-                    <VBox spacing="0" HBox.hgrow="ALWAYS"
-                          style="-fx-background-color: white;
-                                 -fx-background-radius: 16;
-                                 -fx-border-color: #d7e7f8;
-                                 -fx-border-radius: 16;
-                                 -fx-border-width: 1;
-                                 -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.12), 14, 0, 0, 5);">
+                    <VBox spacing="0" style="-fx-background-color: white;                                  -fx-background-radius: 16;                                  -fx-border-color: #d7e7f8;                                  -fx-border-radius: 16;                                  -fx-border-width: 1;                                  -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.12), 14, 0, 0, 5);" HBox.hgrow="ALWAYS">
 
-                        <HBox alignment="CENTER_LEFT" spacing="10"
-                              style="-fx-background-color: #f5f9ff;
-                                     -fx-background-radius: 16 16 0 0;
-                                     -fx-border-color: transparent transparent #e8eef5 transparent;
-                                     -fx-border-width: 0 0 1 0;">
+                        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #f5f9ff;                                      -fx-background-radius: 16 16 0 0;                                      -fx-border-color: transparent transparent #e8eef5 transparent;                                      -fx-border-width: 0 0 1 0;">
                             <padding>
-                                <Insets top="18" right="24" bottom="18" left="24"/>
+                                <Insets bottom="18" left="24" right="24" top="18" />
                             </padding>
-                            <Label text="⬆️" style="-fx-font-size: 18px;"/>
                             <VBox spacing="1">
-                                <Label text="Upload CA Marks"
-                                       style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
-                                <Label text="Insert student CA marks by assessment type."
-                                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                                <Label style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;" text="Upload CA Marks" />
+                                <Label style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;" text="Select only your assigned course and assignment type." />
                             </VBox>
                         </HBox>
 
                         <VBox spacing="16">
                             <padding>
-                                <Insets top="22" right="24" bottom="24" left="24"/>
+                                <Insets bottom="24" left="24" right="24" top="22" />
                             </padding>
 
-                            <TextField fx:id="uploadStudentIdField"
-                                       promptText="Student ID"
-                                       style="-fx-background-color: white; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10;"/>
+                            <ComboBox fx:id="uploadCourseBox" maxWidth="Infinity" promptText="Select Course" style="-fx-background-color: white; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-background-radius: 8;" />
 
-                            <TextField fx:id="uploadAssessmentTypeIdField"
-                                       promptText="Assessment Type ID"
-                                       style="-fx-background-color: white; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10;"/>
+                            <ComboBox fx:id="uploadAssessmentTypeBox" maxWidth="Infinity" promptText="Assignment ID" style="-fx-background-color: white; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-background-radius: 8;" />
 
-                            <TextField fx:id="uploadMarksField"
-                                       promptText="Marks 0 - 100"
-                                       style="-fx-background-color: white; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10;"/>
+                            <TextField fx:id="uploadStudentIdField" promptText="Student Reg No" style="-fx-background-color: white; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10;" />
 
-                            <Button text="✅ Upload CA Marks"
-                                    onAction="#uploadCAMarks"
-                                    maxWidth="Infinity"
-                                    prefHeight="42"
-                                    style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);
-                                           -fx-text-fill: white;
-                                           -fx-font-weight: bold;
-                                           -fx-background-radius: 9;
-                                           -fx-cursor: hand;"/>
+                            <TextField fx:id="uploadMarksField" promptText="Marks 0 - 100" style="-fx-background-color: white; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10;" />
+
+                            <Button maxWidth="Infinity" onAction="#uploadCAMarks" prefHeight="42" style="-fx-background-color: linear-gradient(to right, #5b9fd9, #4c8fce);                                            -fx-text-fill: white;                                            -fx-font-weight: bold;                                            -fx-background-radius: 9;                                            -fx-cursor: hand;" text="Upload CA Marks" />
                         </VBox>
                     </VBox>
 
-                    <VBox spacing="0" HBox.hgrow="ALWAYS"
-                          style="-fx-background-color: white;
-                                 -fx-background-radius: 16;
-                                 -fx-border-color: #d7e7f8;
-                                 -fx-border-radius: 16;
-                                 -fx-border-width: 1;
-                                 -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.12), 14, 0, 0, 5);">
+                    <VBox spacing="0" style="-fx-background-color: white;                                  -fx-background-radius: 16;                                  -fx-border-color: #d7e7f8;                                  -fx-border-radius: 16;                                  -fx-border-width: 1;                                  -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.12), 14, 0, 0, 5);" HBox.hgrow="ALWAYS">
 
-                        <HBox alignment="CENTER_LEFT" spacing="10"
-                              style="-fx-background-color: #f5f9ff;
-                                     -fx-background-radius: 16 16 0 0;
-                                     -fx-border-color: transparent transparent #e8eef5 transparent;
-                                     -fx-border-width: 0 0 1 0;">
+                        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #f5f9ff;                                      -fx-background-radius: 16 16 0 0;                                      -fx-border-color: transparent transparent #e8eef5 transparent;                                      -fx-border-width: 0 0 1 0;">
                             <padding>
-                                <Insets top="18" right="24" bottom="18" left="24"/>
+                                <Insets bottom="18" left="24" right="24" top="18" />
                             </padding>
-                            <Label text="✏️" style="-fx-font-size: 18px;"/>
                             <VBox spacing="1">
-                                <Label text="Update CA Marks"
-                                       style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
-                                <Label text="Update existing CA marks using mark ID."
-                                       style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+                                <Label style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;" text="Update CA Marks" />
+                                <Label style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;" text="Update existing CA marks using mark ID." />
                             </VBox>
                         </HBox>
 
                         <VBox spacing="16">
                             <padding>
-                                <Insets top="22" right="24" bottom="24" left="24"/>
+                                <Insets bottom="24" left="24" right="24" top="22" />
                             </padding>
 
-                            <TextField fx:id="updateMarkIdField"
-                                       promptText="Mark ID"
-                                       style="-fx-background-color: white; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10;"/>
+                            <TextField fx:id="updateMarkIdField" promptText="Mark ID" style="-fx-background-color: white; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10;" />
 
-                            <TextField fx:id="updateMarksField"
-                                       promptText="New Marks"
-                                       style="-fx-background-color: white; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10;"/>
+                            <TextField fx:id="updateMarksField" promptText="New Marks" style="-fx-background-color: white; -fx-border-color: #d4e4f7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10;" />
 
-                            <Button text="✏️ Update CA Marks"
-                                    onAction="#updateCAMarks"
-                                    maxWidth="Infinity"
-                                    prefHeight="42"
-                                    style="-fx-background-color: #4cba52;
-                                           -fx-text-fill: white;
-                                           -fx-font-weight: bold;
-                                           -fx-background-radius: 9;
-                                           -fx-cursor: hand;"/>
+                            <Button maxWidth="Infinity" onAction="#updateCAMarks" prefHeight="42" style="-fx-background-color: #4cba52;                                            -fx-text-fill: white;                                            -fx-font-weight: bold;                                            -fx-background-radius: 9;                                            -fx-cursor: hand;" text="Update CA Marks" />
                         </VBox>
                     </VBox>
 
                 </HBox>
 
-                <HBox spacing="20">
-
-                    <VBox spacing="0" HBox.hgrow="ALWAYS"
-                          style="-fx-background-color: white; -fx-background-radius: 16;
-                                 -fx-border-color: #d7e7f8; -fx-border-radius: 16; -fx-border-width: 1;">
-                        <padding>
-                            <Insets top="20" right="22" bottom="22" left="22"/>
-                        </padding>
-
-                        <Label text="👤 Get Student CA Marks"
-                               style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
-                        <Label text="Load marks for one student."
-                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
-
-                        <HBox spacing="10" style="-fx-padding: 16 0 0 0;">
-                            <TextField fx:id="studentMarksStudentIdField" promptText="Student ID" HBox.hgrow="ALWAYS"/>
-                            <TextField fx:id="studentMarksCourseIdField" promptText="Course ID optional" HBox.hgrow="ALWAYS"/>
-                            <Button text="Load" onAction="#getStudentCAMarks"
-                                    style="-fx-background-color: #e8eef5; -fx-text-fill: #5b9fd9; -fx-font-weight: bold; -fx-background-radius: 8;"/>
-                        </HBox>
-                    </VBox>
-
-                    <VBox spacing="0" HBox.hgrow="ALWAYS"
-                          style="-fx-background-color: white; -fx-background-radius: 16;
-                                 -fx-border-color: #d7e7f8; -fx-border-radius: 16; -fx-border-width: 1;">
-                        <padding>
-                            <Insets top="20" right="22" bottom="22" left="22"/>
-                        </padding>
-
-                        <Label text="👥 Get Batch CA Marks"
-                               style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
-                        <Label text="Load CA marks for a batch."
-                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
-
-                        <HBox spacing="10" style="-fx-padding: 16 0 0 0;">
-                            <TextField fx:id="batchMarksBatchField" promptText="Batch" HBox.hgrow="ALWAYS"/>
-                            <TextField fx:id="batchMarksCourseIdField" promptText="Course ID optional" HBox.hgrow="ALWAYS"/>
-                            <Button text="Load" onAction="#getBatchCAMarks"
-                                    style="-fx-background-color: #e8eef5; -fx-text-fill: #5b9fd9; -fx-font-weight: bold; -fx-background-radius: 8;"/>
-                        </HBox>
-                    </VBox>
-
-                </HBox>
-
-                <HBox spacing="20">
-
-                    <VBox spacing="0" HBox.hgrow="ALWAYS"
-                          style="-fx-background-color: white; -fx-background-radius: 16;
-                                 -fx-border-color: #d7e7f8; -fx-border-radius: 16; -fx-border-width: 1;">
-                        <padding>
-                            <Insets top="20" right="22" bottom="22" left="22"/>
-                        </padding>
-
-                        <Label text="✅ Check CA Eligibility"
-                               style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
-                        <Label text="Check CA eligibility for one student."
-                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
-
-                        <HBox spacing="10" style="-fx-padding: 16 0 0 0;">
-                            <TextField fx:id="studentEligibilityStudentIdField" promptText="Student ID" HBox.hgrow="ALWAYS"/>
-                            <TextField fx:id="studentEligibilityCourseIdField" promptText="Course ID" HBox.hgrow="ALWAYS"/>
-                            <Button text="Check" onAction="#checkCAEligibility"
-                                    style="-fx-background-color: #f0a35a; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"/>
-                        </HBox>
-                    </VBox>
-
-                    <VBox spacing="0" HBox.hgrow="ALWAYS"
-                          style="-fx-background-color: white; -fx-background-radius: 16;
-                                 -fx-border-color: #d7e7f8; -fx-border-radius: 16; -fx-border-width: 1;">
-                        <padding>
-                            <Insets top="20" right="22" bottom="22" left="22"/>
-                        </padding>
-
-                        <Label text="📑 Batch CA Eligibility Report"
-                               style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
-                        <Label text="Generate eligibility list for a batch."
-                               style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
-
-                        <HBox spacing="10" style="-fx-padding: 16 0 0 0;">
-                            <TextField fx:id="batchEligibilityBatchField" promptText="Batch" HBox.hgrow="ALWAYS"/>
-                            <TextField fx:id="batchEligibilityCourseIdField" promptText="Course ID" HBox.hgrow="ALWAYS"/>
-                            <Button text="Load" onAction="#getBatchCAEligibilityReport"
-                                    style="-fx-background-color: #8e5fd2; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"/>
-                        </HBox>
-                    </VBox>
-
-                </HBox>
-
-                <VBox spacing="12"
-                      style="-fx-background-color: white;
-                             -fx-background-radius: 16;
-                             -fx-border-color: #d7e7f8;
-                             -fx-border-radius: 16;
-                             -fx-border-width: 1;
-                             -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.12), 14, 0, 0, 5);">
+                <VBox spacing="12" style="-fx-background-color: white;                              -fx-background-radius: 16;                              -fx-border-color: #d7e7f8;                              -fx-border-radius: 16;                              -fx-border-width: 1;                              -fx-effect: dropshadow(three-pass-box, rgba(91,159,217,0.12), 14, 0, 0, 5);">
                     <padding>
-                        <Insets top="20" right="22" bottom="22" left="22"/>
+                        <Insets bottom="22" left="22" right="22" top="20" />
                     </padding>
 
-                    <Label text="📌 Output"
-                           style="-fx-text-fill: #1a3a52; -fx-font-size: 15px; -fx-font-weight: bold;"/>
-
-                    <HBox alignment="CENTER_LEFT"
-                          style="-fx-background-color: #f5f9ff;
-                                 -fx-background-radius: 8;
-                                 -fx-border-color: #e8eef5;
-                                 -fx-border-radius: 8;
-                                 -fx-padding: 10 12;">
-                        <Label fx:id="statusLabel"
-                               style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <HBox alignment="CENTER_LEFT" style="-fx-background-color: #f5f9ff;                                  -fx-background-radius: 8;                                  -fx-border-color: #e8eef5;                                  -fx-border-radius: 8;                                  -fx-padding: 10 12;">
+                        <Label fx:id="statusLabel" style="-fx-font-size: 12px; -fx-font-weight: bold;" />
                     </HBox>
-
-                    <TextArea fx:id="outputArea"
-                              prefHeight="240"
-                              wrapText="true"
-                              style="-fx-control-inner-background: #f5f9ff;
-                                     -fx-background-color: #f5f9ff;
-                                     -fx-border-color: #d4e4f7;
-                                     -fx-border-radius: 8;
-                                     -fx-background-radius: 8;
-                                     -fx-text-fill: #1a3a52;"/>
                 </VBox>
 
             </VBox>
@@ -341,21 +138,17 @@
     </center>
 
     <bottom>
-        <HBox alignment="CENTER_LEFT"
-              spacing="10"
-              style="-fx-background-color: white; -fx-border-color: #e8eef5; -fx-border-width: 1 0 0 0;">
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: white; -fx-border-color: #e8eef5; -fx-border-width: 1 0 0 0;">
             <padding>
-                <Insets top="8" bottom="8" left="24" right="24"/>
+                <Insets bottom="8" left="24" right="24" top="8" />
             </padding>
 
-            <Circle radius="4" style="-fx-fill: #4cba52;"/>
-            <Label text="System Online  •  Faculty of Technology Management System  •  v1.0"
-                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+            <Circle radius="4" style="-fx-fill: #4cba52;" />
+            <Label style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;" text="System Online | Faculty of Technology Management System | v1.0" />
 
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
 
-            <Label text="CA Management Panel"
-                   style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;"/>
+            <Label style="-fx-text-fill: #8fa3b8; -fx-font-size: 11px;" text="CA Management Panel" />
         </HBox>
     </bottom>
 

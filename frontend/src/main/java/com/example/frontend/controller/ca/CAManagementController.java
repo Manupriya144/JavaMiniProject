@@ -1,16 +1,22 @@
 package com.example.frontend.controller.ca;
 
 import com.example.frontend.controller.admin.LoginController;
+import com.example.frontend.model.CAAssessmentTypeOption;
 import com.example.frontend.model.CAMark;
+import com.example.frontend.model.LecturerCourseItem;
 import com.example.frontend.service.CAMarkService;
+import com.example.frontend.service.LecturerCourseService;
 import com.fasterxml.jackson.databind.JsonNode;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -18,54 +24,137 @@ import java.util.List;
 
 public class CAManagementController {
 
+    @FXML private ComboBox<LecturerCourseItem> uploadCourseBox;
+    @FXML private ComboBox<CAAssessmentTypeOption> uploadAssessmentTypeBox;
     @FXML private TextField uploadStudentIdField;
-    @FXML private TextField uploadAssessmentTypeIdField;
     @FXML private TextField uploadMarksField;
 
     @FXML private TextField updateMarkIdField;
     @FXML private TextField updateMarksField;
-
-    @FXML private TextField studentMarksStudentIdField;
-    @FXML private TextField studentMarksCourseIdField;
-
-    @FXML private TextField batchMarksBatchField;
-    @FXML private TextField batchMarksCourseIdField;
-
-    @FXML private TextField studentEligibilityStudentIdField;
-    @FXML private TextField studentEligibilityCourseIdField;
-
-    @FXML private TextField batchEligibilityBatchField;
-    @FXML private TextField batchEligibilityCourseIdField;
-
-    @FXML private TextArea outputArea;
     @FXML private Label statusLabel;
 
     private final CAMarkService caService = new CAMarkService(LoginController.client);
+    private final LecturerCourseService lecturerCourseService = new LecturerCourseService(LoginController.client);
+    private final ObservableList<LecturerCourseItem> lecturerCourses = FXCollections.observableArrayList();
+    private final ObservableList<CAAssessmentTypeOption> assessmentTypeOptions = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
         showStatus("", StatusType.INFO);
+        setupCourseBox(uploadCourseBox, "Select Course");
+        setupAssessmentTypeBox();
+        uploadCourseBox.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue == null) {
+                assessmentTypeOptions.clear();
+                uploadAssessmentTypeBox.getSelectionModel().clearSelection();
+                return;
+            }
+            loadCourseReference(newValue.getCourseId(), true);
+        });
+        loadLecturerCourses();
+    }
+
+    private void setupCourseBox(ComboBox<LecturerCourseItem> comboBox, String emptyText) {
+        comboBox.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(LecturerCourseItem item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getCourseName() + " | " + item.getCourseId());
+            }
+        });
+
+        comboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(LecturerCourseItem item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? emptyText : item.getCourseName() + " | " + item.getCourseId());
+            }
+        });
+    }
+
+    private void setupAssessmentTypeBox() {
+        uploadAssessmentTypeBox.setItems(assessmentTypeOptions);
+        uploadAssessmentTypeBox.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(CAAssessmentTypeOption item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.toString());
+                }
+            }
+        });
+
+        uploadAssessmentTypeBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(CAAssessmentTypeOption item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Assignment ID" : item.toString());
+            }
+        });
+    }
+
+    private void loadLecturerCourses() {
+        try {
+            List<LecturerCourseItem> courses = lecturerCourseService.getLecturerCourses();
+
+            if (courses == null || courses.isEmpty()) {
+                showStatus("No assigned courses found for this lecturer.", StatusType.ERROR);
+                return;
+            }
+
+            lecturerCourses.setAll(courses);
+            uploadCourseBox.setItems(lecturerCourses);
+
+            uploadCourseBox.getSelectionModel().selectFirst();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showStatus("Failed to load lecturer course list.", StatusType.ERROR);
+        }
     }
 
     @FXML
     private void uploadCAMarks() {
         try {
-            String studentId = uploadStudentIdField.getText().trim();
-            Integer assessmentTypeId = Integer.parseInt(uploadAssessmentTypeIdField.getText().trim());
+            LecturerCourseItem selectedCourse = uploadCourseBox.getValue();
+            CAAssessmentTypeOption selectedAssessment = uploadAssessmentTypeBox.getValue();
+            String studentRegNo = uploadStudentIdField.getText() == null ? "" : uploadStudentIdField.getText().trim();
             Double marks = Double.parseDouble(uploadMarksField.getText().trim());
 
-            CAMark saved = caService.uploadCAMarks(studentId, assessmentTypeId, marks);
+            if (selectedCourse == null) {
+                showStatus("Please select a course.", StatusType.ERROR);
+                return;
+            }
+
+            if (selectedAssessment == null || selectedAssessment.getAssessmentTypeId() == null) {
+                showStatus("Please select an assignment type.", StatusType.ERROR);
+                return;
+            }
+
+            if (studentRegNo.isBlank()) {
+                showStatus("Student registration number is required.", StatusType.ERROR);
+                return;
+            }
+
+            CAMark saved = caService.uploadCAMarks(studentRegNo, selectedAssessment.getAssessmentTypeId(), marks);
             if (saved == null) {
                 showStatus(caService.getLastMessage(), StatusType.ERROR);
                 return;
             }
 
             showStatus("CA mark uploaded successfully.", StatusType.SUCCESS);
-            outputArea.setText("Mark ID: " + saved.getMarkId()
-                    + "\nStudent: " + saved.getStudentId()
-                    + "\nCourse: " + saved.getCourseId()
-                    + "\nAssessment: " + saved.getAssessmentName()
-                    + "\nMarks: " + saved.getMarks());
+            showInfoMessage(
+                    "Upload Successful",
+                    "CA mark uploaded successfully.",
+                    "Student Reg No: " + studentRegNo
+                            + "\nAssignment: " + selectedAssessment
+                            + "\nMarks: " + marks
+            );
+            clearUploadFields();
+            loadCourseReference(selectedCourse.getCourseId(), false);
+        } catch (NumberFormatException e) {
+            showStatus("Marks must be a valid number.", StatusType.ERROR);
         } catch (Exception e) {
             showStatus("Invalid upload input.", StatusType.ERROR);
         }
@@ -81,76 +170,47 @@ public class CAManagementController {
             showStatus(ok ? "CA mark updated successfully." : caService.getLastMessage(),
                     ok ? StatusType.SUCCESS : StatusType.ERROR);
 
+            if (ok) {
+                showInfoMessage(
+                        "Update Successful",
+                        "CA mark updated successfully.",
+                        "Mark ID: " + markId + "\nNew Marks: " + marks
+                );
+                LecturerCourseItem selectedCourse = uploadCourseBox.getValue();
+                if (selectedCourse != null) {
+                    loadCourseReference(selectedCourse.getCourseId(), false);
+                }
+            }
         } catch (Exception e) {
             showStatus("Invalid update input.", StatusType.ERROR);
         }
     }
 
-    @FXML
-    private void getStudentCAMarks() {
-        String studentId = studentMarksStudentIdField.getText() == null ? "" : studentMarksStudentIdField.getText().trim();
-        String courseId = studentMarksCourseIdField.getText() == null ? "" : studentMarksCourseIdField.getText().trim();
-
-        List<CAMark> list = caService.getStudentCAMarks(studentId, courseId.isBlank() ? null : courseId);
-        outputArea.setText(formatCAMarks(list));
-        showStatus(list.isEmpty() ? caService.getLastMessage() : "Loaded student CA marks.",
-                list.isEmpty() ? StatusType.ERROR : StatusType.SUCCESS);
-    }
-
-    @FXML
-    private void getBatchCAMarks() {
-        String batch = batchMarksBatchField.getText() == null ? "" : batchMarksBatchField.getText().trim();
-        String courseId = batchMarksCourseIdField.getText() == null ? "" : batchMarksCourseIdField.getText().trim();
-
-        List<CAMark> list = caService.getBatchCAMarks(batch, courseId.isBlank() ? null : courseId);
-        outputArea.setText(formatCAMarks(list));
-        showStatus(list.isEmpty() ? caService.getLastMessage() : "Loaded batch CA marks.",
-                list.isEmpty() ? StatusType.ERROR : StatusType.SUCCESS);
-    }
-
-    @FXML
-    private void checkCAEligibility() {
-        String studentId = studentEligibilityStudentIdField.getText() == null ? "" : studentEligibilityStudentIdField.getText().trim();
-        String courseId = studentEligibilityCourseIdField.getText() == null ? "" : studentEligibilityCourseIdField.getText().trim();
-
-        JsonNode node = caService.checkCAEligibility(studentId, courseId);
+    private void loadCourseReference(String courseId, boolean showLoadStatus) {
+        JsonNode node = caService.getCourseCAReference(courseId);
         if (node == null || !node.path("success").asBoolean(false)) {
-            showStatus(caService.getLastMessage(), StatusType.ERROR);
+            assessmentTypeOptions.clear();
+            uploadAssessmentTypeBox.getSelectionModel().clearSelection();
+            if (showLoadStatus) {
+                showStatus(caService.getLastMessage(), StatusType.ERROR);
+            }
             return;
         }
 
         JsonNode data = node.path("data");
-        outputArea.setText("Student: " + data.path("studentId").asText("-")
-                + "\nCourse: " + data.path("courseId").asText("-")
-                + "\nCA %: " + data.path("caPercentage").asDouble(0.0)
-                + "\nThreshold: " + data.path("thresholdPercent").asDouble(40.0)
-                + "\nEligible: " + data.path("eligible").asBoolean(false));
+        assessmentTypeOptions.setAll(readAssessmentTypes(data.path("assessmentTypes")));
 
-        showStatus("Student CA eligibility checked.", StatusType.SUCCESS);
-    }
-
-    @FXML
-    private void getBatchCAEligibilityReport() {
-        String batch = batchEligibilityBatchField.getText() == null ? "" : batchEligibilityBatchField.getText().trim();
-        String courseId = batchEligibilityCourseIdField.getText() == null ? "" : batchEligibilityCourseIdField.getText().trim();
-
-        JsonNode node = caService.getBatchCAEligibilityReport(batch, courseId);
-        if (node == null || !node.path("success").asBoolean(false) || !node.path("data").isArray()) {
-            showStatus(caService.getLastMessage(), StatusType.ERROR);
-            return;
+        if (assessmentTypeOptions.isEmpty()) {
+            uploadAssessmentTypeBox.getSelectionModel().clearSelection();
+            if (showLoadStatus) {
+                showStatus("No assignment IDs found for selected course.", StatusType.ERROR);
+            }
+        } else if (showLoadStatus) {
+            uploadAssessmentTypeBox.getSelectionModel().selectFirst();
+            showStatus("Assignment IDs loaded for selected course.", StatusType.SUCCESS);
+        } else {
+            uploadAssessmentTypeBox.getSelectionModel().selectFirst();
         }
-
-        StringBuilder sb = new StringBuilder();
-        for (JsonNode row : node.path("data")) {
-            sb.append(row.path("regNo").asText("-"))
-                    .append(" | ").append(row.path("studentName").asText("-"))
-                    .append(" | CA% ").append(row.path("caPercentage").asDouble(0.0))
-                    .append(" | Eligible: ").append(row.path("eligible").asBoolean(false))
-                    .append('\n');
-        }
-
-        outputArea.setText(sb.length() == 0 ? "No eligibility records found." : sb.toString());
-        showStatus("Batch CA eligibility report loaded.", StatusType.SUCCESS);
     }
 
     @FXML
@@ -158,26 +218,37 @@ public class CAManagementController {
         loadView("/view/lecturer/lecturerDashboard.fxml");
     }
 
-    private String formatCAMarks(List<CAMark> list) {
-        if (list == null || list.isEmpty()) {
-            return "No CA marks found.";
+    private List<CAAssessmentTypeOption> readAssessmentTypes(JsonNode arrayNode) {
+        ObservableList<CAAssessmentTypeOption> items = FXCollections.observableArrayList();
+        if (arrayNode == null || !arrayNode.isArray()) {
+            return items;
         }
 
-        StringBuilder sb = new StringBuilder();
-        for (CAMark m : list) {
-            sb.append("Mark ID: ").append(m.getMarkId())
-                    .append(" | Student: ").append(value(m.getStudentId()))
-                    .append(" | Course: ").append(value(m.getCourseId()))
-                    .append(" | Assessment: ").append(value(m.getAssessmentName()))
-                    .append(" (").append(m.getAssessmentWeight() == null ? "-" : m.getAssessmentWeight()).append("%)")
-                    .append(" | Marks: ").append(m.getMarks() == null ? "-" : m.getMarks())
-                    .append('\n');
+        for (JsonNode row : arrayNode) {
+            CAAssessmentTypeOption option = new CAAssessmentTypeOption();
+            if (row.hasNonNull("assessmentTypeId")) {
+                option.setAssessmentTypeId(row.path("assessmentTypeId").asInt());
+            }
+            option.setAssessmentName(row.path("assessmentName").asText(""));
+            if (row.has("weight") && !row.path("weight").isNull()) {
+                option.setWeight(row.path("weight").asDouble());
+            }
+            items.add(option);
         }
-        return sb.toString();
+        return items;
     }
 
-    private String value(String text) {
-        return text == null ? "-" : text;
+    private void clearUploadFields() {
+        uploadStudentIdField.clear();
+        uploadMarksField.clear();
+    }
+
+    private void showInfoMessage(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     private void loadView(String path) {

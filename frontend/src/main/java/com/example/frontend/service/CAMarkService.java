@@ -108,6 +108,23 @@ public class CAMarkService {
         }
     }
 
+    public JsonNode getCourseCAReference(String courseId) {
+        try {
+            Map<String, Object> data = new HashMap<>();
+            data.put("course_id", courseId);
+            JsonNode node = send("GetCourseCAReference", data);
+            if (node != null) {
+                lastMessage = node.path("message").asText("Course CA reference loaded");
+            } else {
+                lastMessage = "No response from server";
+            }
+            return node;
+        } catch (Exception e) {
+            lastMessage = "Failed to load course CA reference: " + (e.getMessage() == null ? "error" : e.getMessage());
+            return null;
+        }
+    }
+
     private List<CAMark> readCAList(JsonNode node, String defaultError) {
         List<CAMark> list = new ArrayList<>();
         if (node == null) {

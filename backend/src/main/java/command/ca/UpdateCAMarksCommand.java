@@ -23,6 +23,13 @@ public class UpdateCAMarksCommand implements Command {
                 return;
             }
             UpdateCAMarksRequestDTO request = mapper.convertValue(data, UpdateCAMarksRequestDTO.class);
+            if ("Lecturer".equalsIgnoreCase(context.getRole())
+                    && !caMarkService.canLecturerManageMark(context.getUserId(), request.getMarkId())) {
+                context.getOutput().println(mapper.writeValueAsString(
+                        new CAResponseDTO(false, "You can only update CA marks for your assigned courses", null)
+                ));
+                return;
+            }
             boolean ok = caMarkService.updateCAMarks(request.getMarkId(), request.getMarks());
             CAResponseDTO response = ok
                     ? new CAResponseDTO(true, "CA mark updated", null)
