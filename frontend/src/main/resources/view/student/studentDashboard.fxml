@@ -172,10 +172,28 @@
                         <Insets top="22" bottom="22" left="24" right="24"/>
                     </padding>
 
-                    <StackPane prefWidth="58" prefHeight="58"
+                    <StackPane prefWidth="58" prefHeight="58">
+
+                        <!-- Profile Image -->
+                        <ImageView fx:id="welcomeAvatarImage"
+                                   fitWidth="58"
+                                   fitHeight="58"
+                                   preserveRatio="false"
+                                   visible="false"/>
+
+                        <!-- Fallback Initial -->
+                        <Label fx:id="welcomeAvatarInitial"
+                               text="S"
                                style="-fx-background-color: linear-gradient(to bottom right, #5b9fd9, #7cb7ea);
-                                      -fx-background-radius: 29;">
-                        <Label text="👋" style="-fx-font-size: 24px;"/>
+                              -fx-text-fill: white;
+                              -fx-font-size: 20px;
+                              -fx-font-weight: bold;
+                              -fx-alignment: center;
+                              -fx-background-radius: 29;
+                              -fx-min-width: 58;
+                              -fx-min-height: 58;
+                              -fx-max-width: 58;
+                              -fx-max-height: 58;"/>
                     </StackPane>
 
                     <VBox spacing="5">

@@ -41,46 +41,42 @@ public class AssignLecturerCourseController implements Initializable {
     private LecturerCourseService lecturerCourseService;
 
     private static final String POPUP_STYLE =
-            "-fx-background-color: #091527;" +
-                    "-fx-background-radius: 10;" +
-                    "-fx-border-color: #1e3a5f;" +
-                    "-fx-border-radius: 10;" +
-                    "-fx-border-width: 1.5;";
+            "-fx-background-color: white;" +
+                    "-fx-background-radius: 8;" +
+                    "-fx-border-color: #d4e4f7;" +
+                    "-fx-border-radius: 8;" +
+                    "-fx-border-width: 1;";
 
     private static final String CELL_NORMAL =
-            "-fx-background-color: transparent;" +
-                    "-fx-text-fill: #c8dcf5;" +
+            "-fx-background-color: white;" +
+                    "-fx-text-fill: #1a3a52;" +
                     "-fx-font-size: 13px;" +
-                    "-fx-font-family: 'Segoe UI';" +
                     "-fx-padding: 10 14;";
 
     private static final String CELL_HOVER =
-            "-fx-background-color: #1e3a5f;" +
-                    "-fx-text-fill: white;" +
+            "-fx-background-color: #eaf3ff;" +
+                    "-fx-text-fill: #1a3a52;" +
                     "-fx-font-size: 13px;" +
-                    "-fx-font-family: 'Segoe UI';" +
                     "-fx-padding: 10 14;";
 
     private static final String CELL_SELECTED =
-            "-fx-background-color: #2563eb;" +
+            "-fx-background-color: #5b9fd9;" +
                     "-fx-text-fill: white;" +
                     "-fx-font-size: 13px;" +
-                    "-fx-font-family: 'Segoe UI';" +
                     "-fx-font-weight: bold;" +
                     "-fx-padding: 10 14;";
 
-    // FIXED: selected item shown in closed ComboBox is dark now
     private static final String BUTTON_CELL_FILLED =
             "-fx-text-fill: #1a3a52;" +
                     "-fx-font-size: 13px;" +
-                    "-fx-font-family: 'Segoe UI';" +
                     "-fx-font-weight: bold;" +
+                    "-fx-background-color: white;" +
                     "-fx-padding: 0 14;";
 
     private static final String BUTTON_CELL_EMPTY =
-            "-fx-text-fill: #4a7ab5;" +
+            "-fx-text-fill: #8fa3b8;" +
                     "-fx-font-size: 13px;" +
-                    "-fx-font-family: 'Segoe UI';" +
+                    "-fx-background-color: white;" +
                     "-fx-padding: 0 14;";
 
     @Override
