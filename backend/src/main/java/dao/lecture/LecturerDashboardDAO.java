@@ -1,6 +1,5 @@
 package dao.lecture;
 
-
 import dto.responseDto.lecture.LecturerDashboardStatsDTO;
 import utility.DataSource;
 
@@ -33,8 +32,11 @@ public class LecturerDashboardDAO {
         String sql = """
                 SELECT COUNT(DISTINCT cr.student_id) AS total
                 FROM lecturer_course lc
-                JOIN course_registration cr ON lc.course_id = cr.course_id
+                JOIN course_registration cr 
+                    ON lc.course_id = cr.course_id
                 WHERE lc.lecturer_id = ?
+                  AND cr.academic_year = YEAR(CURDATE())
+                  AND cr.registration_type IN ('Proper', 'Repeat')
                 """;
 
         return getCount(sql, lecturerId);
@@ -44,13 +46,16 @@ public class LecturerDashboardDAO {
         String sql = """
                 SELECT COUNT(*) AS total
                 FROM lecturer_course lc
-                JOIN course_registration cr ON lc.course_id = cr.course_id
+                JOIN course_registration cr 
+                    ON lc.course_id = cr.course_id
                 LEFT JOIN course_result r 
                     ON r.student_id = cr.student_id 
                    AND r.course_id = cr.course_id
                    AND r.academic_year = cr.academic_year
                    AND r.semester = cr.semester
                 WHERE lc.lecturer_id = ?
+                  AND cr.academic_year = YEAR(CURDATE())
+                  AND cr.registration_type IN ('Proper', 'Repeat')
                   AND r.result_id IS NULL
                 """;
 
@@ -64,12 +69,16 @@ public class LecturerDashboardDAO {
                 SELECT 
                     cr.student_id,
                     cr.course_id,
+                    cr.registration_type,
 
                     COALESCE(SUM(se.session_hours), 0) AS total_hours,
-                    COALESCE(SUM(CASE 
-                        WHEN a.status = 'Present' THEN a.hours_attended 
-                        ELSE 0 
-                    END), 0) AS attended_hours,
+
+                    COALESCE(SUM(
+                        CASE 
+                            WHEN a.status = 'Present' THEN a.hours_attended 
+                            ELSE 0 
+                        END
+                    ), 0) AS attended_hours,
 
                     CASE 
                         WHEN EXISTS (
@@ -105,16 +114,24 @@ public class LecturerDashboardDAO {
                   AND cr.academic_year = YEAR(CURDATE())
                   AND cr.registration_type IN ('Proper', 'Repeat')
 
-                GROUP BY cr.student_id, cr.course_id
+                GROUP BY cr.student_id, cr.course_id, cr.registration_type
             ) x
-            WHERE x.total_hours > 0
-              AND ((x.attended_hours / x.total_hours) * 100) >= 80
-              AND x.ca_marks >= (x.ca_max * 0.5)
+            WHERE
+            (
+                x.registration_type = 'Proper'
+                AND x.total_hours > 0
+                AND ((x.attended_hours / x.total_hours) * 100) >= 80
+                AND x.ca_marks >= (x.ca_max * 0.5)
+            )
+            OR
+            (
+                x.registration_type = 'Repeat'
+                AND x.ca_marks >= (x.ca_max * 0.5)
+            )
             """;
 
         return getCount(sql, lecturerId);
     }
-
 
     private int getCount(String sql, String lecturerId) {
         try (Connection con = DataSource.getInstance().getConnection();

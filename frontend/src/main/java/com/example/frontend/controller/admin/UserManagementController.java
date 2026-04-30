@@ -19,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -263,6 +264,11 @@ public class UserManagementController implements Initializable {
         }
 
         Dialog<UserResponseDTO> dialog = new Dialog<>();
+
+        Stage ownerStage = (Stage) tblUsers.getScene().getWindow();
+        dialog.initOwner(ownerStage);
+        dialog.initModality(Modality.WINDOW_MODAL);
+
         dialog.setTitle("Update User");
         dialog.setHeaderText("Update user: " + selectedUser.getUsername());
 
@@ -342,6 +348,11 @@ public class UserManagementController implements Initializable {
         }
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+
+        Stage ownerStage = (Stage) tblUsers.getScene().getWindow();
+        confirm.initOwner(ownerStage);
+        confirm.initModality(Modality.WINDOW_MODAL);
+
         confirm.setTitle("Delete User");
         confirm.setHeaderText("Delete selected user?");
         confirm.setContentText(

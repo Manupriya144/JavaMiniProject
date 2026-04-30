@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 
 public class MultiServer {
 
-    private ExecutorService executorService;
+    private final ExecutorService executorService;
     private static final int threadPool = 20;
 
 

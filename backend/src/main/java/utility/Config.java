@@ -16,9 +16,9 @@ public class Config {
 //            System.out.println("Searching config at: " + file.getAbsolutePath());
 //            System.out.println("Exists: " + file.exists());
 
-            if (!file.exists()) {
-                throw new RuntimeException("backend.properties not found at " + file.getAbsolutePath());
-            }
+//            if (!file.exists()) {
+//                throw new RuntimeException("backend.properties not found at " + file.getAbsolutePath());
+//            }
 
             try (InputStream input = new FileInputStream(file)) {
                 props.load(input);

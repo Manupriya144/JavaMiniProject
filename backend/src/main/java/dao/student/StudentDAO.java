@@ -181,14 +181,29 @@ public class StudentDAO {
             """;
 
         String gpaSql = """
-            SELECT 
-                COALESCE(sr.sgpa, 0) AS sgpa,
-                COALESCE(sr.cgpa, 0) AS cgpa
-            FROM semester_result sr
-            WHERE sr.student_id = ?
-            ORDER BY sr.academic_year DESC, sr.academic_level DESC, sr.semester DESC
-            LIMIT 1
-            """;
+                    SELECT 
+                        COALESCE(sr.sgpa, 0) AS sgpa,
+                        COALESCE(sr.cgpa, 0) AS cgpa
+                    FROM students st
+                    JOIN (
+                        SELECT rp.*
+                        FROM registration_period rp
+                        JOIN students s
+                            ON s.department_id = rp.department_id
+                           AND s.academic_level = rp.academic_level
+                        WHERE s.user_id = ?
+                        ORDER BY rp.academic_year DESC, rp.semester DESC
+                        LIMIT 1
+                    ) current_period
+                        ON current_period.department_id = st.department_id
+                       AND current_period.academic_level = st.academic_level
+                    LEFT JOIN semester_result sr
+                        ON sr.student_id = st.user_id
+                       AND sr.academic_year = current_period.academic_year
+                       AND sr.academic_level = current_period.academic_level
+                       AND sr.semester = current_period.semester
+                    WHERE st.user_id = ?
+                    """;
 
         String attendanceSql = """
             SELECT 
@@ -248,6 +263,7 @@ public class StudentDAO {
 
             try (PreparedStatement ps = con.prepareStatement(gpaSql)) {
                 ps.setString(1, studentId);
+                ps.setString(2, studentId);
 
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {

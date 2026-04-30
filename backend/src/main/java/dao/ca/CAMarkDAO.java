@@ -1,6 +1,7 @@
 package dao.ca;
 
 import model.ca.CAMark;
+import utility.DataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,15 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 public class CAMarkDAO {
-    private final Connection connection;
-
-    public CAMarkDAO(Connection connection) {
-        this.connection = connection;
-    }
 
     public CAMark uploadCAMark(String studentId, Integer assessmentTypeId, Double marks) {
         String sql = "INSERT INTO student_marks (student_id, assessment_type_id, marks) VALUES (?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, studentId);
             stmt.setInt(2, assessmentTypeId);
             stmt.setDouble(3, marks);
@@ -42,7 +39,8 @@ public class CAMarkDAO {
 
     public String findStudentIdByRegNo(String regNo) {
         String sql = "SELECT user_id FROM students WHERE reg_no = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, regNo);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -57,7 +55,8 @@ public class CAMarkDAO {
 
     public boolean updateCAMark(Integer markId, Double marks) {
         String sql = "UPDATE student_marks SET marks = ? WHERE mark_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setDouble(1, marks);
             stmt.setInt(2, markId);
             return stmt.executeUpdate() > 0;
@@ -73,7 +72,8 @@ public class CAMarkDAO {
                 "WHERE sm.student_id = ? AND at.component = 'CA' AND (? IS NULL OR at.course_id = ?) " +
                 "ORDER BY at.course_id, at.assessment_type_id";
         List<CAMark> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, studentId);
             stmt.setString(2, courseId);
             stmt.setString(3, courseId);
@@ -96,7 +96,8 @@ public class CAMarkDAO {
                 "WHERE s.batch = ? AND at.component = 'CA' AND (? IS NULL OR at.course_id = ?) " +
                 "ORDER BY s.reg_no, at.course_id, at.assessment_type_id";
         List<CAMark> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, batch);
             stmt.setString(2, courseId);
             stmt.setString(3, courseId);
@@ -119,7 +120,10 @@ public class CAMarkDAO {
                 "INNER JOIN assessment_type at ON sm.assessment_type_id = at.assessment_type_id " +
                 "WHERE sm.student_id = ? AND at.component = 'CA' AND at.course_id = ? " +
                 "GROUP BY sm.student_id, at.course_id";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
             stmt.setString(1, studentId);
             stmt.setString(2, courseId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -149,8 +153,12 @@ public class CAMarkDAO {
                 "WHERE s.batch = ? AND at.component = 'CA' AND at.course_id = ? " +
                 "GROUP BY sm.student_id, s.reg_no, u.username, s.batch, at.course_id " +
                 "ORDER BY s.reg_no ASC";
+
         List<Map<String, Object>> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+
             stmt.setString(1, batch);
             stmt.setString(2, courseId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -174,7 +182,8 @@ public class CAMarkDAO {
 
     public boolean isCourseAssignedToLecturer(String lecturerId, String courseId) {
         String sql = "SELECT 1 FROM lecturer_course WHERE lecturer_id = ? AND course_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, lecturerId);
             stmt.setString(2, courseId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -191,7 +200,10 @@ public class CAMarkDAO {
                 "FROM assessment_type at " +
                 "INNER JOIN lecturer_course lc ON lc.course_id = at.course_id " +
                 "WHERE lc.lecturer_id = ? AND at.assessment_type_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
             stmt.setString(1, lecturerId);
             stmt.setInt(2, assessmentTypeId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -209,7 +221,8 @@ public class CAMarkDAO {
                 "INNER JOIN assessment_type at ON at.assessment_type_id = sm.assessment_type_id " +
                 "INNER JOIN lecturer_course lc ON lc.course_id = at.course_id " +
                 "WHERE lc.lecturer_id = ? AND sm.mark_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, lecturerId);
             stmt.setInt(2, markId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -252,7 +265,9 @@ public class CAMarkDAO {
                 "WHERE at.course_id = ? AND at.component = 'CA' " +
                 "ORDER BY sm.mark_id";
         List<Map<String, Object>> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
             stmt.setString(1, courseId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -279,7 +294,8 @@ public class CAMarkDAO {
         String sql = "SELECT sm.mark_id, sm.student_id, sm.assessment_type_id, at.course_id, at.name, at.weight, sm.marks " +
                 "FROM student_marks sm INNER JOIN assessment_type at ON sm.assessment_type_id = at.assessment_type_id " +
                 "WHERE sm.mark_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, markId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -294,7 +310,9 @@ public class CAMarkDAO {
 
     private List<Map<String, Object>> loadAssessmentTypes(String sql, String courseId) {
         List<Map<String, Object>> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
             stmt.setString(1, courseId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

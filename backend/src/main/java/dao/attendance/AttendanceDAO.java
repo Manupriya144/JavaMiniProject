@@ -2,6 +2,7 @@ package dao.attendance;
 
 import dto.responseDto.attendance.StudentAttendanceSummaryDTO;
 import model.Attendance;
+import utility.DataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,15 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 public class AttendanceDAO {
-    private final Connection connection;
 
-    public AttendanceDAO(Connection connection) {
-        this.connection = connection;
-    }
 
     public Attendance addAttendance(Attendance attendance) {
         String sql = "INSERT INTO attendance (student_id, session_id, status, hours_attended) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, attendance.getStudentId());
             stmt.setInt(2, attendance.getSessionId());
             stmt.setString(3, attendance.getStatus());
@@ -50,7 +48,8 @@ public class AttendanceDAO {
 
     public boolean updateAttendance(Integer attendanceId, String status, Double hoursAttended) {
         String sql = "UPDATE attendance SET status = ?, hours_attended = ? WHERE attendance_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, status);
             stmt.setDouble(2, hoursAttended == null ? 0.0 : hoursAttended);
             stmt.setInt(3, attendanceId);
@@ -64,7 +63,8 @@ public class AttendanceDAO {
 
     public boolean deleteAttendance(Integer attendanceId) {
         String sql = "DELETE FROM attendance WHERE attendance_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try(Connection con = DataSource.getInstance().getConnection();
+            PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, attendanceId);
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
@@ -75,7 +75,8 @@ public class AttendanceDAO {
 
     public Attendance getAttendanceById(Integer attendanceId) {
         String sql = "SELECT attendance_id, student_id, session_id, status, hours_attended FROM attendance WHERE attendance_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, attendanceId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -103,7 +104,8 @@ public class AttendanceDAO {
                 "INNER JOIN users u ON s.user_id = u.user_id " +
                 "ORDER BY s.reg_no";
         List<Map<String, Object>> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql);
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Map<String, Object> row = new HashMap<>();
@@ -131,7 +133,9 @@ public class AttendanceDAO {
                 "WHERE a.student_id = ? " +
                 "ORDER BY se.course_id";
         List<Map<String, Object>> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
             stmt.setString(1, studentUserId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -152,7 +156,9 @@ public class AttendanceDAO {
                 "FROM students s INNER JOIN users u ON s.user_id = u.user_id " +
                 "ORDER BY s.reg_no";
         List<Map<String, Object>> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql);
+
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Map<String, Object> row = new HashMap<>();
@@ -170,7 +176,8 @@ public class AttendanceDAO {
     public List<Map<String, Object>> getSessionOptions() {
         String sql = "SELECT session_id, course_id, session_date, type FROM session ORDER BY session_date DESC, session_id DESC";
         List<Map<String, Object>> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql);
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Map<String, Object> row = new HashMap<>();
@@ -196,7 +203,8 @@ public class AttendanceDAO {
                 "WHERE a.student_id = ? AND (? = 'Combined' OR se.type = ?) " +
                 "ORDER BY se.session_date DESC, a.attendance_id DESC";
         List<Map<String, Object>> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, studentId);
             stmt.setString(2, viewType);
             stmt.setString(3, viewType);
@@ -232,7 +240,8 @@ public class AttendanceDAO {
                 "WHERE s.batch = ? AND (? = 'Combined' OR se.type = ?) " +
                 "ORDER BY s.reg_no ASC, se.session_date DESC, a.attendance_id DESC";
         List<Map<String, Object>> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, batch);
             stmt.setString(2, viewType);
             stmt.setString(3, viewType);
@@ -270,7 +279,8 @@ public class AttendanceDAO {
                 "WHERE (? = 'Combined' OR se.type = ?) " +
                 "ORDER BY se.session_date DESC, s.reg_no ASC, a.attendance_id DESC";
         List<Map<String, Object>> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, viewType);
             stmt.setString(2, viewType);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -310,7 +320,8 @@ public class AttendanceDAO {
                 "INNER JOIN session se ON a.session_id = se.session_id " +
                 "WHERE a.student_id = ? AND (? = 'Combined' OR se.type = ?) " +
                 "GROUP BY a.student_id, s.reg_no, u.username";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, studentId);
             stmt.setString(2, viewType);
             stmt.setString(3, viewType);
@@ -353,7 +364,9 @@ public class AttendanceDAO {
                 "GROUP BY a.student_id, s.reg_no, u.username, s.batch " +
                 "ORDER BY s.reg_no ASC";
         List<Map<String, Object>> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
             stmt.setString(1, batch);
             stmt.setString(2, viewType);
             stmt.setString(3, viewType);
@@ -385,7 +398,8 @@ public class AttendanceDAO {
 
     public boolean hasAttendanceMedicalRecord(String studentId) {
         String sql = "SELECT 1 FROM medical WHERE student_id = ? AND exam_type = 'Attendance' AND status = 'Approved' LIMIT 1";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, studentId);
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next();
@@ -411,7 +425,8 @@ public class AttendanceDAO {
                 "GROUP BY a.student_id, s.reg_no, u.username, s.batch " +
                 "ORDER BY s.reg_no ASC";
         List<Map<String, Object>> rows = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, batch);
             stmt.setString(2, viewType);
             stmt.setString(3, viewType);
@@ -468,7 +483,8 @@ public class AttendanceDAO {
             ORDER BY c.course_code
             """;
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection con = DataSource.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, studentId);
 
             try (ResultSet rs = ps.executeQuery()) {

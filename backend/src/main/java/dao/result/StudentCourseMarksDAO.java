@@ -19,6 +19,7 @@ public class StudentCourseMarksDAO {
                     d.name AS department_name,
                     s.academic_level,
                     cr.semester,
+                    cr.academic_year,
                     cr.registration_type,
                     c.course_id,
                     c.course_code,
@@ -41,7 +42,10 @@ public class StudentCourseMarksDAO {
                 ) total_hours ON total_hours.course_id = c.course_id
 
                 LEFT JOIN (
-                    SELECT a.student_id, se.course_id, SUM(a.hours_attended) AS attended
+                    SELECT 
+                        a.student_id, 
+                        se.course_id, 
+                        SUM(a.hours_attended) AS attended
                     FROM attendance a
                     INNER JOIN session se ON a.session_id = se.session_id
                     WHERE a.status = 'Present'
@@ -50,11 +54,15 @@ public class StudentCourseMarksDAO {
                             AND att_hours.course_id = c.course_id
 
                 LEFT JOIN (
-                    SELECT sm.student_id, at.course_id, sm.marks AS final_marks
+                    SELECT 
+                        sm.student_id, 
+                        at.course_id, 
+                        MAX(sm.marks) AS final_marks
                     FROM student_marks sm
                     INNER JOIN assessment_type at 
                         ON sm.assessment_type_id = at.assessment_type_id
                     WHERE at.component = 'Final'
+                    GROUP BY sm.student_id, at.course_id
                 ) final_marks ON final_marks.student_id = s.user_id
                               AND final_marks.course_id = c.course_id
 
@@ -66,86 +74,71 @@ public class StudentCourseMarksDAO {
                 """;
 
         try (Connection con = DataSource.getInstance().getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    String studentId = rs.getString("student_id");
-                    String courseId = rs.getString("course_id");
-                    String registrationType = rs.getString("registration_type");
+            while (rs.next()) {
+                String studentId = rs.getString("student_id");
+                String courseId = rs.getString("course_id");
+                String registrationType = rs.getString("registration_type");
 
-                    double totalHours = rs.getDouble("total_hours");
-                    double attendedHours = rs.getDouble("attended_hours");
+                double totalHours = rs.getDouble("total_hours");
+                double attendedHours = rs.getDouble("attended_hours");
 
-                    double medicalAttendanceHours =
-                            calculateApprovedAttendanceMedicalHours(con, studentId, courseId);
+                double medicalAttendanceHours =
+                        calculateApprovedAttendanceMedicalHours(con, studentId, courseId);
 
-                    double finalAttendanceHours = attendedHours + medicalAttendanceHours;
+                double finalAttendanceHours = attendedHours + medicalAttendanceHours;
 
-                    if (finalAttendanceHours > totalHours) {
-                        finalAttendanceHours = totalHours;
-                    }
-
-                    double attendancePercentage = totalHours > 0
-                            ? (finalAttendanceHours / totalHours) * 100.0
-                            : 0.0;
-
-                    double caPercentage = calculateCAPercentage(con, studentId, courseId);
-
-                    boolean hasPractical = hasPracticalSession(con, courseId);
-
-                    double finalExamRawMarks = rs.getDouble("final_exam_marks");
-
-                    double finalExamContribution = hasPractical
-                            ? (finalExamRawMarks / 100.0) * 60.0
-                            : (finalExamRawMarks / 100.0) * 70.0;
-
-                    String medicalStatus = getMedicalStatus(con, studentId, courseId);
-
-                    String resultStatus;
-
-                    if ("WH".equalsIgnoreCase(medicalStatus)) {
-                        resultStatus = "WH";
-
-                    } else if ("Repeat".equalsIgnoreCase(registrationType)) {
-
-                        if (caPercentage < 50.0) {
-                            resultStatus = "EE";
-                        } else {
-                            resultStatus = "Allowed";
-                        }
-
-                    } else {
-
-                        if (attendancePercentage < 80.0 || caPercentage < 50.0) {
-                            resultStatus = "EE";
-                        } else {
-                            resultStatus = "Allowed";
-                        }
-                    }
-
-                    StudentCourseMarksDTO dto = new StudentCourseMarksDTO();
-
-                    dto.setStudentId(studentId);
-                    dto.setRegNo(rs.getString("reg_no"));
-                    dto.setStudentName(rs.getString("student_name"));
-                    dto.setDepartmentName(rs.getString("department_name"));
-                    dto.setAcademicLevel(rs.getInt("academic_level"));
-                    dto.setSemester(rs.getString("semester"));
-
-                    dto.setCourseId(courseId);
-                    dto.setCourseCode(rs.getString("course_code"));
-                    dto.setCourseName(rs.getString("course_name"));
-
-                    dto.setAttendancePercentage(round(attendancePercentage));
-                    dto.setCaPercentage(round(caPercentage));
-                    dto.setFinalExamMarks(round(finalExamContribution));
-
-                    dto.setMedicalStatus(medicalStatus);
-                    dto.setResultStatus(resultStatus);
-
-                    list.add(dto);
+                if (finalAttendanceHours > totalHours) {
+                    finalAttendanceHours = totalHours;
                 }
+
+                double attendancePercentage = totalHours > 0
+                        ? (finalAttendanceHours / totalHours) * 100.0
+                        : 0.0;
+
+                double caPercentage = calculateCAPercentage(con, studentId, courseId);
+
+                boolean hasPractical = hasPracticalSession(con, courseId);
+
+                double finalExamRawMarks = rs.getDouble("final_exam_marks");
+
+                double finalExamContribution = hasPractical
+                        ? (finalExamRawMarks / 100.0) * 60.0
+                        : (finalExamRawMarks / 100.0) * 70.0;
+
+                String medicalStatus = getMedicalStatus(con, studentId, courseId);
+
+                String resultStatus = calculateResultStatus(
+                        registrationType,
+                        attendancePercentage,
+                        caPercentage,
+                        finalExamRawMarks,
+                        medicalStatus
+                );
+
+                StudentCourseMarksDTO dto = new StudentCourseMarksDTO();
+
+                dto.setStudentId(studentId);
+                dto.setRegNo(rs.getString("reg_no"));
+                dto.setStudentName(rs.getString("student_name"));
+                dto.setDepartmentName(rs.getString("department_name"));
+                dto.setAcademicLevel(rs.getInt("academic_level"));
+                dto.setSemester(rs.getString("semester"));
+
+                dto.setCourseId(courseId);
+                dto.setCourseCode(rs.getString("course_code"));
+                dto.setCourseName(rs.getString("course_name"));
+
+                dto.setAttendancePercentage(round(attendancePercentage));
+                dto.setCaPercentage(round(caPercentage));
+                dto.setFinalExamMarks(round(finalExamContribution));
+
+                dto.setMedicalStatus(medicalStatus);
+                dto.setResultStatus(resultStatus);
+
+                list.add(dto);
             }
 
         } catch (Exception e) {
@@ -153,6 +146,31 @@ public class StudentCourseMarksDAO {
         }
 
         return list;
+    }
+
+    private String calculateResultStatus(String registrationType,
+                                         double attendancePercentage,
+                                         double caPercentage,
+                                         double finalExamRawMarks,
+                                         String medicalStatus) {
+
+        if ("WH".equalsIgnoreCase(medicalStatus)) {
+            return "WH";
+        }
+
+        if (finalExamRawMarks <= 0) {
+            return "EC";
+        }
+
+        if ("Repeat".equalsIgnoreCase(registrationType)) {
+            return caPercentage < 50.0 ? "EE" : "Allowed";
+        }
+
+        if (attendancePercentage < 80.0 || caPercentage < 50.0) {
+            return "EE";
+        }
+
+        return "Allowed";
     }
 
     private String getMedicalStatus(Connection con, String studentId, String courseId) throws SQLException {
@@ -221,7 +239,9 @@ public class StudentCourseMarksDAO {
         return "No Medical";
     }
 
-    private double calculateApprovedAttendanceMedicalHours(Connection con, String studentId, String courseId) throws SQLException {
+    private double calculateApprovedAttendanceMedicalHours(Connection con,
+                                                           String studentId,
+                                                           String courseId) throws SQLException {
         int approvedMedicalCount = getApprovedAttendanceMedicalCount(con, studentId, courseId);
 
         if (approvedMedicalCount <= 0) {
@@ -256,7 +276,9 @@ public class StudentCourseMarksDAO {
         return medicalHours;
     }
 
-    private int getApprovedAttendanceMedicalCount(Connection con, String studentId, String courseId) throws SQLException {
+    private int getApprovedAttendanceMedicalCount(Connection con,
+                                                  String studentId,
+                                                  String courseId) throws SQLException {
         String sql = """
                 SELECT COUNT(*) AS medical_count
                 FROM medical
@@ -298,7 +320,9 @@ public class StudentCourseMarksDAO {
         }
     }
 
-    private double calculateCAPercentage(Connection con, String studentId, String courseId) throws SQLException {
+    private double calculateCAPercentage(Connection con,
+                                         String studentId,
+                                         String courseId) throws SQLException {
         String sql = """
                 SELECT at.name, at.weight, sm.marks
                 FROM assessment_type at

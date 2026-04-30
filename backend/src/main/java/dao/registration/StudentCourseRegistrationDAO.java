@@ -119,7 +119,7 @@ public class StudentCourseRegistrationDAO {
                 WHERE s.user_id = ?
                   AND rp.status = 'Open'
                   AND NOW() BETWEEN rp.start_at AND rp.end_at
-                  AND result.grade IN ('E', 'F','D','EE')
+                  AND result.grade IN ('E', 'F', 'D', 'EE', 'EC', 'WH', 'MC')
                 ORDER BY c.course_code
                 """;
 
@@ -142,6 +142,10 @@ public class StudentCourseRegistrationDAO {
     }
 
     public boolean registerCourse(String studentId, RegisterCourseReqDTO dto) {
+        if (studentId == null || studentId.isBlank() || dto == null) {
+            return false;
+        }
+
         String sql = """
                 INSERT INTO course_registration
                 (student_id, course_id, academic_year, semester, registration_type)

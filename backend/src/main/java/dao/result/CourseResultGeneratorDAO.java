@@ -28,14 +28,16 @@ public class CourseResultGeneratorDAO {
             ps.setInt(2, dto.getAcademicYear());
             ps.setString(3, dto.getSemester());
 
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                String studentId = rs.getString("student_id");
-                String registrationType = rs.getString("registration_type");
-
-                processStudent(con, studentId, registrationType, dto);
-                count++;
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    processStudent(
+                            con,
+                            rs.getString("student_id"),
+                            rs.getString("registration_type"),
+                            dto
+                    );
+                    count++;
+                }
             }
 
         } catch (Exception e) {
@@ -72,8 +74,12 @@ public class CourseResultGeneratorDAO {
             grade = "WH";
             totalMarks = 0.0;
 
-        } else if (hasApprovedExamMedical(con, studentId, courseId)) {
+        } else if (hasApprovedFinalMedical(con, studentId, courseId)) {
             grade = "WH";
+            totalMarks = 0.0;
+
+        } else if (finalRawMarks <= 0) {
+            grade = "EC";
             totalMarks = 0.0;
 
         } else if ("Repeat".equalsIgnoreCase(registrationType)) {
@@ -82,8 +88,15 @@ public class CourseResultGeneratorDAO {
                 grade = "EE";
                 totalMarks = 0.0;
             } else {
-                grade = calculateGrade(totalMarks);
-                grade = capRepeatGradeToC(grade);
+                String previousGrade = getPreviousGrade(con, studentId, courseId, dto);
+
+                if (isMedicalRepeat(previousGrade)) {
+                    // WH / MC repeat: can get any grade
+                    grade = calculateGrade(totalMarks);
+                } else {
+                    // Failed repeat: maximum grade is C
+                    grade = capRepeatGradeToC(calculateGrade(totalMarks));
+                }
             }
 
         } else {
@@ -106,6 +119,51 @@ public class CourseResultGeneratorDAO {
                 totalMarks,
                 grade
         );
+    }
+
+    private String getPreviousGrade(Connection con,
+                                    String studentId,
+                                    String courseId,
+                                    GenerateCourseResultReqDTO dto) throws SQLException {
+
+        String sql = """
+                SELECT grade
+                FROM course_result
+                WHERE student_id = ?
+                  AND course_id = ?
+                  AND NOT (
+                        academic_year = ?
+                    AND academic_level = ?
+                    AND semester = ?
+                  )
+                ORDER BY academic_year DESC,
+                         academic_level DESC,
+                         CAST(semester AS UNSIGNED) DESC
+                LIMIT 1
+                """;
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, studentId);
+            ps.setString(2, courseId);
+            ps.setInt(3, dto.getAcademicYear());
+            ps.setInt(4, dto.getAcademicLevel());
+            ps.setString(5, dto.getSemester());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("grade");
+                }
+            }
+        }
+
+        return "";
+    }
+
+    private boolean isMedicalRepeat(String previousGrade) {
+        if (previousGrade == null) return false;
+
+        return previousGrade.equalsIgnoreCase("WH")
+                || previousGrade.equalsIgnoreCase("MC");
     }
 
     private void saveCourseResult(Connection con,
@@ -142,19 +200,18 @@ public class CourseResultGeneratorDAO {
             ps.setString(5, semester);
             ps.setDouble(6, totalMarks);
             ps.setString(7, grade);
-
             ps.executeUpdate();
         }
     }
 
-    private boolean hasApprovedExamMedical(Connection con, String studentId, String courseId) throws SQLException {
+    private boolean hasApprovedFinalMedical(Connection con, String studentId, String courseId) throws SQLException {
         String sql = """
                 SELECT 1
                 FROM medical
                 WHERE student_id = ?
                   AND course_id = ?
                   AND status = 'Approved'
-                  AND exam_type IN ('Mid', 'Final')
+                  AND exam_type = 'Final'
                 LIMIT 1
                 """;
 
@@ -162,7 +219,9 @@ public class CourseResultGeneratorDAO {
             ps.setString(1, studentId);
             ps.setString(2, courseId);
 
-            return ps.executeQuery().next();
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
         }
     }
 
@@ -171,15 +230,9 @@ public class CourseResultGeneratorDAO {
         double attendedHours = getAttendedHours(con, studentId, courseId);
         double medicalHours = calculateApprovedAttendanceMedicalHours(con, studentId, courseId);
 
-        double finalAttendanceHours = attendedHours + medicalHours;
+        double finalAttendanceHours = Math.min(attendedHours + medicalHours, totalHours);
 
-        if (finalAttendanceHours > totalHours) {
-            finalAttendanceHours = totalHours;
-        }
-
-        if (totalHours <= 0) {
-            return 0.0;
-        }
+        if (totalHours <= 0) return 0.0;
 
         return round((finalAttendanceHours / totalHours) * 100.0);
     }
@@ -194,14 +247,10 @@ public class CourseResultGeneratorDAO {
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, courseId);
 
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getDouble("total_hours");
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getDouble("total_hours") : 0.0;
             }
         }
-
-        return 0.0;
     }
 
     private double getAttendedHours(Connection con, String studentId, String courseId) throws SQLException {
@@ -218,22 +267,19 @@ public class CourseResultGeneratorDAO {
             ps.setString(1, studentId);
             ps.setString(2, courseId);
 
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getDouble("attended_hours");
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getDouble("attended_hours") : 0.0;
             }
         }
-
-        return 0.0;
     }
 
-    private double calculateApprovedAttendanceMedicalHours(Connection con, String studentId, String courseId) throws SQLException {
+    private double calculateApprovedAttendanceMedicalHours(Connection con,
+                                                           String studentId,
+                                                           String courseId) throws SQLException {
+
         int approvedMedicalCount = getApprovedAttendanceMedicalCount(con, studentId, courseId);
 
-        if (approvedMedicalCount <= 0) {
-            return 0.0;
-        }
+        if (approvedMedicalCount <= 0) return 0.0;
 
         String sql = """
                 SELECT se.session_hours
@@ -253,17 +299,19 @@ public class CourseResultGeneratorDAO {
             ps.setString(2, courseId);
             ps.setInt(3, approvedMedicalCount);
 
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                medicalHours += rs.getDouble("session_hours");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    medicalHours += rs.getDouble("session_hours");
+                }
             }
         }
 
         return medicalHours;
     }
 
-    private int getApprovedAttendanceMedicalCount(Connection con, String studentId, String courseId) throws SQLException {
+    private int getApprovedAttendanceMedicalCount(Connection con,
+                                                  String studentId,
+                                                  String courseId) throws SQLException {
         String sql = """
                 SELECT COUNT(*) AS medical_count
                 FROM medical
@@ -277,17 +325,16 @@ public class CourseResultGeneratorDAO {
             ps.setString(1, studentId);
             ps.setString(2, courseId);
 
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt("medical_count");
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt("medical_count") : 0;
             }
         }
-
-        return 0;
     }
 
-    private double calculateCAPercentage(Connection con, String studentId, String courseId) throws SQLException {
+    private double calculateCAPercentage(Connection con,
+                                         String studentId,
+                                         String courseId) throws SQLException {
+
         String sql = """
                 SELECT at.name, at.weight, sm.marks
                 FROM assessment_type at
@@ -307,24 +354,22 @@ public class CourseResultGeneratorDAO {
             ps.setString(1, studentId);
             ps.setString(2, courseId);
 
-            ResultSet rs = ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String name = rs.getString("name");
+                    double weight = rs.getDouble("weight");
 
-            while (rs.next()) {
-                String name = rs.getString("name");
-                double weight = rs.getDouble("weight");
+                    double marks = rs.getDouble("marks");
+                    if (rs.wasNull()) marks = 0.0;
 
-                double marks = rs.getDouble("marks");
-                if (rs.wasNull()) {
-                    marks = 0.0;
-                }
+                    double value = (marks / 100.0) * weight;
 
-                double value = (marks / 100.0) * weight;
-
-                if (name != null && name.toLowerCase().contains("quiz")) {
-                    quizList.add(new CAItem(weight, value));
-                } else {
-                    contribution += value;
-                    selectedWeight += weight;
+                    if (name != null && name.toLowerCase().contains("quiz")) {
+                        quizList.add(new CAItem(weight, value));
+                    } else {
+                        contribution += value;
+                        selectedWeight += weight;
+                    }
                 }
             }
         }
@@ -338,14 +383,15 @@ public class CourseResultGeneratorDAO {
             selectedWeight += quizList.get(i).getWeight();
         }
 
-        if (selectedWeight <= 0) {
-            return 0.0;
-        }
+        if (selectedWeight <= 0) return 0.0;
 
         return round((contribution / selectedWeight) * 100.0);
     }
 
-    private double getFinalRawMarks(Connection con, String studentId, String courseId) throws SQLException {
+    private double getFinalRawMarks(Connection con,
+                                    String studentId,
+                                    String courseId) throws SQLException {
+
         String sql = """
                 SELECT sm.marks
                 FROM student_marks sm
@@ -361,14 +407,10 @@ public class CourseResultGeneratorDAO {
             ps.setString(1, studentId);
             ps.setString(2, courseId);
 
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getDouble("marks");
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getDouble("marks") : 0.0;
             }
         }
-
-        return 0.0;
     }
 
     private boolean hasPracticalSession(Connection con, String courseId) throws SQLException {
@@ -383,7 +425,9 @@ public class CourseResultGeneratorDAO {
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, courseId);
 
-            return ps.executeQuery().next();
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
         }
     }
 
@@ -397,20 +441,12 @@ public class CourseResultGeneratorDAO {
         if (marks >= 55) return "C+";
         if (marks >= 50) return "C";
         if (marks >= 45) return "C-";
-        if (marks >= 40) return "D+";
-        if (marks >= 35) return "D";
-        return "F";
+        if (marks >= 40) return "D";
+        return "E";
     }
 
     private String capRepeatGradeToC(String grade) {
-        double gp = gradePoint(grade);
-        double cGp = gradePoint("C");
-
-        if (gp > cGp) {
-            return "C";
-        }
-
-        return grade;
+        return gradePoint(grade) > gradePoint("C") ? "C" : grade;
     }
 
     private double gradePoint(String grade) {
@@ -425,8 +461,8 @@ public class CourseResultGeneratorDAO {
             case "C+" -> 2.3;
             case "C" -> 2.0;
             case "C-" -> 1.7;
-            case "D+" -> 1.3;
-            case "D" -> 1.0;
+            case "D" -> 1.3;
+            case "E" -> 0.0;
             default -> 0.0;
         };
     }

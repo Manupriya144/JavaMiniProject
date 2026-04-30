@@ -86,18 +86,14 @@ import service.timetable.TimeTableService;
 import service.user.AdminDashboardService;
 import service.user.UserService;
 import service.techofficer.TechOfficerService;
-import utility.DataSource;
-import command.report.GetBatchFullAcademicReportCommand;
-import command.report.GetStudentFullAcademicReportCommand;
+
 
 import dao.course.CourseDAO;
-import dao.report.AcademicReportDAO;
 
 
 import service.course.CourseService;
-import service.report.AcademicReportService;
 
-import java.sql.Connection;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -107,7 +103,6 @@ public class CommandRegistry {
 
     public static void init() {
         try {
-            Connection connection = DataSource.getInstance().getConnection();
 
             UserDAO userDAO = new UserDAO();
             AuthService authService = new AuthService(userDAO);
@@ -139,7 +134,7 @@ public class CommandRegistry {
             commands.put("UPDATE_STUDENT_PROFILE",new UpdateStudentProfileCommand(studentService, authService));
 
             // attendance related
-            AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
+            AttendanceDAO attendanceDAO = new AttendanceDAO();
             AttendanceService attendanceService = new AttendanceService(attendanceDAO);
             commands.put("AddAttendance", new AddAttendanceCommand(attendanceService));
             commands.put("UpdateAttendance", new UpdateAttendanceCommand(attendanceService));
@@ -163,10 +158,8 @@ public class CommandRegistry {
 
 
 
-
-
             // CA marks related
-            CAMarkDAO caMarkDAO = new CAMarkDAO(connection);
+            CAMarkDAO caMarkDAO = new CAMarkDAO();
             CAEligibilityService caEligibilityService = new CAEligibilityService();
             FinalEligibilityService finalEligibilityService = new FinalEligibilityService();
             StudentCourseMarksService studentCourseMarksService = new StudentCourseMarksService();
@@ -200,7 +193,7 @@ public class CommandRegistry {
                     new SaveSemesterResultsCommand(gradeGPAService, authService));
 
             // medical related
-            MedicalDAO medicalDAO = new MedicalDAO(connection);
+            MedicalDAO medicalDAO = new MedicalDAO();
             MedicalService medicalService = new MedicalService(medicalDAO);
             commands.put("AddMedical", new AddMedicalCommand(medicalService));
             commands.put("UpdateMedical", new UpdateMedicalCommand(medicalService));
@@ -213,15 +206,6 @@ public class CommandRegistry {
 
 
 
-            // ---------------- Full Academic Reports ----------------
-            AcademicReportDAO academicReportDAO = new AcademicReportDAO();
-            AcademicReportService academicReportService = new AcademicReportService(academicReportDAO);
-
-            commands.put("GetStudentFullAcademicReport", new GetStudentFullAcademicReportCommand(academicReportService));
-            commands.put("GetBatchFullAcademicReport", new GetBatchFullAcademicReportCommand(academicReportService));
-
-
-
             // notice related
             NoticeDAO noticeDAO = new NoticeDAO();
             NoticeService noticeService = new NoticeService(noticeDAO);
@@ -229,7 +213,7 @@ public class CommandRegistry {
             commands.put("GET_ALL_NOTICE",new GetAllNoticeCommand(noticeService,authService));
 
             // technical officer profile related
-            TechOfficerDAO techOfficerDAO = new TechOfficerDAO(connection);
+            TechOfficerDAO techOfficerDAO = new TechOfficerDAO();
             TechOfficerService techOfficerService = new TechOfficerService(techOfficerDAO);
             commands.put("GET_TECH_OFFICER_PROFILE", new GetTechOfficerProfileCommand(techOfficerService));
             commands.put("GET_MY_TECH_OFFICER_PROFILE", new GetMyTechOfficerProfileCommand(techOfficerService));

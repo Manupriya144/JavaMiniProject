@@ -34,7 +34,7 @@ public class GradeGPADAO {
                 int totalCredits = 0;
 
                 for (Course course : courses) {
-                    String grade = getGrade(con, student.studentId(), course.courseId(), filter);
+                    String grade = calculateGradeFromMarks(con, student.studentId(), course.courseId());
 
                     row.getCourseGrades().put(course.courseCode(), grade);
 
@@ -65,33 +65,30 @@ public class GradeGPADAO {
         List<Course> courses = new ArrayList<>();
 
         String sql = """
-            SELECT DISTINCT 
-                c.course_id, 
-                c.course_code, 
-                c.course_credit
-            FROM course_result cr
-            INNER JOIN course c ON cr.course_id = c.course_id
-            WHERE cr.academic_year = ?
-              AND cr.academic_level = ?
-              AND cr.semester = ?
-              AND c.department_id = ?
-            ORDER BY c.course_code
+            SELECT 
+                course_id,
+                course_code,
+                course_credit
+            FROM course
+            WHERE department_id = ?
+              AND academic_level = ?
+              AND semester = ?
+            ORDER BY course_code
             """;
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, filter.getAcademicYear());
+            ps.setString(1, filter.getDepartmentId());
             ps.setInt(2, filter.getAcademicLevel());
             ps.setString(3, filter.getSemester());
-            ps.setString(4, filter.getDepartmentId());
 
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                courses.add(new Course(
-                        rs.getString("course_id"),
-                        rs.getString("course_code"),
-                        rs.getInt("course_credit")
-                ));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    courses.add(new Course(
+                            rs.getString("course_id"),
+                            rs.getString("course_code"),
+                            rs.getInt("course_credit")
+                    ));
+                }
             }
         }
 
@@ -102,64 +99,97 @@ public class GradeGPADAO {
         List<Student> students = new ArrayList<>();
 
         String sql = """
-                SELECT DISTINCT s.user_id, s.reg_no, u.username
-                FROM students s
-                INNER JOIN users u ON s.user_id = u.user_id
-                INNER JOIN course_result cr ON cr.student_id = s.user_id
-                INNER JOIN course c ON cr.course_id = c.course_id
-                WHERE cr.academic_year = ?
-                  AND cr.academic_level = ?
-                  AND cr.semester = ?
-                  AND c.department_id = ?
-                ORDER BY s.reg_no
-                """;
+            SELECT DISTINCT 
+                s.user_id,
+                s.reg_no,
+                u.username
+            FROM students s
+            INNER JOIN users u 
+                ON u.user_id = s.user_id
+            INNER JOIN course_registration cr 
+                ON cr.student_id = s.user_id
+            INNER JOIN course c 
+                ON c.course_id = cr.course_id
+            WHERE s.department_id = ?
+              AND s.academic_level = ?
+              AND cr.academic_year = ?
+              AND cr.semester = ?
+              AND c.department_id = ?
+              AND c.academic_level = ?
+              AND c.semester = ?
+            ORDER BY s.reg_no
+            """;
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, filter.getAcademicYear());
+            ps.setString(1, filter.getDepartmentId());
             ps.setInt(2, filter.getAcademicLevel());
-            ps.setString(3, filter.getSemester());
-            ps.setString(4, filter.getDepartmentId());
+            ps.setInt(3, filter.getAcademicYear());
+            ps.setString(4, filter.getSemester());
+            ps.setString(5, filter.getDepartmentId());
+            ps.setInt(6, filter.getAcademicLevel());
+            ps.setString(7, filter.getSemester());
 
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                students.add(new Student(
-                        rs.getString("user_id"),
-                        rs.getString("reg_no"),
-                        rs.getString("username")
-                ));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    students.add(new Student(
+                            rs.getString("user_id"),
+                            rs.getString("reg_no"),
+                            rs.getString("username")
+                    ));
+                }
             }
         }
 
         return students;
     }
 
-    private String getGrade(Connection con, String studentId, String courseId, GradeGPAFilterDTO filter) throws SQLException {
+    private String calculateGradeFromMarks(Connection con, String studentId, String courseId) throws SQLException {
         String sql = """
-                SELECT grade
-                FROM course_result
-                WHERE student_id = ?
-                  AND course_id = ?
-                  AND academic_year = ?
-                  AND academic_level = ?
-                  AND semester = ?
-                """;
+            SELECT 
+                COALESCE(SUM(sm.marks * at.weight / 100.0), 0) AS total_marks,
+                COUNT(at.assessment_type_id) AS assessment_count,
+                COUNT(sm.mark_id) AS entered_mark_count
+            FROM assessment_type at
+            LEFT JOIN student_marks sm
+                ON sm.assessment_type_id = at.assessment_type_id
+               AND sm.student_id = ?
+            WHERE at.course_id = ?
+            """;
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, studentId);
             ps.setString(2, courseId);
-            ps.setInt(3, filter.getAcademicYear());
-            ps.setInt(4, filter.getAcademicLevel());
-            ps.setString(5, filter.getSemester());
 
-            ResultSet rs = ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int assessmentCount = rs.getInt("assessment_count");
+                    int enteredMarkCount = rs.getInt("entered_mark_count");
 
-            if (rs.next()) {
-                return rs.getString("grade");
+                    if (assessmentCount == 0 || enteredMarkCount == 0) {
+                        return "-";
+                    }
+
+                    double totalMarks = rs.getDouble("total_marks");
+                    return calculateGrade(totalMarks);
+                }
             }
         }
 
         return "-";
+    }
+
+    private String calculateGrade(double marks) {
+        if (marks >= 85) return "A+";
+        if (marks >= 80) return "A";
+        if (marks >= 75) return "A-";
+        if (marks >= 70) return "B+";
+        if (marks >= 65) return "B";
+        if (marks >= 60) return "B-";
+        if (marks >= 55) return "C+";
+        if (marks >= 50) return "C";
+        if (marks >= 45) return "C-";
+        if (marks >= 40) return "D";
+        return "E";
     }
 
     private double calculateCGPA(Connection con,
@@ -169,15 +199,22 @@ public class GradeGPADAO {
                                  GradeGPAFilterDTO filter) throws SQLException {
 
         String sql = """
-                SELECT total_credits, sgpa
-                FROM semester_result
-                WHERE student_id = ?
-                  AND NOT (
+            SELECT total_credits, sgpa
+            FROM semester_result
+            WHERE student_id = ?
+              AND (
+                    academic_year < ?
+                 OR (
+                        academic_year = ?
+                    AND academic_level < ?
+                 )
+                 OR (
                         academic_year = ?
                     AND academic_level = ?
-                    AND semester = ?
-                  )
-                """;
+                    AND CAST(semester AS UNSIGNED) < CAST(? AS UNSIGNED)
+                 )
+              )
+            """;
 
         double totalPoints = currentSgpa * currentCredits;
         int totalCredits = currentCredits;
@@ -185,17 +222,20 @@ public class GradeGPADAO {
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, studentId);
             ps.setInt(2, filter.getAcademicYear());
-            ps.setInt(3, filter.getAcademicLevel());
-            ps.setString(4, filter.getSemester());
+            ps.setInt(3, filter.getAcademicYear());
+            ps.setInt(4, filter.getAcademicLevel());
+            ps.setInt(5, filter.getAcademicYear());
+            ps.setInt(6, filter.getAcademicLevel());
+            ps.setString(7, filter.getSemester());
 
-            ResultSet rs = ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int previousCredits = rs.getInt("total_credits");
+                    double previousSgpa = rs.getDouble("sgpa");
 
-            while (rs.next()) {
-                int previousCredits = rs.getInt("total_credits");
-                double previousSgpa = rs.getDouble("sgpa");
-
-                totalPoints += previousSgpa * previousCredits;
-                totalCredits += previousCredits;
+                    totalPoints += previousSgpa * previousCredits;
+                    totalCredits += previousCredits;
+                }
             }
         }
 
@@ -206,7 +246,9 @@ public class GradeGPADAO {
         if (grade == null) return false;
 
         return !grade.equalsIgnoreCase("WH")
-                && !grade.equals("-");
+                && !grade.equalsIgnoreCase("MC")
+                && !grade.equalsIgnoreCase("AC")
+                && !grade.equalsIgnoreCase("-");
     }
 
     private double gradePoint(String grade) {
@@ -221,9 +263,8 @@ public class GradeGPADAO {
             case "C+" -> 2.3;
             case "C" -> 2.0;
             case "C-" -> 1.7;
-            case "D+" -> 1.3;
-            case "D" -> 1.0;
-            case "F", "EE" -> 0.0;
+            case "D" -> 1.3;
+            case "E", "EE", "EC" -> 0.0;
             default -> 0.0;
         };
     }
@@ -234,25 +275,25 @@ public class GradeGPADAO {
 
     public boolean saveSemesterResults(GradeGPAFilterDTO filter, List<GradeGPARowDTO> rows) {
         String deleteSql = """
-                DELETE FROM semester_result
-                WHERE student_id = ?
-                  AND academic_year = ?
-                  AND academic_level = ?
-                  AND semester = ?
-                """;
+            DELETE FROM semester_result
+            WHERE student_id = ?
+              AND academic_year = ?
+              AND academic_level = ?
+              AND semester = ?
+            """;
 
         String insertSql = """
-                INSERT INTO semester_result(
-                    student_id,
-                    academic_year,
-                    academic_level,
-                    semester,
-                    total_credits,
-                    sgpa,
-                    cgpa
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                """;
+            INSERT INTO semester_result(
+                student_id,
+                academic_year,
+                academic_level,
+                semester,
+                total_credits,
+                sgpa,
+                cgpa
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """;
 
         try (Connection con = DataSource.getInstance().getConnection()) {
             con.setAutoCommit(false);
