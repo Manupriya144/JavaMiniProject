@@ -331,7 +331,7 @@ if (file.exists()) {
 **Manupriya R**
 BICT Undergraduate · Java Developer
 
-[![GitHub](https://img.shields.io/badge/GitHub-Mohamed--Irfan--git-181717?style=for-the-badge&logo=github)](https://github.com/Mohamed-Irfan-git)
+[![GitHub](https://img.shields.io/badge/GitHub-Manupriya144-181717?style=for-the-badge&logo=github)](https://github.com/Manupriya144)
 
 ---
 
