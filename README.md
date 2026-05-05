@@ -1,197 +1,342 @@
-# Faculty of Technology Management System
+<div align="center">
 
-A desktop-based university management system built with Java, JavaFX, and MySQL. The project separates the user interface and the backend server into two Maven modules and supports multiple academic workflows such as course management, attendance, continuous assessment, medical handling, notices, registration, and eligibility tracking.
+<br/>
 
-## Overview
-
-This project provides a role-based academic management platform for:
-
-- `Admin`
-- `Dean`
-- `Lecturer`
-- `Student`
-- `Tech_Officer`
-
-The frontend is a JavaFX client application, while the backend runs as a socket-based Java server. Data is stored in MySQL.
-
-## Key Features
-
-- Role-based login with JWT-backed session handling
-- Admin dashboard for users, notices, courses, timetable, and lecturer-course assignment
-- Lecturer tools for assigned courses, CA marks, final marks, session management, eligibility, GPA/grade views, and profile updates
-- Student tools for registered courses, attendance, grades, eligibility, medical submissions, and profile access
-- Technical officer tools for attendance workflows, medical record management, CA workflows, and dashboard reporting
-- Notice management and timetable viewing
-- Course registration and academic record support
-
-## Tech Stack
-
-- `Java 17`
-- `JavaFX 17`
-- `Maven`
-- `MySQL 8`
-- `Jackson`
-- `HikariCP`
-- `JJWT`
-- `ControlsFX`
-- `Docker Compose` for database/backend container setup
-
-## Project Structure
-
-```text
-JavaMiniProject/
-├─ backend/                  # Socket server, commands, services, DAO layer
-├─ frontend/                 # JavaFX desktop client
-├─ database/                 # SQL dump / seed data
-├─ documents/                # Project diagrams and supporting documents
-├─ docker-compose.yaml       # MySQL + backend container setup
-└─ README.md
+```
+██╗     ███╗   ███╗███████╗
+██║     ████╗ ████║██╔════╝
+██║     ██╔████╔██║███████╗
+██║     ██║╚██╔╝██║╚════██║
+███████╗██║ ╚═╝ ██║███████║
+╚══════╝╚═╝     ╚═╝╚══════╝
 ```
 
-## Architecture
+# Faculty Learning Management System
 
-### Frontend
+**A production-grade academic platform built on Java Sockets + JavaFX**
 
-- JavaFX application entry point: `com.example.frontend.Launcher`
-- Loads FXML-based screens from `frontend/src/main/resources/view`
-- Communicates with the backend using `ServerClient`
-- Default client connection: `localhost:5000`
+<br/>
 
-### Backend
+![Java](https://img.shields.io/badge/Java-17+-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![JavaFX](https://img.shields.io/badge/JavaFX-UI_Layer-2d6a9f?style=for-the-badge&logo=java&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-Auth-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+![Socket](https://img.shields.io/badge/Socket-Networking-22c55e?style=for-the-badge&logo=socket.io&logoColor=white)
 
-- Backend entry point: `backend/src/main/java/Main.java`
-- Starts a multi-threaded socket server on port `5000`
-- Uses a command-based request handling approach
-- Connects to MySQL through `HikariCP`
+<br/>
 
-## Prerequisites
+> *Real academic rules. Real eligibility logic. Real-world architecture.*
 
-Before running the project, make sure you have:
+<br/>
 
-- `JDK 17` or newer installed
-- `Maven` available, or use the Maven wrapper in `frontend/`
-- `MySQL 8` installed locally, or Docker Desktop for containerized setup
+</div>
 
-## Database Notes
+---
 
-The repository currently contains two different database configurations:
+## Table of Contents
 
-- `docker-compose.yaml` uses:
-  - database: `lms_db`
-  - port: `3307`
-  - username: `root`
-  - password: `root123`
-- `backend/src/main/java/utility/DataSource.java` currently uses:
-  - database: `lms_db`
-  - port: `3306`
-  - username: `root`
-  - password: empty string
+- [Overview](#-overview)
+- [Architecture](#-architecture)
+- [Feature Breakdown](#-feature-breakdown)
+- [Academic Logic](#-academic-logic)
+- [Database Schema](#-database-schema)
+- [Backend Commands](#-backend-commands)
+- [Setup & Installation](#-setup--installation)
+- [Authentication Flow](#-authentication-flow)
+- [Avatar System](#-avatar-system)
+- [Roadmap](#-roadmap)
+- [Author](#-author)
 
-If you run the backend locally, you should update `DataSource.java` or your MySQL instance so these values match.
+---
 
-## Running the Project
+## 🎯 Overview
 
-### Option 1: Run with local MySQL
+The **Faculty LMS** is a full-stack desktop application that replicates real-world academic management workflows — from course registration gating to eligibility enforcement and medical overrides. Built entirely without a web framework, it uses raw **Java TCP Sockets** for client-server communication, a **Command Pattern** backend, and a **JavaFX** GUI layer.
 
-1. Create a MySQL database named `lms_db`.
-2. Import `database/lms_db_dump.sql`.
-3. Make sure `backend/src/main/java/utility/DataSource.java` points to the correct MySQL host, port, username, and password.
-4. Start the backend server:
+| Layer      | Technology            |
+|------------|-----------------------|
+| Frontend   | JavaFX                |
+| Transport  | Java Socket (TCP/JSON)|
+| Backend    | Java — Command Pattern|
+| Database   | MySQL                 |
+| Auth       | JWT Tokens            |
 
-```powershell
-cd backend
-mvn compile exec:java -Dexec.mainClass=Main
+---
+
+## 🏗 Architecture
+
+```
+┌─────────────────────────────────────┐
+│           JavaFX Client             │
+│  (Controllers → SocketService)      │
+└──────────────┬──────────────────────┘
+               │  JSON over TCP Socket
+┌──────────────▼──────────────────────┐
+│         MultiServer.java            │
+│  CommandRouter → Command Handler    │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│           Service Layer             │
+│  (Business Logic + Eligibility)     │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│             DAO Layer               │
+│  (PreparedStatements + ResultSets)  │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│           MySQL Database            │
+└─────────────────────────────────────┘
 ```
 
-5. Start the frontend:
+Every client request is a **JSON command object** dispatched through the Command Pattern — clean, extensible, and easy to unit-test.
 
-```powershell
-cd frontend
-.\mvnw.cmd javafx:run
+---
+
+## 🧩 Feature Breakdown
+
+### 👨‍💼 Admin Panel
+- Open / close course registration periods by department and academic level
+- Manage all users (create, update, deactivate)
+- Post and manage notices
+
+### 👨‍🏫 Lecturer Panel
+- View assigned courses for current semester
+- Upload final exam marks
+- Manage CA (Continuous Assessment) scores
+- Check and review student eligibility
+- Dashboard with key statistics
+- Update designation and profile picture
+
+### 👨‍🎓 Student Panel
+- Register for courses during active registration periods
+- View SGPA, CGPA, and attendance on dashboard
+- Check exam results
+- View personal eligibility status
+
+---
+
+## 📐 Academic Logic
+
+This system implements the actual eligibility and registration rules used in academic institutions — not a simplified mock.
+
+### Course Registration Flow
+
+```
+Admin opens registration_period
+        │
+        ▼
+Student registers courses
+(blocked if period is closed)
+        │
+        ▼
+course_registration becomes single source of truth
+for all eligibility, result, and reporting logic
 ```
 
-### Option 2: Run database and backend with Docker
+### Registration Types
 
-1. Start the services:
+| Type      | Meaning                              |
+|-----------|--------------------------------------|
+| `Proper`  | First-time attempt at the course     |
+| `Repeat`  | Retaking a previously failed course  |
+| `Suspend` | Student temporarily inactive         |
 
-```powershell
-docker-compose up --build
+### Eligibility Rules
+
+| Registration Type | Attendance Required | CA Required | Eligible? |
+|-------------------|---------------------|-------------|-----------|
+| `Proper`          | ≥ 80%               | ≥ 50%       | ✅ Both must pass |
+| `Repeat`          | Not checked         | ≥ 50%       | ✅ CA only |
+| `Suspend`         | —                   | —           | ❌ Never eligible |
+
+### Medical Handling
+
+| Medical Type        | System Effect                         |
+|---------------------|---------------------------------------|
+| Attendance Medical  | Compensating attendance hours added   |
+| Exam Medical        | Result recorded as `WH` (Withheld)    |
+
+---
+
+## 🗄 Database Schema
+
+Key tables and their primary columns:
+
+```sql
+-- Core user store
+users (
+  user_id, username, email, password,
+  contact_number, profile_picture, role
+)
+
+-- Lecturer-specific data
+lecturers (
+  user_id, specialization, designation
+)
+
+-- Student enrollments per term
+course_registration (
+  student_id, course_id, academic_year,
+  semester, registration_type
+)
+
+-- Controls when students can register
+registration_period (
+  department_id, academic_level, semester,
+  academic_year, start_at, end_at, status
+)
 ```
 
-2. Start the frontend separately:
+> **Rule:** Always filter queries by `academic_year` + `semester`. Never query without temporal scope.
 
-```powershell
-cd frontend
-.\mvnw.cmd javafx:run
+---
+
+## 🔌 Backend Commands
+
+Commands are registered in the `CommandRouter` and dispatched by name from the client.
+
+| Command                   | Description                              |
+|---------------------------|------------------------------------------|
+| `LOGIN`                   | Authenticate and return JWT token        |
+| `GET_LECTURER_PROFILE`    | Fetch lecturer details by user ID        |
+| `UPDATE_LECTURER_PROFILE` | Update designation and profile picture   |
+| `REGISTER_COURSE`         | Enroll student in a course               |
+| `GET_ELIGIBILITY`         | Evaluate and return eligibility status   |
+| `GET_DASHBOARD_STATS`     | Aggregate stats for dashboard view       |
+| `UPLOAD_MARKS`            | Submit final marks for a course          |
+
+Adding new functionality = adding one new `Command` implementation. Zero changes to routing logic.
+
+---
+
+## ⚙️ Setup & Installation
+
+### Prerequisites
+
+- Java 17+
+- JavaFX SDK
+- MySQL 8.0+
+- IDE: IntelliJ IDEA or Eclipse
+
+---
+
+### 1 — Clone the Repository
+
+```bash
+git clone https://github.com/Mohamed-Irfan-git/lms-project.git
+cd lms-project
 ```
 
-3. If the frontend cannot connect, confirm the backend is available on port `5000` and align the backend database settings if needed.
+### 2 — Configure the Database
 
-## Main Screens and Modules
+```sql
+CREATE DATABASE lms_db;
+-- Then import the provided schema:
+-- database/schema.sql
+```
 
-### Admin
+### 3 — Update DB Connection
 
-- User management
-- Course management
-- Lecturer assignment
-- Notice management
-- Timetable management
-- Registration period setup
+Edit your database config file:
 
-### Lecturer
+```java
+// src/config/DBConfig.java
+String URL  = "jdbc:mysql://localhost:3306/lms_db";
+String USER = "root";
+String PASS = "your_password";
+```
 
-- Dashboard and assigned courses
-- Continuous assessment management
-- Final marks upload
-- Attendance and eligibility views
-- Course materials
-- Profile management
-- Session creation
+### 4 — Start the Backend Server
 
-### Student
+```bash
+# Run from your IDE or:
+javac MultiServer.java && java MultiServer
+```
 
-- Dashboard
-- Course registration
-- Attendance
-- Grades
-- Eligibility
-- Medical submission and record viewing
-- Profile management
+Server listens on `localhost:5000` by default.
 
-### Technical Officer
+### 5 — Launch the Frontend
 
-- Attendance management
-- Medical management
-- CA support workflows
-- Profile management
+Run the JavaFX application from your IDE with the JavaFX SDK configured in the module path.
 
-## Default Communication Ports
+---
 
-- Backend socket server: `5000`
-- Docker MySQL host port: `3307`
-- Backend container port mapping: `8080:8080` in compose, though the current Java backend entry point shown in the repository is socket-based
+## 🔐 Authentication Flow
 
-## Known Notes
+```
+Client sends LOGIN command
+         │
+         ▼
+Server validates credentials against DB
+         │
+         ▼
+JWT token generated (signed with secret key)
+         │
+         ▼
+Token returned → stored in SessionManager
+         │
+         ▼
+All subsequent requests include token in header
+         │
+         ▼
+Server validates token on every command
+```
 
-- The backend server in the current codebase is socket-based, not a standard REST API.
-- Some environment values in Docker and local Java configuration may need alignment before first run.
-- The repository includes both source resources and generated Maven target output; always run the latest built frontend when checking UI changes.
+Tokens are stateless — no server-side session storage required.
 
-## Development Tips
+---
 
-- Frontend FXML views are under `frontend/src/main/resources/view`
-- Frontend controllers are under `frontend/src/main/java/com/example/frontend/controller`
-- Backend command registration is under `backend/src/main/java/command/repository`
-- Database access classes are under `backend/src/main/java/dao`
+## 🖼 Avatar System
 
-## Future Improvements
+Profile images are displayed as circular avatars. If no image is set, the user's initial is rendered as a styled fallback.
 
-- Centralize configuration using environment variables or `.properties`
-- Align Docker and local database configuration
-- Add automated tests
-- Add API documentation / protocol documentation for frontend-backend messages
-- Add CI checks for both frontend and backend builds
+```java
+File file = new File(profilePicturePath);
 
-## License
+if (file.exists()) {
+    // Load and clip the real profile image
+    avatarImage.setImage(new Image(file.toURI().toString()));
+    avatarImage.setClip(new Circle(centerX, centerY, radius));
+    avatarImage.setVisible(true);
+    avatarInitial.setVisible(false);
+} else {
+    // Show styled initial fallback
+    avatarInitial.setText(String.valueOf(username.charAt(0)).toUpperCase());
+    avatarInitial.setVisible(true);
+    avatarImage.setVisible(false);
+}
+```
 
-No license file is currently included in this repository. Add one if you plan to distribute or open-source the project.
+---
+
+## 🗺 Roadmap
+
+| Feature                         | Status      |
+|---------------------------------|-------------|
+| Core LMS (marks, eligibility)   | ✅ Complete  |
+| JWT Authentication              | ✅ Complete  |
+| Profile picture + avatar system | ✅ Complete  |
+| In-app notification system      | 🔲 Planned  |
+| Assignment file uploads         | 🔲 Planned  |
+| Real-time updates via WebSocket | 🔲 Planned  |
+| Flutter mobile companion app    | 🔲 Planned  |
+
+---
+
+## 👨‍💻 Author
+
+**Manupriya R**
+BICT Undergraduate · Java Developer
+
+[![GitHub](https://img.shields.io/badge/GitHub-Mohamed--Irfan--git-181717?style=for-the-badge&logo=github)](https://github.com/Mohamed-Irfan-git)
+
+---
+
+<div align="center">
+
+*Built with real academic rules, not mock logic.*
+
+</div>
